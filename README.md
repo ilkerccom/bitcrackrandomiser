@@ -27,7 +27,7 @@ I can scan each key in about 10 minutes on NVIDIA 3090. This actually means abou
 
 ## settings.txt
 
-Add the folder where the Bitcrack application is located in the first line.
+Add the folder where the Bitcrack application is located in the first line. **Note: Only for NVIDIA CUDA devices. Do not use clBitCrack.exe**
 
 `C:\Users\{YOURUSERNAME}\App\bitcrack\cuBitCrack.exe`
 
