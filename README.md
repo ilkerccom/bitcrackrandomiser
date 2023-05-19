@@ -72,3 +72,9 @@ Run the application.
 If 15,000 people scan 1.7 billion per second (like 3090), it would take 15 days to scan all keys.
 
 **I will wrap up more information here soon.**
+
+# Donate 
+
+1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+
+
