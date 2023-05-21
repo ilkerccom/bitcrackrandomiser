@@ -23,7 +23,9 @@ Puzzle 66 HEX ranges as follows. It starts with 2 or 3. Any private key in this 
 
 We now have about 33 million possible private keys to search. All possible private keys are **stored in the database**. A random value will come up each time a scan job is called and **will be marked as scanned** when the scan is complete. 
 
-I can scan each key in about 10 minutes on NVIDIA 3090. This actually means about 1,01 trillion private keys. When the private key is scanned, it is marked as scanned. So it won't show up anymore.
+I can scan each key in about 10 minutes on NVIDIA 3090. This actually means about 1,1 trillion private keys. When the private key is scanned, it is marked as scanned. So it won't show up anymore.
+
+
 
 ## settings.txt
 
@@ -56,6 +58,10 @@ Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/d
 Edit the settings.txt file according to you.
 
 Run the application.
+
+# If found?
+
+If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the destination wallet address.)
 
 # Information
 
