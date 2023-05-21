@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Runtime;
@@ -16,7 +16,7 @@ namespace BitcrackRandomiser
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            Helpers.WriteLine("Please wait while app is starting ...");
+            Helpers.WriteLine("Please wait while app is starting...");
             RunBitcrack();
             Console.ReadLine();
         }
@@ -34,7 +34,9 @@ namespace BitcrackRandomiser
             // Cannot get HEX value
             if (RandomHex == "")
             {
-                Helpers.WriteLine("Database connection corrupted. Please try again later.");
+                Helpers.WriteLine("Database connection error. Please wait...");
+                Thread.Sleep(5000);
+                RunBitcrack();
                 return Task.FromResult(0);
             }
 
@@ -86,11 +88,11 @@ namespace BitcrackRandomiser
                 // Info
                 if(FlagUsed)
                 {
-                    Helpers.WriteLine("Range scanned and flagged successfully ... Launching again ... Please wait ...");
+                    Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
                 }
                 else
                 {
-                    Helpers.WriteLine("Range scanned with flag error ... Launching again ... Please wait ...");
+                    Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
                 }
 
                 // Check winner
@@ -99,7 +101,7 @@ namespace BitcrackRandomiser
                 // Run again
                 if (!Found)
                 {
-                    Thread.Sleep(15000);
+                    Thread.Sleep(10000);
                     RunBitcrack();
                 }
                 else
