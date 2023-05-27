@@ -5,6 +5,10 @@
 
 ![alt text](https://i.ibb.co/DGq2Bbz/ap.png)
 
+## Pool Statistics
+
+Go to https://btcpuzzle.info/
+
 ## How it works?
 
 It only works with BTC Puzzle 66. If you want to **scan all private keys in  puzzle 66**; you need to do 36 quintillion scans in total. In case you do a random scan; previously generated private keys will be regenerated (random problem). This extends the scan time by x10.
@@ -65,7 +69,7 @@ If the private key is found, it will appear on the console screen. Also, a new t
 
 # Information
 
-1. This is not a pool. However, it can be done in the future.
+1. This is not a shared pool. However, it can be done in the future.
 2. If the private key is found, only you can see it. No one else can see!
 3. If the private key is found, it is not shared.
 4. Once a private key is scanned, it is not scanned again.
