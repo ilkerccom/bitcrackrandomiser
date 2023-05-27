@@ -57,6 +57,8 @@ When the range is scanned, a new private key is requested and the process procee
 
 Download released version or build it yourself.
 
+Download [Bitcrack](https://github.com/brichard19/BitCrack) or build it yourself (recommended) or download it from this repo (bitcrack.zip) (recommended)
+
 Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 Edit the settings.txt file according to you.
