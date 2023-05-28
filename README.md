@@ -35,15 +35,15 @@ I can scan each key in about 10 minutes on NVIDIA 3090. This actually means abou
 
 Add the folder where the Bitcrack application is located in the first line. **Note: Only for NVIDIA CUDA devices. Do not use clBitCrack.exe**
 
-`C:\Users\{YOURUSERNAME}\App\bitcrack\cuBitCrack.exe`
+`C:\Users\{YOURUSERNAME}\App\bitcrack\cuBitCrack.exe` `*Required*`
 
 You can write the arguments for Bitcrack. Do not change the -o and -keyspace arguments.
 
-`-b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}`
+`-b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}` `*Required*`
 
 Enter the BTC address here. Remember for now **this is not a pool**! But if in the future please enter a BTC recipient address.
 
-`1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw`
+`1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw` or `any worker name` Recommended: Your BTC Wallet Address `*Required*`
 
 ## Example
 
