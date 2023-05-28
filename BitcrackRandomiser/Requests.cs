@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -19,20 +19,13 @@ namespace BitcrackRandomiser
         /// <returns></returns>
         public static async Task<string> GetHex()
         {
-            using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
-            string Result = await client.GetAsync("hex/get").Result.Content.ReadAsStringAsync();
-            return Result;
-        }
-
-        /// <summary>
-        /// Get percentage
-        /// </summary>
-        /// <returns></returns>
-        public static async Task<string> GetPercentage()
-        {
-            using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
-            string Result = await client.GetAsync("hex/percentage").Result.Content.ReadAsStringAsync();
-            return Result;
+            try
+            {
+                using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
+                string Result = await client.GetAsync("hex/get").Result.Content.ReadAsStringAsync();
+                return Result;
+            }
+            catch { return ""; }
         }
 
         /// <summary>
@@ -41,13 +34,17 @@ namespace BitcrackRandomiser
         /// <returns></returns>
         public static async Task<bool> SetHex(string HEX, string WalletAddress)
         {
-            bool isSuccess = false;
-            using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
-            client.DefaultRequestHeaders.Add("HEX", HEX);
-            client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
-            string Result = await client.PostAsync("hex/flag", null).Result.Content.ReadAsStringAsync();
-            Boolean.TryParse(Result, out isSuccess);
-            return isSuccess;
+            try
+            {
+                bool isSuccess = false;
+                using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
+                client.DefaultRequestHeaders.Add("HEX", HEX);
+                client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
+                string Result = await client.PostAsync("hex/flag", null).Result.Content.ReadAsStringAsync();
+                Boolean.TryParse(Result, out isSuccess);
+                return isSuccess;
+            }
+            catch { return false; }
         }
     }
 }
