@@ -62,8 +62,8 @@ namespace BitcrackRandomiser
             Helpers.WriteLine("Bitcrack starting...", true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
-            Helpers.WriteLine(string.Format("Percentage: {0}", Requests.GetPercentage().Result));
-            Helpers.WriteLine(string.Format("Your BTC payment address: {0}", Helpers.GetSettings(2)));
+            Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
+            Helpers.WriteLine(string.Format("Your wallet address: {0}", Helpers.GetSettings(2)));
 
             // Get settings and arguments from setting.txt
             string BitcrackFolder = Helpers.GetSettings(0);
@@ -79,20 +79,39 @@ namespace BitcrackRandomiser
                 EnableRaisingEvents = true
             };
 
-            // Bitcrack exit
+            // Bitcrack exited
             process.Exited += (sender, args) =>
             {
-                // Flag HEX as used
-                bool FlagUsed = Requests.SetHex(StartHex, WalletAddress).Result;
-
-                // Info
-                if(FlagUsed)
+                if(process.ExitCode == 0)
                 {
-                    Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
+                    int FlagTries = 1;
+
+                    // Flag HEX as used
+                    bool FlagUsed = Requests.SetHex(StartHex, WalletAddress).Result;
+
+                    // Try flagging
+                    while (!FlagUsed && FlagTries <= 3)
+                    {
+                        FlagUsed = Requests.SetHex(StartHex, WalletAddress).Result;
+                        Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/3", FlagTries));
+                        Thread.Sleep(5000);
+                        FlagTries++;
+                    }
+
+                    // Info
+                    if (FlagUsed)
+                    {
+                        Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
+                    }
+                    else
+                    {
+                        Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
+                    }
                 }
                 else
                 {
-                    Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
+                    // User shuts down cuBitcrack.exe
+                    Helpers.WriteLine("Bitcrack app exited with unknown code... Launching again... Please wait...");
                 }
 
                 // Check winner
