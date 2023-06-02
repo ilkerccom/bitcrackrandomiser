@@ -1,3 +1,4 @@
 C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitCrack.exe
 -b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}
 1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+default
