@@ -16,13 +16,22 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Get random HEX value from API
         /// </summary>
+        /// <param name="ScanType">default or includeDefeatedRanges</param>
         /// <returns></returns>
-        public static async Task<string> GetHex()
+        public static async Task<string> GetHex(string ScanType = "default")
         {
             try
             {
+                string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
-                string Result = await client.GetAsync("hex/get").Result.Content.ReadAsStringAsync();
+
+                if (ScanType == "includeDefeatedRanges")
+                {
+                    Result = await client.GetAsync("hex/getall").Result.Content.ReadAsStringAsync();
+                    return Result;
+                }
+
+                Result = await client.GetAsync("hex/get").Result.Content.ReadAsStringAsync();
                 return Result;
             }
             catch { return ""; }
