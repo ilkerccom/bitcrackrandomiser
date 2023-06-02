@@ -27,8 +27,11 @@ namespace BitcrackRandomiser
         /// <returns></returns>
         static Task<int> RunBitcrack()
         {
+            // Get scan type. Include or exclude defeated ranges
+            string ScanType = Helpers.GetSettings(3);
+
             // Get random HEX value 
-            string RandomHex = Requests.GetHex().Result;
+            string RandomHex = Requests.GetHex(ScanType).Result;
             string TargetAddress = "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so";
 
             // Cannot get HEX value
