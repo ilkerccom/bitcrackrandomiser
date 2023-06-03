@@ -22,16 +22,18 @@ namespace BitcrackRandomiser
         {
             try
             {
+                // CustomRange
+                string StartsWith = Helpers.GetSettings(4).Split('=')[1];
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
                 if (ScanType == "includeDefeatedRanges")
                 {
-                    Result = await client.GetAsync("hex/getall").Result.Content.ReadAsStringAsync();
+                    Result = await client.GetAsync(string.Format("hex/getall?startswith={0}", StartsWith)).Result.Content.ReadAsStringAsync();
                     return Result;
                 }
 
-                Result = await client.GetAsync("hex/get").Result.Content.ReadAsStringAsync();
+                Result = await client.GetAsync(string.Format("hex/get?startswith={0}", StartsWith)).Result.Content.ReadAsStringAsync();
                 return Result;
             }
             catch { return ""; }
