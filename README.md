@@ -33,21 +33,27 @@ I can scan each key in about 10 minutes on NVIDIA 3090. This actually means abou
 
 ## settings.txt
 
-Add the folder where the Bitcrack application is located in the first line. **Note: Only for NVIDIA CUDA devices. Do not use clBitCrack.exe**
+[1] Add the folder where the Bitcrack application is located in the first line. **Note: Only for NVIDIA CUDA devices. Do not use clBitCrack.exe**
 
 `C:\Users\{YOURUSERNAME}\App\bitcrack\cuBitCrack.exe` `*Required*`
 
-You can write the arguments for Bitcrack. Do not change the -o and -keyspace arguments.
+[2] You can write the arguments for Bitcrack. Do not change the -o and -keyspace arguments.
 
 `-b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}` `*Required*`
 
-Enter the BTC address here. Remember for now **this is not a pool**! But if in the future please enter a BTC recipient address.
+[3] Enter the BTC address here. Remember for now **this is not a pool**! But if in the future please enter a BTC recipient address.
 
 `1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw` or `any worker name` Recommended: Your BTC Wallet Address `*Required*`
 
-Select a scan type.
+[4] Select a scan type.
 
 `default` or `includeDefeatedRanges` `*Required*`
+
+[5] Scan custom range
+
+`custom_range=none` or `custom_range=30` or `custom_range=2D` `*Required*`
+
+Enter the first 2 characters of the range you want to scan. Possible values: "20,21,22,23,24,25,26,27,28,29,2A,2B,2C,2D,2E,2F,30,31,32,33,34,35,36,37,38,39,3A,3B,3C,3D,3E,3F"
 
 ## Scan type
 
