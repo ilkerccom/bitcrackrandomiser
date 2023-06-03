@@ -45,6 +45,18 @@ Enter the BTC address here. Remember for now **this is not a pool**! But if in t
 
 `1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw` or `any worker name` Recommended: Your BTC Wallet Address `*Required*`
 
+Select a scan type.
+
+`default` or `includeDefeatedRanges` `*Required*`
+
+## Scan type
+
+`default` - Scan and exclude defeated ranges.
+
+`includeDefeatedRanges` - Scan and include defeated ranges.
+
+2000000-2050000 (First ~%0.98) ranges and 3FAF000-3FFFFFF (Last ~%0.98) manually defeated in this pool. If you rescan a defeated range, it will now be marked as scanned normal.
+
 ## Example
 
 Random key from database: **326FB80**
