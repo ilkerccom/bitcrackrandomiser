@@ -1,5 +1,9 @@
 C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitCrack.exe
--b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}
-1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
-default
+-b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000A00000 {2}
+wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+scan_type=default
 custom_range=none
+telegram_share=false
+telegram_acesstoken=0
+telegram_chatid=0
+telegram_share_eachkey=true
