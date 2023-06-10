@@ -70,8 +70,12 @@ namespace BitcrackRandomiser
                 }
                 else
                 {
-                    Console.SetCursorPosition(0, 5);
-                    Console.Write(e.Data + new string(' ', Console.WindowWidth - e.Data.Length));
+                    try
+                    {
+                        Console.SetCursorPosition(0, 5);
+                        Console.Write(e.Data + new string(' ', Console.WindowWidth - e.Data.Length));
+                    }
+                    catch { }
                     return false;
                 }
             }
