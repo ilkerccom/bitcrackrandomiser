@@ -203,9 +203,9 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit settings.txt file. Example below:
 
-> /root/BitCrack/bin/./cuBitCrack
+> bitcrack_path=/root/BitCrack/bin/./cuBitCrack
 > 
-> -b 896 -t 256 -p 256 -o {2}.txt --keyspace {0}0000000000:{1}0000000000 {2}
+> bitcrack_arguments=-b 896 -t 256 -p 256
 > 
 > wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 > 
@@ -220,6 +220,8 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 > telegram_chatid=0
 > 
 > telegram_share_eachkey=false
+>
+> untrusted_computer=false
 
 
 `dotnet BitcrackRandomiser.dll` Run the app
