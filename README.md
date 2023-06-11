@@ -195,7 +195,7 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 `make BUILD_CUDA=1 COMPUTE_CAP=86` Building BitCrack.
 
-`wget https://github.com/ilkerccom/bitcrackrandomiser/releases/download/v0.6/bitcrackrandomiser.zip` Download BitcrackRandomiser
+`wget https://github.com/ilkerccom/bitcrackrandomiser/releases/download/v0.7/bitcrackrandomiser.zip` Download BitcrackRandomiser
 
 `unzip bitcrackrandomiser.zip`
 
