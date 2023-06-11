@@ -8,6 +8,9 @@ namespace BitcrackRandomiser
 {
     class Program
     {
+        // Istesting
+        public static bool IsTest = false;
+
         // Found or not
         public static bool Found = false;
 
@@ -20,8 +23,30 @@ namespace BitcrackRandomiser
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            Helpers.WriteLine("Please wait while app is starting...");
-            RunBitcrack();
+            if (args.Length > 0)
+            {
+                if (args.Contains("--mode-test"))
+                {
+                    // Test mode
+                    IsTest = true;
+                    Helpers.WriteLine("Please wait while app is starting in [Mode:Test Mode]...");
+                    RunBitcrack();
+                }
+                else if (args.Contains("--mode-telegramtest"))
+                {
+                    // Telegram share test
+                    Helpers.WriteLine("Telegram testing [Mode:Telegram Test Mode]");
+                    Helpers.ShareTelegram("Test message from bitcrackrandomiser app.");
+                    Helpers.WriteLine("Message sent to your telegram channel/group");
+                }
+            }
+            else
+            {
+                // Run normally
+                Helpers.WriteLine("Please wait while app is starting...");
+                RunBitcrack();
+            }
+
             Console.ReadLine();
         }
 
@@ -64,8 +89,7 @@ namespace BitcrackRandomiser
             string EndHex = EndNumber.ToString("X");
 
             // Testing
-            bool isTesting = false;
-            if (isTesting)
+            if (IsTest)
             {
                 TargetAddress = "1HFUvT61q2bfT5tHvEfqLeicppkr5V1QAR";
                 StartHex = "2FBE3AA";
@@ -73,7 +97,7 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("Bitcrack starting... Test mode: {0}", isTesting), true);
+            Helpers.WriteLine(string.Format("Bitcrack starting... Test mode: {0}", IsTest), true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
