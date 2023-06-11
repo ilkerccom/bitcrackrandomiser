@@ -179,9 +179,7 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 (2) Connect instance via SSH client (Like PuTTY). Follow commands:
 
-`sudo apt install unzip` Install required app
-
-`sudo apt install nano` Install optional app
+`sudo apt install nano` Install optional app (For edit settings.txt file)
 
 `wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh` Installing .NET core runtime for linux
 
