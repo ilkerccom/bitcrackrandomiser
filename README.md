@@ -187,7 +187,7 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 `sudo chmod +x ./dotnet-install.sh`
 
-`./dotnet-install.sh --version latest --runtime aspnetcore`
+`./dotnet-install.sh --version latest`
 
 `export DOTNET_ROOT=$HOME/.dotnet`
 
@@ -201,13 +201,11 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 `make BUILD_CUDA=1 COMPUTE_CAP=86` Building BitCrack.
 
-`wget https://github.com/ilkerccom/bitcrackrandomiser/releases/download/v0.7/bitcrackrandomiser.zip` Download BitcrackRandomiser
+`git clone https://github.com/ilkerccom/bitcrackrandomiser` Cloning BitcrackRandomiser
 
-`unzip bitcrackrandomiser.zip`
+`cd bitcrackrandomiser/BitcrackRandomiser`
 
-`cd bitcrackrandomiser`
-
-Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit settings.txt file. Example below:
+Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit *settings.txt* file. Example below:
 
 > bitcrack_path=/root/BitCrack/bin/./cuBitCrack
 > 
@@ -229,8 +227,7 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 >
 > untrusted_computer=false
 
-
-`dotnet BitcrackRandomiser.dll` Run the app
+`dotnet run --property:Configuration=Release` or `dotnet run` Build and run in release mode
 
 You can press "CTRL+B" and then "D" to leave terminal without closing app.
 
