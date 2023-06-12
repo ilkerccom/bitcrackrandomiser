@@ -225,7 +225,7 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 >
 > untrusted_computer=false
 
-`dotnet run --property:Configuration=Release` or `dotnet run` Build and run in release mode
+`dotnet run` Run the bitcrackrandomiser
 
 You can press "CTRL+B" and then "D" to leave terminal without closing app.
 
