@@ -9,6 +9,8 @@
 
 Go to https://btcpuzzle.info/
 
+For support join https://t.me/bitcrackrandomiser
+
 ## How it works?
 
 It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the [target_puzzle] variable in the settings.txt file.).
