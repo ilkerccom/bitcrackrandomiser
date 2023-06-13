@@ -99,5 +99,22 @@ namespace BitcrackRandomiser
             }
             catch { }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="WalletAddress"></param>
+        /// <returns></returns>
+        public static string WalletParser(string WalletAddress)
+        {
+            if(WalletAddress.Length > 24)
+            {
+                string Start = WalletAddress.Substring(0, 8);
+                string End = WalletAddress.Substring(WalletAddress.Length - 8);
+                return string.Format("{0}...{1}",Start,End);
+            }
+
+            return WalletAddress;
+        }
     }
 }
