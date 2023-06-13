@@ -8,3 +8,4 @@ telegram_acesstoken=0
 telegram_chatid=0
 telegram_share_eachkey=true
 untrusted_computer=false
+target_puzzle=66
