@@ -1,7 +1,7 @@
 
 # Bitcrack-Randomiser
 
-**Bitcrack-Randomiser** works integrated with the application called Bitcrack. 
+**Bitcrack-Randomiser** works integrated with the application called Bitcrack. Works with **Puzzle 66-67-68**
 
 ![alt text](https://i.ibb.co/DGq2Bbz/ap.png)
 
@@ -234,6 +234,8 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 > telegram_share_eachkey=false
 >
 > untrusted_computer=false
+> 
+> target_puzzle=66
 
 `dotnet run` Run the bitcrackrandomiser
 
