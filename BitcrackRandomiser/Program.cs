@@ -11,6 +11,9 @@ namespace BitcrackRandomiser
         // Istesting
         public static bool IsTest = false;
 
+        // Each scan
+        public static int Attempts = 0;
+
         // Found or not
         public static bool Found = false;
 
@@ -63,6 +66,13 @@ namespace BitcrackRandomiser
             string TelegramShareEachKey = Helpers.GetSettings(8).Split('=')[1].ToLower();
             string WalletAddress = Helpers.GetSettings(2).Split('=')[1];
             string UntrustedComputer = Helpers.GetSettings(9).Split('=')[1];
+            string TargetPuzzle = Helpers.GetSettings(10).Split('=')[1];
+
+            // Send start message to telegram if active
+            if (TelegramShare == "true" && Attempts == 0)
+            {
+                Helpers.ShareTelegram(string.Format("[{0}] started job for (Puzzle{1})", Helpers.WalletParser(WalletAddress), TargetPuzzle));
+            }
 
             // Is scan finished?
             bool IsFinished = false;
@@ -97,7 +107,7 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("Bitcrack starting... Test mode: {0}", IsTest), true);
+            Helpers.WriteLine(string.Format("Bitcrack starting... Puzzle:{1} | TestMode: {0}", IsTest, TargetPuzzle), true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
@@ -176,7 +186,7 @@ namespace BitcrackRandomiser
                     {
                         if (TelegramShare == "true")
                         {
-                            Helpers.ShareTelegram(string.Format("Congratulations. Private Key Found by worker {0}. {1}", WalletAddress, PrivateKey));
+                            Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker {0}. {1}", Helpers.WalletParser(WalletAddress), PrivateKey));
                         }
 
                         Helpers.WriteLine("Congratulations. Key found. Please check your folder.");
@@ -191,7 +201,7 @@ namespace BitcrackRandomiser
                     {
                         if (TelegramShare == "true" && TelegramShareEachKey == "true")
                         {
-                            Helpers.ShareTelegram(string.Format("HEX {0} scanned by worker {1}", StartHex, WalletAddress));
+                            Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}]", StartHex, Helpers.WalletParser(WalletAddress)));
                         }
 
                         // Flag HEX as used
@@ -224,12 +234,20 @@ namespace BitcrackRandomiser
                 else
                 {
                     // User shuts down cuBitcrack.exe
-                    Helpers.WriteLine("Bitcrack app exited with unknown code... Launching again... Please wait...");
+                    Helpers.WriteLine("Bitcrack app exited with unknown code...");
+
+                    // Worker goes to offline
+                    if (TelegramShare == "true")
+                    {
+                        Helpers.ShareTelegram(string.Format("[{0}] goes offline.", Helpers.WalletParser(WalletAddress)));
+                    }
                 }
 
                 taskCompletionSource.SetResult(process.ExitCode);
                 process.Dispose();
             };
+
+            Attempts++;
 
             // Start bitcrack app
             process.Start();
