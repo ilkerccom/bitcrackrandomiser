@@ -11,11 +11,11 @@ Go to https://btcpuzzle.info/
 
 ## How it works?
 
-It only works with BTC Puzzle 66. If you want to **scan all private keys in  puzzle 66**; you need to do 36 quintillion scans in total. In case you do a random scan; previously generated private keys will be regenerated (random problem). This extends the scan time by x10.
+It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the [target_puzzle] variable in the settings.txt file.).
 
-## Puzzle 66
+## Example Puzzle 66
 
-Puzzle 66 HEX ranges as follows. It starts with 2 or 3. Any private key in this range is **17 characters long.**
+If you want to **scan all private keys in  puzzle 66**; you need to do 36 quintillion scans in total. In case you do a random scan; previously generated private keys will be regenerated (random problem). This extends the scan time by x10. Puzzle 66 HEX ranges as follows. It starts with 2 or 3. Any private key in this range is **17 characters long.**
 
 `20000000000000000 to
 3ffffffffffffffff`
@@ -40,6 +40,14 @@ You can use start arguments to test some events.
 ## Settings
 
 You can update the application settings via the "settings.txt" file.
+
+### [**target_puzzle**] `*Required*`
+
+Select the puzzle you want to scan. Default: 66
+
+`66` or `67` or `68`
+
+---
 
 ### [**bitcrack_path**] `*Required*`
 
@@ -88,6 +96,8 @@ Scan custom range
 `{VALUE}` Scan for keys starting with {VALUE}.
 
 Enter the first 2 characters of the range you want to scan. Possible values: `20,21,22,23,24,25,26,27,28,29,2A,2B,2C,2D,2E,2F,30,31,32,33,34,35,36,37,38,39,3A,3B,3C,3D,3E,3F`
+
+Note: Valid between 2 and 5 characters.
 
 ---
 
