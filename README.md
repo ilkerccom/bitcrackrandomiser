@@ -9,7 +9,7 @@
 
 Go to https://btcpuzzle.info/
 
-For support join https://t.me/bitcrackrandomiser
+For support https://t.me/bitcrackrandomiser
 
 ## How it works?
 
