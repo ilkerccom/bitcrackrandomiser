@@ -24,16 +24,17 @@ namespace BitcrackRandomiser
             {
                 // CustomRange
                 string StartsWith = Helpers.GetSettings(4).Split('=')[1];
+                string TargetPuzzle = Helpers.GetSettings(10).Split('=')[1];
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
                 if (ScanType == "includeDefeatedRanges")
                 {
-                    Result = await client.GetAsync(string.Format("hex/getall?startswith={0}", StartsWith)).Result.Content.ReadAsStringAsync();
+                    Result = await client.GetAsync(string.Format("hex/getall?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
                     return Result;
                 }
 
-                Result = await client.GetAsync(string.Format("hex/get?startswith={0}", StartsWith)).Result.Content.ReadAsStringAsync();
+                Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
                 return Result;
             }
             catch { return ""; }
@@ -48,10 +49,11 @@ namespace BitcrackRandomiser
             try
             {
                 bool isSuccess = false;
+                string TargetPuzzle = Helpers.GetSettings(10).Split('=')[1];
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("HEX", HEX);
                 client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
-                string Result = await client.PostAsync("hex/flag", null).Result.Content.ReadAsStringAsync();
+                string Result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", TargetPuzzle), null).Result.Content.ReadAsStringAsync();
                 Boolean.TryParse(Result, out isSuccess);
                 return isSuccess;
             }
