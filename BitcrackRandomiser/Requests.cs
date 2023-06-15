@@ -16,43 +16,52 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Get random HEX value from API
         /// </summary>
-        /// <param name="ScanType">default or includeDefeatedRanges</param>
+        /// <param name="settings"></param>
         /// <returns></returns>
-        public static async Task<string> GetHex(string ScanType = "default")
+        public static async Task<string> GetHex(Settings settings)
         {
             try
             {
                 // CustomRange
-                string StartsWith = Helpers.GetSettings(4).Split('=')[1];
-                string TargetPuzzle = Helpers.GetSettings(10).Split('=')[1];
+                string StartsWith = settings.CustomRange;
+                string TargetPuzzle = settings.TargetPuzzle;
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
-                if (ScanType == "includeDefeatedRanges")
+                if (settings.ScanType == ScanType.includeDefeatedRanges)
                 {
                     Result = await client.GetAsync(string.Format("hex/getall?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
                     return Result;
                 }
 
                 Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
-                return Result;
+
+                if (Result.Length >= 7 && Result.Length <= 10)
+                {
+                    return Result;
+                }
+
+                return "";
             }
             catch { return ""; }
         }
 
         /// <summary>
-        /// HEX will be flagged
+        /// HEX will be flagged as scanned
         /// </summary>
+        /// <param name="HEX"></param>
+        /// <param name="WalletAddress"></param>
+        /// <param name="TargetPuzzle"></param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string HEX, string WalletAddress)
+        public static async Task<bool> SetHex(string HEX, string WalletAddress, string GPUName, string TargetPuzzle = "66")
         {
             try
             {
                 bool isSuccess = false;
-                string TargetPuzzle = Helpers.GetSettings(10).Split('=')[1];
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("HEX", HEX);
                 client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
+                client.DefaultRequestHeaders.Add("GPU", GPUName);
                 string Result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", TargetPuzzle), null).Result.Content.ReadAsStringAsync();
                 Boolean.TryParse(Result, out isSuccess);
                 return isSuccess;
