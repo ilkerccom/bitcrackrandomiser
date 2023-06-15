@@ -31,14 +31,6 @@ We now have about 33 million possible private keys to search. All possible priva
 
 I can scan each key in about 10 minutes on NVIDIA 3090. This actually means about 1,1 trillion private keys. When the private key is scanned, it is marked as scanned. So it won't show up anymore.
 
-## Start arguments
-
-You can use start arguments to test some events.
-
-`dotnet BitcrackRandomiser.dll --mode-test` Run application in test mode. Example private key will be found in a few seconds for testing.
-
-`dotnet BitcrackRandomiser.dll --mode-telegramtest` Check if the Telegram sharing function is working.
-
 ## Settings
 
 You can update the application settings via the "settings.txt" file.
@@ -144,6 +136,12 @@ Leave true if you are working on an untrusted computer
 `true` When private key is found, it only sends it via Telegram. Make sure your Telegram settings are correct. Otherwise, when the key is found, you will not be able to see it anywhere.
 
 `false` When private key is found, The private key will be saved in a new text file. If Telegram share is active, notification will be sent.
+
+---
+
+### [**test_mode**] 
+
+Start app in test mode if true.
 
 ---
 
