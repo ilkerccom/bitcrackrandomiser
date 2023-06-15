@@ -1,11 +1,35 @@
-bitcrack_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitCrack.exe
-bitcrack_arguments=-b 896 -t 256 -p 256
-wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
-scan_type=default
-custom_range=none
-telegram_share=false
-telegram_acesstoken=0
-telegram_chatid=0
-telegram_share_eachkey=true
-untrusted_computer=false
+// Select puzzle number [66,67,68]
 target_puzzle=66
+
+// Bitcrack folder path
+bitcrack_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitCrack.exe
+
+// Bitcrack arguments
+bitcrack_arguments=-b 896 -t 256 -p 256
+
+// Wallet address for worker
+wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+
+// Scan type [default,includeDefeatedRanges]
+scan_type=default
+
+// Custom range to scan Example; [2D,3BA,3F12,2881A or none]
+custom_range=none
+
+// Send notifications to Telegram
+telegram_share=false
+
+// Telegram access token
+telegram_acesstoken=0
+
+// Telegram chat id
+telegram_chatid=0
+
+// Send notification when eack key scanned
+telegram_share_eachkey=false
+
+// If true and the private key found; private key will be send to Telegram 
+untrusted_computer=false
+
+// Run app in test mode. Example private key will be found
+test_mode=false
