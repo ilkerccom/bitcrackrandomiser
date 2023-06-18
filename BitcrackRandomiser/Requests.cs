@@ -28,19 +28,23 @@ namespace BitcrackRandomiser
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
+                // Include defeated ranges to scan
                 if (settings.ScanType == ScanType.includeDefeatedRanges)
                 {
                     Result = await client.GetAsync(string.Format("hex/getall?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
-                    return Result;
+                    if (Result.Length >= 7 && Result.Length <= 10)
+                    {
+                        return Result;
+                    }
+                    return "";
                 }
 
+                // Default ranges
                 Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
-
                 if (Result.Length >= 7 && Result.Length <= 10)
                 {
                     return Result;
                 }
-
                 return "";
             }
             catch { return ""; }
