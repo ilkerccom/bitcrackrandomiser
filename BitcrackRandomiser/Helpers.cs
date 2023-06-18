@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using System.Diagnostics.SymbolStore;
+using System.Net;
 
 namespace BitcrackRandomiser
 {
@@ -44,7 +46,20 @@ namespace BitcrackRandomiser
             }
 
             // Write message
-            Console.WriteLine(string.Format("[{0}] [Info] " + message, DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss")));
+            Console.WriteLine(string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), message));
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="Color"></param>
+        public static void Write(string message, ConsoleColor Color = ConsoleColor.Blue)
+        {
+            // Write message
+            Console.ForegroundColor = Color;
+            Console.Write(string.Format("{0}",message));
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -120,21 +135,6 @@ namespace BitcrackRandomiser
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Filename"></param>
-        public static bool CheckWinner(string Filename, string HEX)
-        {
-            string Path = AppDomain.CurrentDomain.BaseDirectory + Filename + ".txt";
-            if (System.IO.File.Exists(Path))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
         /// <returns></returns>
@@ -156,7 +156,7 @@ namespace BitcrackRandomiser
                 }
                 else if (e.Data.Contains("Initializing"))
                 {
-                    string GpuModel = e.Data.Substring(e.Data.IndexOf("Initializing")).Replace("Initializing","").Trim();
+                    string GpuModel = e.Data.Substring(e.Data.IndexOf("Initializing")).Replace("Initializing", "").Trim();
                     return new Result { OutputType = OutputType.gpuModel, Content = GpuModel };
                 }
                 else
