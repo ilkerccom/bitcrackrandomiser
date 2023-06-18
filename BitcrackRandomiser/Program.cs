@@ -1,9 +1,5 @@
 using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Runtime;
-using System.Text;
-using Microsoft.VisualBasic;
+using System.Reflection.Emit;
 
 namespace BitcrackRandomiser
 {
@@ -33,8 +29,16 @@ namespace BitcrackRandomiser
             // Get settings
             var AppSettings = Helpers.GetSettings();
 
+            // Edit settings
+            Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
+            bool EditSettings = Task.Factory.StartNew(() => Console.ReadKey()).Wait(TimeSpan.FromSeconds(3));
+            if (EditSettings)
+            {
+                AppSettings = Settings.SetSettings();
+            }
+
             // Run
-            Helpers.WriteLine("Please wait while app is starting...");
+            Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
             RunBitcrack(AppSettings);
             Console.ReadLine();
         }
@@ -55,7 +59,7 @@ namespace BitcrackRandomiser
             // Send worker start message to telegram if active
             if (settings.TelegramShare && Attempts == 0)
             {
-                Helpers.ShareTelegram(string.Format("[{0}] started job for (Puzzle{1})", Helpers.StringParser(settings.WalletAddress), settings.TargetPuzzle), settings);
+                Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(settings.ParsedWalletAddress), settings.TargetPuzzle, settings.ParsedWorkerName), settings);
             }
 
             // Get random HEX value 
@@ -100,7 +104,7 @@ namespace BitcrackRandomiser
             Helpers.WriteLine(string.Format("Telegram share: {0}", settings.TelegramShare), MessageType.info);
             Helpers.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
-            Helpers.WriteLine(string.Format("Your wallet address: {0}", settings.WalletAddress));
+            Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
 
             // Get settings and arguments from setting.txt
             string BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}0000000000:{1}0000000000 {2}", StartHex, EndHex, TargetAddress);
@@ -124,21 +128,13 @@ namespace BitcrackRandomiser
             {
                 if (process.ExitCode == 0)
                 {
-                    int FlagTries = 1;
-
-                    // Check winner
-                    if (!Found)
-                    {
-                        Found = Helpers.CheckWinner(TargetAddress, StartHex);
-                    }
-
-                    // Run again if not found
+                    // Check found or not
                     if (Found)
                     {
                         // Always send notification when key found
                         if (settings.TelegramShare)
                         {
-                            Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker {0}. {1}", Helpers.StringParser(settings.WalletAddress), PrivateKey), settings);
+                            Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
                         }
 
                         // Not on untrusted computer
@@ -156,18 +152,20 @@ namespace BitcrackRandomiser
                     {
                         if (settings.TelegramShare && settings.TelegramShareEachKey)
                         {
-                            Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}]", StartHex, Helpers.StringParser(settings.WalletAddress)), settings);
+                            Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}].[{2}]", StartHex, Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
                         }
 
                         // Flag HEX as used
                         bool FlagUsed = Requests.SetHex(StartHex, settings.WalletAddress, GPUName, settings.TargetPuzzle).Result;
 
                         // Try flagging
-                        while (!FlagUsed && FlagTries <= 3)
+                        int FlagTries = 1;
+                        int MaxTries = 6;
+                        while (!FlagUsed && FlagTries <= MaxTries)
                         {
                             FlagUsed = Requests.SetHex(StartHex, settings.WalletAddress, GPUName, settings.TargetPuzzle).Result;
-                            Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/3", FlagTries));
-                            Thread.Sleep(5000);
+                            Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
+                            Thread.Sleep(10000);
                             FlagTries++;
                         }
 
@@ -195,7 +193,7 @@ namespace BitcrackRandomiser
                     // Worker goes to offline
                     if (settings.TelegramShare)
                     {
-                        Helpers.ShareTelegram(string.Format("[{0}] goes offline.", Helpers.StringParser(settings.WalletAddress)), settings);
+                        Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
                     }
                 }
 
