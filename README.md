@@ -3,7 +3,7 @@
 
 Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works with Bitcrack.
 
-Supports ++Windows++, ++Linux++ and ++MacOS++.
+Supports <ins>Windows</ins>, <ins>Linux</ins> and <ins>MacOS</ins>.
 
 ![alt text](https://i.ibb.co/vYHYsMq/bitcrackrandomiser.png)
 
@@ -15,7 +15,7 @@ For support > https://t.me/bitcrackrandomiser
 
 ## How it works?
 
-It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the **[++target_puzzle++]** variable in the ++settings.txt++ file.).
+It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>settings.txt</ins> file.).
 
 ## Example Puzzle 66 Scenario
 
@@ -150,9 +150,9 @@ Required if "telegram_share" = "true"
 
 Leave true if you are working on an untrusted computer
 
-`true` When private key is found, ++**it only sends it via Telegram**++. Make sure your Telegram settings are correct. ++Otherwise, when the key is found, you will not be able to see it anywhere.++
+`true` When private key is found, <ins>**it only sends it via Telegram**</ins>. Make sure your Telegram settings are correct. <ins>Otherwise, when the key is found, you will not be able to see it anywhere.</ins>
 
-`false` When private key is found, The private key will be ++saved in a new text file++ and it ++appears on console screen++. If Telegram share is active, notification will be sent.
+`false` When private key is found, The private key will be <ins>saved in a new text file</ins> and it <ins>appears on console screen</ins>. If Telegram share is active, notification will be sent.
 
 
 
@@ -197,9 +197,9 @@ Run the application.
 
 # Information
 
-1. This is ++not a shared pool++.
-2. If the private key is found, ++only you can see it++. No one else can see!
-3. If the private key is found, ++it is not shared++.
+1. This is <ins>not a shared pool</ins>.
+2. If the private key is found, <ins>only you can see it</ins>. No one else can see!
+3. If the private key is found, <ins>it is not shared</ins>.
 4. Once a private key is scanned, it is not scanned again.
 5. You can see the percentage on the application.
 6. If you exit the application before the scan is not complete, the scanned HEX value will not be marked as scanned.
@@ -250,7 +250,7 @@ wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 
 `dotnet run` Run the bitcrackrandomiser
 
-You can press "++CTRL+B++" and then "++D++" to leave terminal without closing app.
+You can press "<ins>CTRL+B</ins>" and then "<ins>D</ins>" to leave terminal without closing app.
 
 # Donate 
 
