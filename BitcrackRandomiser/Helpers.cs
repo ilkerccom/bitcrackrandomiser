@@ -146,13 +146,14 @@ namespace BitcrackRandomiser
                 {
                     return new Result { OutputType = OutputType.finished };
                 }
-                else if (e.Data.Contains("Private key"))
+                else if (e.Data.Contains("Address:"))
                 {
-                    return new Result { OutputType = OutputType.privateKeyFound, Content = e.Data.Trim() };
+                    return new Result { OutputType = OutputType.address, Content = e.Data.Trim() };
                 }
-                else if (e.Data.Contains("Found key"))
+                else if (e.Data.Contains("Private key:"))
                 {
-                    return new Result { OutputType = OutputType.privateKeyFound };
+                    string Key = e.Data.Replace(" ", "").ToLower().Trim().Replace("privatekey:","").Trim().ToUpper();
+                    return new Result { OutputType = OutputType.privateKeyFound, Content = Key };
                 }
                 else if (e.Data.Contains("Initializing"))
                 {
@@ -164,7 +165,15 @@ namespace BitcrackRandomiser
                     try
                     {
                         Console.SetCursorPosition(0, 9);
-                        Console.Write(e.Data + new string(' ', Console.WindowWidth - e.Data.Length));
+                        if (e.Data.Length > 0)
+                        {
+                            Console.Write(e.Data + new string(' ', Console.WindowWidth - e.Data.Length));
+                        }
+                        else
+                        {
+                            string LoadingMessage = string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), "Running ...");
+                            Console.Write(LoadingMessage + new string(' ', Console.WindowWidth - LoadingMessage.Length));
+                        }
                     }
                     catch { }
                     return new Result { OutputType = OutputType.running };
