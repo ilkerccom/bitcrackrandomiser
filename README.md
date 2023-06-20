@@ -198,11 +198,11 @@ Run the application.
 
 # If found?
 
-`untrusted_computer=true` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
+`untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
 
 ---
 
-`untrusted_computer=false` If the private key is found, it will send your Telegram channel/group only.
+`untrusted_computer=true` If the private key is found, it will send your Telegram channel/group only.
 
 
 # Information
