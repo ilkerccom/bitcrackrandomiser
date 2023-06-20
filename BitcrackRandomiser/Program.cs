@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
@@ -5,17 +6,14 @@ namespace BitcrackRandomiser
 {
     class Program
     {
-        // Each scan
-        public static int Attempts = 0;
-
-        // Found or not
-        public static bool Found = false;
-
         // Found private key
-        public static string PrivateKey = string.Empty;
+        public static string PrivateKey = "";
 
-        // Is scan finished?
-        public static bool IsFinished = false;
+        // Is proof of work key
+        public static bool IsProofKey = false;
+
+        // Proof of work key
+        public static string ProofKey = "";
 
         // GPU Model name
         public static string GPUName = "-";
@@ -37,6 +35,12 @@ namespace BitcrackRandomiser
                 AppSettings = Settings.SetSettings();
             }
 
+            // Send worker start message to telegram if active
+            if (AppSettings.TelegramShare)
+            {
+                Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(AppSettings.ParsedWalletAddress), AppSettings.TargetPuzzle, AppSettings.ParsedWorkerName), AppSettings);
+            }
+
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
             RunBitcrack(AppSettings);
@@ -56,27 +60,25 @@ namespace BitcrackRandomiser
                 Thread.Sleep(30000);
             }
 
-            // Send worker start message to telegram if active
-            if (settings.TelegramShare && Attempts == 0)
-            {
-                Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(settings.ParsedWalletAddress), settings.TargetPuzzle, settings.ParsedWorkerName), settings);
-            }
-
             // Get random HEX value 
-            string RandomHex = Requests.GetHex(settings).Result;
+            string GetHex = Requests.GetHex(settings).Result;
             string TargetAddress =
                 settings.TargetPuzzle == "66" ? "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so" :
                 settings.TargetPuzzle == "67" ? "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9" :
                 settings.TargetPuzzle == "68" ? "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ" : "Unknown";
 
             // Cannot get HEX value
-            if (RandomHex == "")
+            if (GetHex == "")
             {
                 Helpers.WriteLine("Database connection error. Please wait...");
                 Thread.Sleep(5000);
                 RunBitcrack(settings);
                 return Task.FromResult(0);
             }
+
+            // Parse hex result
+            string RandomHex = GetHex.Split(':')[0];
+            string ProofValue = GetHex.Split(':')[1];
 
             // Add +1 to random HEX value
             int StartNumber = int.Parse(RandomHex, System.Globalization.NumberStyles.HexNumber);
@@ -89,13 +91,15 @@ namespace BitcrackRandomiser
             // Testing
             if (settings.TestMode)
             {
-                TargetAddress = "1HFUvT61q2bfT5tHvEfqLeicppkr5V1QAR";
-                StartHex = "2FBE3AA";
-                EndHex = "2FBE3AB";
+                // ~1min on 3090
+                TargetAddress = "1Cnrx6rxiGvVNw1UroYM5hRjVvqPnWC7fR";
+                StartHex = "2012E83";
+                EndHex = "2012E84";
+                ProofValue = "1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai";
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("Bitcrack starting... Puzzle: [{0}]", settings.TargetPuzzle), MessageType.normal, true);
+            Helpers.WriteLine(string.Format("Bitcrack starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle), MessageType.normal, true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
@@ -106,8 +110,8 @@ namespace BitcrackRandomiser
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
             Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
 
-            // Get settings and arguments from setting.txt
-            string BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}0000000000:{1}0000000000 {2}", StartHex, EndHex, TargetAddress);
+            // Bitcrack arguments
+            string BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}0000000000:{1}0000000000 {2} {3}", StartHex, EndHex, TargetAddress, ProofValue);
 
             // Tcs
             var taskCompletionSource = new TaskCompletionSource<int>();
@@ -120,88 +124,22 @@ namespace BitcrackRandomiser
             };
 
             // Output from BitCrack
-            process.ErrorDataReceived += new DataReceivedEventHandler(OutputReceivedHandler);
-            process.OutputDataReceived += new DataReceivedEventHandler(OutputReceivedHandler);
+            process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
+            process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
 
             // Bitcrack exited
             process.Exited += (sender, args) =>
             {
-                if (process.ExitCode == 0)
+                if (process.ExitCode != 0)
                 {
-                    // Check found or not
-                    if (Found)
-                    {
-                        // Always send notification when key found
-                        if (settings.TelegramShare)
-                        {
-                            Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
-                        }
-
-                        // Not on untrusted computer
-                        if (!settings.UntrustedComputer)
-                        {
-                            Helpers.WriteLine(PrivateKey, MessageType.success);
-                            Helpers.SaveFile(PrivateKey, TargetAddress);
-                        }
-
-                        Helpers.WriteLine("Congratulations. Key found. Please check your folder.", MessageType.success);
-                        Helpers.WriteLine("You can donate me; 1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw", MessageType.success);
-                        Console.ReadLine();
-                    }
-                    else if (IsFinished)
-                    {
-                        if (settings.TelegramShare && settings.TelegramShareEachKey)
-                        {
-                            Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}].[{2}]", StartHex, Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
-                        }
-
-                        // Flag HEX as used
-                        bool FlagUsed = Requests.SetHex(StartHex, settings.WalletAddress, GPUName, settings.TargetPuzzle).Result;
-
-                        // Try flagging
-                        int FlagTries = 1;
-                        int MaxTries = 6;
-                        while (!FlagUsed && FlagTries <= MaxTries)
-                        {
-                            FlagUsed = Requests.SetHex(StartHex, settings.WalletAddress, GPUName, settings.TargetPuzzle).Result;
-                            Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
-                            Thread.Sleep(10000);
-                            FlagTries++;
-                        }
-
-                        // Info
-                        if (FlagUsed)
-                        {
-                            Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
-                        }
-                        else
-                        {
-                            Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
-                        }
-
-                        // Wait and restart
-                        IsFinished = false;
-                        Thread.Sleep(10000);
-                        RunBitcrack(settings);
-                    }
-                }
-                else
-                {
-                    // User shuts down cuBitcrack.exe
-                    Helpers.WriteLine("Bitcrack app exited with unknown code...");
-
-                    // Worker goes to offline
                     if (settings.TelegramShare)
                     {
                         Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
                     }
                 }
-
                 taskCompletionSource.SetResult(process.ExitCode);
                 process.Dispose();
             };
-
-            Attempts++;
 
             // Start bitcrack app
             process.Start();
@@ -211,21 +149,110 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
-        /// Check bitcrack app output
+        /// Runs on scan completed or private key found
+        /// </summary>
+        /// <param name="TargetAddress">Target address</param>
+        /// <param name="HEX">HEX range</param>
+        /// <param name="settings">Current settings</param>
+        /// <param name="KeyFound">Key found or not</param>
+        private static void JobFinished(string TargetAddress, string HEX, Settings settings, bool KeyFound = false)
+        {
+            if (KeyFound)
+            {
+                // Always send notification when key found
+                if (settings.TelegramShare)
+                {
+                    Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
+                }
+
+                // Not on untrusted computer
+                if (!settings.UntrustedComputer)
+                {
+                    Helpers.WriteLine(PrivateKey, MessageType.success);
+                    Helpers.SaveFile(PrivateKey, TargetAddress);
+                }
+
+                Helpers.WriteLine("Congratulations. Key found. Please check your folder.", MessageType.success);
+                Helpers.WriteLine("You can donate me; 1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw", MessageType.success);
+                Console.ReadLine();
+            }
+            else
+            {
+                // Send notification each key scanned
+                if (settings.TelegramShare && settings.TelegramShareEachKey)
+                {
+                    Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}].[{2}]", HEX, Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
+                }
+
+                // Flag HEX as used
+                bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
+
+                // Try flagging
+                int FlagTries = 1;
+                int MaxTries = 6;
+                while (!FlagUsed && FlagTries <= MaxTries)
+                {
+                    FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
+                    Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
+                    Thread.Sleep(10000);
+                    FlagTries++;
+                }
+
+                // Info
+                if (FlagUsed)
+                {
+                    Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
+                }
+                else
+                {
+                    Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
+                }
+
+                // Wait and restart
+                ProofKey = "";
+                IsProofKey = false;
+                Thread.Sleep(10000);
+                RunBitcrack(settings);
+            }
+        }
+
+        /// <summary>
+        /// Runs when output data received by external app
         /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
-        private static void OutputReceivedHandler(object o, DataReceivedEventArgs e)
+        /// <param name="TargetAddress">Target address</param>
+        /// <param name="ProofValue">Proof value</param>
+        /// <param name="HEX">Selected HEX range</param>
+        /// <param name="settings">Current settings</param>
+        /// <param name="process">Active proccess</param>
+        private static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string TargetAddress, string ProofValue, string HEX, Settings settings, Process process)
         {
             var Status = Helpers.CheckJobStatus(o, e);
             if (Status.OutputType == OutputType.finished)
             {
-                IsFinished = true;
+                // Job finished normally
+                JobFinished(TargetAddress, HEX, settings);
+            }
+            else if (Status.OutputType == OutputType.address)
+            {
+                // Check founded address is proof key
+                IsProofKey = Status.Content.Contains(ProofValue);
             }
             else if (Status.OutputType == OutputType.privateKeyFound)
             {
-                Found = true;
-                PrivateKey = Status.Content;
+                if (IsProofKey)
+                {
+                    // Check if proof key
+                    ProofKey = Status.Content;
+                }
+                else
+                {
+                    // If target address found
+                    process.Kill();
+                    PrivateKey = Status.Content;
+                    JobFinished(TargetAddress, HEX, settings, KeyFound: true);
+                }
             }
             else if (Status.OutputType == OutputType.gpuModel)
             {
