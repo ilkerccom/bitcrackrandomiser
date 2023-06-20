@@ -133,6 +133,71 @@ namespace BitcrackRandomiser
         /// </summary>
         public bool TestMode { get; set; } = false;
 
+        public static Settings GetSettings()
+        {
+            Settings settings = new Settings();
+            string Path = AppDomain.CurrentDomain.BaseDirectory + "settings.txt";
+            foreach (var line in System.IO.File.ReadLines(Path))
+            {
+                if (line.Contains('='))
+                {
+                    string key = line.Split('=')[0];
+                    string value = line.Split("=")[1];
+
+                    switch (key)
+                    {
+                        case "target_puzzle":
+                            settings.TargetPuzzle = value;
+                            break;
+                        case "bitcrack_path":
+                            settings.BitcrackPath = value;
+                            break;
+                        case "bitcrack_arguments":
+                            settings.BitcrackArgs = value;
+                            break;
+                        case "wallet_address":
+                            settings.WalletAddress = value;
+                            break;
+                        case "scan_type":
+                            ScanType _e = ScanType.@default;
+                            _ = Enum.TryParse(value, true, out _e);
+                            settings.ScanType = _e;
+                            break;
+                        case "custom_range":
+                            settings.CustomRange = value;
+                            break;
+                        case "telegram_share":
+                            bool _v;
+                            _ = bool.TryParse(value, out _v);
+                            settings.TelegramShare = _v;
+                            break;
+                        case "telegram_acesstoken":
+                            settings.TelegramAccessToken = value;
+                            break;
+                        case "telegram_chatid":
+                            settings.TelegramChatId = value;
+                            break;
+                        case "telegram_share_eachkey":
+                            bool _s;
+                            _ = bool.TryParse(value, out _s);
+                            settings.TelegramShareEachKey = _s;
+                            break;
+                        case "untrusted_computer":
+                            bool _u;
+                            _ = bool.TryParse(value, out _u);
+                            settings.UntrustedComputer = _u;
+                            break;
+                        case "test_mode":
+                            bool _t;
+                            _ = bool.TryParse(value, out _t);
+                            settings.TestMode = _t;
+                            break;
+                    }
+                }
+            }
+            return settings;
+        }
+
         /// <summary>
         /// Create settings
         /// </summary>

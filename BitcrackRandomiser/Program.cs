@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Emit;
+using Telegram.Bot.Types;
 
 namespace BitcrackRandomiser
 {
@@ -25,7 +26,7 @@ namespace BitcrackRandomiser
         public static void Main(string[] args)
         {
             // Get settings
-            var AppSettings = Helpers.GetSettings();
+            var AppSettings = Settings.GetSettings();
 
             // Edit settings
             Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
@@ -96,6 +97,20 @@ namespace BitcrackRandomiser
                 StartHex = "2012E83";
                 EndHex = "2012E84";
                 ProofValue = "1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai";
+
+                // Test with custom settings
+                string CustomTestFile = AppDomain.CurrentDomain.BaseDirectory + "customtest.txt";
+                if (System.IO.File.Exists(CustomTestFile))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(CustomTestFile);
+                    if(lines.Length == 4)
+                    {
+                        TargetAddress = lines[0];
+                        StartHex = lines[1];
+                        EndHex = lines[2];
+                        ProofValue = lines[3];
+                    }
+                }
             }
 
             // Write info
