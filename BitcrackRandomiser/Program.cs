@@ -237,7 +237,13 @@ namespace BitcrackRandomiser
             else if (Status.OutputType == OutputType.address)
             {
                 // Check founded address is proof key
-                IsProofKey = Status.Content.Contains(ProofValue);
+                IsProofKey = Status.Content.Contains(ProofValue); 
+                if (!IsProofKey)
+                {
+                    // Check again for known Bitcrack bug - Remove first 10 characters
+                    string ParsedProofValue = ProofValue[10..];
+                    IsProofKey = Status.Content.Contains(ParsedProofValue);
+                }
             }
             else if (Status.OutputType == OutputType.privateKeyFound)
             {
