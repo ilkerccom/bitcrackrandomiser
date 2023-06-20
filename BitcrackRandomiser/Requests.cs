@@ -11,11 +11,7 @@ namespace BitcrackRandomiser
     internal class Requests
     {
         // API URL endpoint
-#if (DEBUG)
-        public static string ApiURL = "https://localhost:7141/";
-#elif (RELEASE)
         public static string ApiURL = "https://api.btcpuzzle.info/";
-#endif
 
         /// <summary>
         /// Get random HEX value from API
