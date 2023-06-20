@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Content. May be private key or another
         /// </summary>
-        public string Content { get; set; }
+        public string Content { get; set; } = "";
     }
 
     /// <summary>
@@ -26,6 +26,7 @@ namespace BitcrackRandomiser
     {
         running,
         finished,
+        address,
         privateKeyFound,
         gpuModel,
         unknown
