@@ -17,6 +17,16 @@ For support > https://t.me/bitcrackrandomiser
 
 It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>settings.txt</ins> file.).
 
+## Proof of Work
+
+The pool always returns you a random secondary address on every scan job. The private key of secondary  address is scanned simultaneously. When the private key of the secondary address is found, it saves it as "**ProofKey**". This is to make sure your program is working correctly. I also want to make sure you have a really healthy scan.
+
+Example; pool returns `3E2ECB0` HEX value to scan. The pool randomly generates another private key within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
+
+When retrieving a random HEX value from the pool, the wallet address of the secondary private key is additionally returned. Marking is done with the secondary private key found.
+
+"**ProofKey**" is used only for data marking.
+
 ## Example Puzzle 66 Scenario
 
 If you want to **scan all private keys in  puzzle 66**; you need to do 36 quintillion scans in total. In case you do a random scan; previously generated private keys will be regenerated (random problem). This extends the scan time by x10. Puzzle 66 HEX ranges as follows. It starts with 2 or 3. Any private key in this range is **17 characters long.**
@@ -188,11 +198,11 @@ Run the application.
 
 # If found?
 
-`untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
+`untrusted_computer=true` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
 
 ---
 
-`untrusted_computer=true` If the private key is found, it will send your Telegram channel/group only.
+`untrusted_computer=false` If the private key is found, it will send your Telegram channel/group only.
 
 
 # Information
