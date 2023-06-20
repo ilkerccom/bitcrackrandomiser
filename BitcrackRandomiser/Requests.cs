@@ -11,7 +11,11 @@ namespace BitcrackRandomiser
     internal class Requests
     {
         // API URL endpoint
+#if (DEBUG)
+        public static string ApiURL = "https://localhost:7141/";
+#elif (RELEASE)
         public static string ApiURL = "https://api.btcpuzzle.info/";
+#endif
 
         /// <summary>
         /// Get random HEX value from API
@@ -28,20 +32,12 @@ namespace BitcrackRandomiser
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
-                // Include defeated ranges to scan
-                if (settings.ScanType == ScanType.includeDefeatedRanges)
-                {
-                    Result = await client.GetAsync(string.Format("hex/getall?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
-                    if (Result.Length >= 7 && Result.Length <= 10)
-                    {
-                        return Result;
-                    }
-                    return "";
-                }
+                // Include defeated ranges
+                bool IncludeDefeatedRanges = settings.ScanType == ScanType.includeDefeatedRanges;
 
-                // Default ranges
-                Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}", StartsWith, TargetPuzzle)).Result.Content.ReadAsStringAsync();
-                if (Result.Length >= 7 && Result.Length <= 10)
+                // Request
+                Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}&includedefeatedranges={2}", StartsWith, TargetPuzzle, IncludeDefeatedRanges)).Result.Content.ReadAsStringAsync();
+                if (Result.Length >= 7 && Result.Length <= 46)
                 {
                     return Result;
                 }
@@ -53,11 +49,13 @@ namespace BitcrackRandomiser
         /// <summary>
         /// HEX will be flagged as scanned
         /// </summary>
-        /// <param name="HEX"></param>
-        /// <param name="WalletAddress"></param>
-        /// <param name="TargetPuzzle"></param>
+        /// <param name="HEX">Scanned HEX</param>
+        /// <param name="WalletAddress">Worker wallet address</param>
+        /// <param name="ProofKey">Proof key for marking</param>
+        /// <param name="GPUName">Current GPU name</param>
+        /// <param name="TargetPuzzle">Target Puzzle</param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string HEX, string WalletAddress, string GPUName, string TargetPuzzle = "66")
+        public static async Task<bool> SetHex(string HEX, string WalletAddress, string ProofKey, string GPUName, string TargetPuzzle = "66")
         {
             try
             {
@@ -65,6 +63,7 @@ namespace BitcrackRandomiser
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("HEX", HEX);
                 client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
+                client.DefaultRequestHeaders.Add("ProofKey", ProofKey);
                 client.DefaultRequestHeaders.Add("GPU", GPUName);
                 string Result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", TargetPuzzle), null).Result.Content.ReadAsStringAsync();
                 Boolean.TryParse(Result, out isSuccess);
