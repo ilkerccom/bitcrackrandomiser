@@ -75,6 +75,9 @@ namespace BitcrackRandomiser
             {
                 if (e.Data.Contains("Reached"))
                 {
+                    Console.SetCursorPosition(0, 9);
+                    string FinishedMessage = string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), "Scan completed.");
+                    Console.Write(FinishedMessage + new string(' ', Console.WindowWidth - FinishedMessage.Length));
                     return new Result { OutputType = OutputType.finished };
                 }
                 else if (e.Data.Contains("Address:"))

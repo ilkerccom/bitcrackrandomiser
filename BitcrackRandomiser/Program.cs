@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Reflection.Emit;
 using Telegram.Bot.Types;
 
@@ -64,6 +65,7 @@ namespace BitcrackRandomiser
             // Get random HEX value 
             string GetHex = Requests.GetHex(settings).Result;
             string TargetAddress =
+                settings.TargetPuzzle == "38" ? "1HBtApAFA9B2YZw3G2YKSMCtb3dVnjuNe2" :
                 settings.TargetPuzzle == "66" ? "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so" :
                 settings.TargetPuzzle == "67" ? "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9" :
                 settings.TargetPuzzle == "68" ? "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ" : "Unknown";
@@ -74,6 +76,13 @@ namespace BitcrackRandomiser
                 Helpers.WriteLine("Database connection error. Please wait...");
                 Thread.Sleep(5000);
                 RunBitcrack(settings);
+                return Task.FromResult(0);
+            }
+
+            // No ranges left to scan
+            if(GetHex == "REACHED_OF_KEYSPACE")
+            {
+                Helpers.WriteLine("Reached of keyspace. No ranges left to scan. Try again later.");
                 return Task.FromResult(0);
             }
 
@@ -114,10 +123,11 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("Bitcrack starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle), MessageType.normal, true);
+            Helpers.WriteLine(string.Format("[v{1}] Bitcrack starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version), MessageType.normal, true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
+            else if (settings.TargetPuzzle == "38") Helpers.WriteLine("Test pool 38 is active.", MessageType.error);
             else Helpers.WriteLine("Test mode is passive.", MessageType.info);
             Helpers.WriteLine(string.Format("Scan type: {0}", settings.ScanType.ToString()), MessageType.info);
             Helpers.WriteLine(string.Format("Telegram share: {0}", settings.TelegramShare), MessageType.info);
@@ -127,6 +137,11 @@ namespace BitcrackRandomiser
 
             // Bitcrack arguments
             string BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}0000000000:{1}0000000000 {2} {3}", StartHex, EndHex, TargetAddress, ProofValue);
+            if(settings.TargetPuzzle == "38")
+            {
+                // Test pool 30
+                BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}00000000:{1}00000000 {2} {3}", StartHex, EndHex, TargetAddress, ProofValue);
+            }
 
             // Tcs
             var taskCompletionSource = new TaskCompletionSource<int>();

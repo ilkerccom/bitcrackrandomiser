@@ -55,6 +55,8 @@ Select the puzzle you want to scan. Default: 66
 
 `66` or `67` or `68`
 
+You can use `38` for test pool. There are 32 possible ranges in the test pool. You can find the test pool data on the website.Test pool data is reset every 30 minutes.
+
 ---
 
 ### [**bitcrack_path**]
@@ -121,6 +123,8 @@ It sends a notification to Telegram when the private key is found. If you set "*
 
 If your Telegram settings are correct, you will receive a notification that the worker has started working.
 
+Suggestion: If you are on an untrusted computer, make the settings via the console and proceed without saving.
+
 ---
 
 ### [**telegram_acesstoken**]
@@ -170,7 +174,23 @@ Leave true if you are working on an untrusted computer
 
 ### [**test_mode**] 
 
-Start app in test mode if true.
+Start app in test mode if `true`. You can test with custom parameters by creating a "**customtest.txt**" file in the app root folder.
+
+```C
+1Cnrx6rxiGvVNw1UroYM5hRjVvqPnWC7fR // [TargetAddress]
+2012E83 // [HexStart]
+2012E84 // [HexEnd]
+1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai // [ProofValue]
+```
+
+<u>[TargetAddress]</u> The private key you want to find
+
+<u>[HexStart]</u> HEX range to start scanning
+
+<u>[HexEnd]</u> HEX range to stop scanning
+
+<u>[ProofValue]</u> Proof of work value. Example: If [HexStart] = `2012E84`, create a BTC address in range `2012E840000000000` and `2012E84FFFFFFFFFF`.
+
 
 ---
 
