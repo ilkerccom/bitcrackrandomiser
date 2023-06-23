@@ -5,6 +5,8 @@ Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works
 
 Supports <ins>Windows</ins>, <ins>Linux</ins> and <ins>MacOS</ins>.
 
+Supports <ins>NVIDIA</ins> and <ins>AMD</ins> devices. (**AMD Bitcrack v0.30 only**)
+
 ![alt text](https://i.ibb.co/vYHYsMq/bitcrackrandomiser.png)
 
 ## Pool & Support
@@ -61,11 +63,13 @@ You can use `38` for test pool. There are 32 possible ranges in the test pool. Y
 
 ### [**bitcrack_path**]
 
-Add the folder where the Bitcrack application is located in the first line. **Note: Only for NVIDIA CUDA devices. Do not use clBitCrack.exe**
+Add the folder where the Bitcrack application is located in the first line.
 
-On Windows: `C:\Users\{YOURUSERNAME}\App\bitcrack\cuBitCrack.exe`
+On Windows: `C:\{BITCRACK_PATH}\cuBitCrack.exe`
 
 On Linux: `/root/{BITCRACK_PATH}/bin/./cuBitCrack`
+
+**NOTE: You can use OpenCL "clBitCrack.exe" for <ins>AMD devices on Bitcrack v0.30 only</ins>**
 
 ---
 
@@ -183,13 +187,13 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai // [ProofValue]
 ```
 
-<u>[TargetAddress]</u> The private key you want to find
+<ins>[TargetAddress]</ins> The private key you want to find
 
-<u>[HexStart]</u> HEX range to start scanning
+<ins>[HexStart]</ins> HEX range to start scanning
 
-<u>[HexEnd]</u> HEX range to stop scanning
+<ins>[HexEnd]</ins> HEX range to stop scanning
 
-<u>[ProofValue]</u> Proof of work value. Example: If [HexStart] = `2012E84`, create a BTC address in range `2012E840000000000` and `2012E84FFFFFFFFFF`.
+<ins>[ProofValue]</ins> Proof of work value. Example: If [HexStart] = `2012E84`, create a BTC address in range `2012E840000000000` and `2012E84FFFFFFFFFF`.
 
 
 ---
@@ -243,32 +247,22 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 (2) Connect instance via SSH client (Like PuTTY). Follow commands:
 
-`sudo apt install nano`
-
-`wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh`
-
-`sudo chmod +x ./dotnet-install.sh`
-
-`./dotnet-install.sh --version latest`
-
-`export DOTNET_ROOT=$HOME/.dotnet`
-
-`export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools`
-
-`export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1`
-
-`git clone https://github.com/brichard19/BitCrack`
-
-`cd BitCrack`
-
-`make BUILD_CUDA=1 COMPUTE_CAP=86`
-
-`git clone https://github.com/ilkerccom/bitcrackrandomiser`
-
-`cd bitcrackrandomiser/BitcrackRandomiser`
+```bash
+$ sudo apt install nano
+$ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+$ sudo chmod +x ./dotnet-install.sh
+$ ./dotnet-install.sh --version latest
+$ export DOTNET_ROOT=$HOME/.dotnet
+$ export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
+$ export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+$ git clone https://github.com/brichard19/BitCrack
+$ cd BitCrack
+$ make BUILD_CUDA=1 COMPUTE_CAP=86
+$ git clone https://github.com/ilkerccom/bitcrackrandomiser
+$ cd bitcrackrandomiser/BitcrackRandomiser
+```
 
 Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit *settings.txt* file. Example below:
-
 
 ```
 target_puzzle=66
@@ -278,7 +272,7 @@ wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 ... other settings
 ```
 
-`dotnet run` Run the bitcrackrandomiser
+Finally `dotnet run`
 
 You can press "<ins>CTRL+B</ins>" and then "<ins>D</ins>" to leave terminal without closing app.
 
