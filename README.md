@@ -61,7 +61,13 @@ You can use `38` for test pool. There are 32 possible ranges in the test pool. Y
 
 ---
 
-### [**bitcrack_path**]
+### [**app_type**]
+
+Currently only `bitcrack` is available.
+
+---
+
+### [**app_path**]
 
 Add the folder where the Bitcrack application is located in the first line.
 
@@ -73,7 +79,7 @@ On Linux: `/root/{BITCRACK_PATH}/bin/./cuBitCrack`
 
 ---
 
-### [**bitcrack_arguments**] 
+### [**app_arguments**] 
 
 You can write the arguments for Bitcrack. For default settings leave blank.
 
@@ -113,6 +119,8 @@ Scan custom range
 
 `2D` or `3BA` or `3FF1`  Enter the first [2-5] characters of the range you want to scan.
 
+You can now specify ranges like `3400000:38FFFFF`. Incoming keys will be selected from this range. You must write the range in full length. Make sure you enter the correct range.
+
 ---
 
 ### [**telegram_share**]
@@ -137,11 +145,6 @@ Enter Telegram BOT access token
 
 Example: 6331494066:ABEfv4cF3dbc3mA8qGLDlEp2uxzgYESIa_w
 
-```
-Required if "telegram_share" = "true"
-```
-
-
 ---
 
 ### [**telegram_chatid**]
@@ -149,10 +152,6 @@ Required if "telegram_share" = "true"
 Enter Telegram chat id
 
 Example: -9334716240
-
-```
-Required if "telegram_share" = "true"
-```
 
 ---
 
@@ -266,13 +265,18 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 
 ```
 target_puzzle=66
+app_type=bitcrack
 bitcrack_path=/root/BitCrack/bin/./cuBitCrack
 bitcrack_arguments=-b 896 -t 256 -p 256
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 ... other settings
 ```
 
-Finally `dotnet run`
+Finally, run the app.
+
+```
+$ dotnet run
+```
 
 You can press "<ins>CTRL+B</ins>" and then "<ins>D</ins>" to leave terminal without closing app.
 

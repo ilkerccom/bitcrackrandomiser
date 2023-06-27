@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace BitcrackRandomiser
 {
     internal class Settings
@@ -14,32 +8,37 @@ namespace BitcrackRandomiser
         public string TargetPuzzle { get; set; } = "66";
 
         /// <summary>
+        /// Which app will be used.
+        /// </summary>
+        public AppType AppType { get; set; } = AppType.bitcrack;
+
+        /// <summary>
         /// Bitcrack app folder path
         /// </summary>
-        public string BitcrackPath { get; set; } = string.Empty;
+        public string AppPath { get; set; } = string.Empty;
 
         /// <summary>
         /// Bitcrack args
         /// Example: -b 896 -t 256 -p 256
         /// </summary>
-        string _BitcrackArgs;
-        public string BitcrackArgs
+        string _AppArgs;
+        public string AppArgs
         {
             get
             {
-                if (_BitcrackArgs.Contains("-o"))
+                if (_AppArgs.Contains("-o"))
                 {
-                    return _BitcrackArgs.Replace("-o", "x");
+                    return _AppArgs.Replace("-o", "x");
                 }
-                else if (_BitcrackArgs.Contains("--keyspace"))
+                else if (_AppArgs.Contains("--keyspace"))
                 {
-                    return _BitcrackArgs.Replace("--keyspace", "x");
+                    return _AppArgs.Replace("--keyspace", "x");
                 }
-                return _BitcrackArgs;
+                return _AppArgs;
             }
             set
             {
-                _BitcrackArgs = value;
+                _AppArgs = value;
             }
         }
 
@@ -149,11 +148,16 @@ namespace BitcrackRandomiser
                         case "target_puzzle":
                             settings.TargetPuzzle = value;
                             break;
-                        case "bitcrack_path":
-                            settings.BitcrackPath = value;
+                        case "app_type":
+                            AppType _at = AppType.bitcrack;
+                            _ = Enum.TryParse(value, true, out _at);
+                            settings.AppType = _at;
                             break;
-                        case "bitcrack_arguments":
-                            settings.BitcrackArgs = value;
+                        case "app_path":
+                            settings.AppPath = value;
+                            break;
+                        case "app_arguments":
+                            settings.AppArgs = value;
                             break;
                         case "wallet_address":
                             settings.WalletAddress = value;
@@ -210,11 +214,11 @@ namespace BitcrackRandomiser
             // Select puzzle
             string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "66", "67", "68" });
 
-            // Select bitcrack path
-            string _Folder = DetermineSettings("Enter Bitcrack app folder path", null, 6);
+            // Select app path
+            string _Folder = DetermineSettings("Enter app folder path", null, 6);
 
-            // Bitcrack arguments
-            var _Arguments = DetermineSettings("Enter Bitcrack app arguments (can be empty)");
+            // App arguments
+            var _Arguments = DetermineSettings("Enter app arguments (can be empty)");
 
             // Wallet address
             string _WalletAddress = DetermineSettings("Your BTC wallet address", null, 20);
@@ -255,8 +259,8 @@ namespace BitcrackRandomiser
 
             // Settings
             ConsoleSettings.TargetPuzzle = _Puzzle;
-            ConsoleSettings.BitcrackPath = _Folder;
-            ConsoleSettings.BitcrackArgs = _Arguments;
+            ConsoleSettings.AppPath = _Folder;
+            ConsoleSettings.AppArgs = _Arguments;
             ConsoleSettings.WalletAddress = _WalletAddress;
             ConsoleSettings.ScanType = (ScanType)Enum.Parse(typeof(ScanType), _ScanType);
             ConsoleSettings.CustomRange = _CustomRange;
@@ -280,8 +284,8 @@ namespace BitcrackRandomiser
             {
                 string SavedSettings = 
                     "target_puzzle=" + ConsoleSettings.TargetPuzzle + Environment.NewLine +
-                    "bitcrack_path=" + ConsoleSettings.BitcrackPath + Environment.NewLine +
-                    "bitcrack_arguments=" + ConsoleSettings.BitcrackArgs + Environment.NewLine +
+                    "app_path=" + ConsoleSettings.AppPath + Environment.NewLine +
+                    "app_arguments=" + ConsoleSettings.AppArgs + Environment.NewLine +
                     "wallet_address=" + ConsoleSettings.WalletAddress + Environment.NewLine +
                     "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
                     "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
@@ -366,5 +370,14 @@ namespace BitcrackRandomiser
         success,
         info,
         error
+    }
+
+    /// <summary>
+    /// Apps to scan
+    /// </summary>
+    enum AppType
+    {
+        bitcrack,
+        keyhunt
     }
 }

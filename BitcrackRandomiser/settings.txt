@@ -1,11 +1,15 @@
 // Select puzzle number [66,67,68] or [38] for test pool
 target_puzzle=66
 
-// Bitcrack folder path
-bitcrack_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitCrack.exe
+// which app will be used [bitcrack]
+app_type=bitcrack
 
-// Bitcrack arguments
-bitcrack_arguments=-b 896 -t 256 -p 256
+// App folder path [cuBitcrack, clBitcrack]
+app_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitcrack.exe
+
+// App arguments
+// Example for bitcrack: -b 896 -t 256 -p 256
+app_arguments= -b 896 -t 256 -p 256
 
 // Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw

@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Reflection.Emit;
-using Telegram.Bot.Types;
 
 namespace BitcrackRandomiser
 {
@@ -82,13 +79,20 @@ namespace BitcrackRandomiser
             // No ranges left to scan
             if(GetHex == "REACHED_OF_KEYSPACE")
             {
-                Helpers.WriteLine("Reached of keyspace. No ranges left to scan. Try again later.");
+                Helpers.WriteLine("Reached of keyspace. No ranges left to scan.");
                 return Task.FromResult(0);
             }
 
             // Parse hex result
             string RandomHex = GetHex.Split(':')[0];
             string ProofValue = GetHex.Split(':')[1];
+            if(ProofValue == TargetAddress)
+            {
+                // Impossible but, may be proof value == target address?
+                PrivateKey = GetHex.Split(':')[2];
+                JobFinished(TargetAddress, RandomHex, settings, KeyFound: true);
+                return Task.FromResult(0);
+            }
 
             // Add +1 to random HEX value
             int StartNumber = int.Parse(RandomHex, System.Globalization.NumberStyles.HexNumber);
@@ -123,7 +127,7 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("[v{1}] Bitcrack starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version), MessageType.normal, true);
+            Helpers.WriteLine(string.Format("[v{1}] {2} starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString().ToUpper()), MessageType.normal, true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
@@ -135,12 +139,12 @@ namespace BitcrackRandomiser
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
             Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
 
-            // Bitcrack arguments
-            string BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}0000000000:{1}0000000000 {2} {3}", StartHex, EndHex, TargetAddress, ProofValue);
-            if(settings.TargetPuzzle == "38")
+            // App arguments
+            string AppArguments = "";
+            if (settings.AppType == AppType.bitcrack)
             {
-                // Test pool 30
-                BitcrackArguments = string.Format(settings.BitcrackArgs + " --keyspace {0}00000000:{1}00000000 {2} {3}", StartHex, EndHex, TargetAddress, ProofValue);
+                string Zeros = (settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10));
+                AppArguments = string.Format("{4} --keyspace {0}{5}:{1}{5} {2} {3}", StartHex, EndHex, TargetAddress, ProofValue, settings.AppArgs, Zeros);
             }
 
             // Tcs
@@ -149,7 +153,7 @@ namespace BitcrackRandomiser
             // Proccess info
             var process = new Process
             {
-                StartInfo = { FileName = settings.BitcrackPath, RedirectStandardError = true, RedirectStandardOutput = true, Arguments = BitcrackArguments },
+                StartInfo = { FileName = settings.AppPath, RedirectStandardError = true, RedirectStandardOutput = true, Arguments = AppArguments },
                 EnableRaisingEvents = true
             };
 
@@ -267,7 +271,7 @@ namespace BitcrackRandomiser
             else if (Status.OutputType == OutputType.address)
             {
                 // Check founded address is proof key
-                IsProofKey = Status.Content.Contains(ProofValue); 
+                IsProofKey = Status.Content.Contains(ProofValue);
                 if (!IsProofKey)
                 {
                     // Check again for known Bitcrack bug - Remove first 10 characters
