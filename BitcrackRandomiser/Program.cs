@@ -24,7 +24,7 @@ namespace BitcrackRandomiser
         public static void Main(string[] args)
         {
             // Get settings
-            var AppSettings = Settings.GetSettings();
+            var AppSettings = Settings.GetSettings(args);
 
             // Edit settings
             Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
@@ -35,10 +35,7 @@ namespace BitcrackRandomiser
             }
 
             // Send worker start message to telegram if active
-            if (AppSettings.TelegramShare)
-            {
-                Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(AppSettings.ParsedWalletAddress), AppSettings.TargetPuzzle, AppSettings.ParsedWorkerName), AppSettings);
-            }
+            Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(AppSettings.ParsedWalletAddress), AppSettings.TargetPuzzle, AppSettings.ParsedWorkerName), AppSettings);
 
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
@@ -80,6 +77,7 @@ namespace BitcrackRandomiser
             if(GetHex == "REACHED_OF_KEYSPACE")
             {
                 Helpers.WriteLine("Reached of keyspace. No ranges left to scan.");
+                Helpers.ShareTelegram(string.Format("[{0}].[{1}] reached of keyspace", Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
                 return Task.FromResult(0);
             }
 
@@ -113,9 +111,9 @@ namespace BitcrackRandomiser
 
                 // Test with custom settings
                 string CustomTestFile = AppDomain.CurrentDomain.BaseDirectory + "customtest.txt";
-                if (System.IO.File.Exists(CustomTestFile))
+                if (File.Exists(CustomTestFile))
                 {
-                    string[] lines = System.IO.File.ReadAllLines(CustomTestFile);
+                    string[] lines = File.ReadAllLines(CustomTestFile);
                     if(lines.Length == 4)
                     {
                         TargetAddress = lines[0];
@@ -161,21 +159,18 @@ namespace BitcrackRandomiser
             process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
             process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
 
-            // Bitcrack exited
+            // App exited
             process.Exited += (sender, args) =>
             {
                 if (process.ExitCode != 0)
                 {
-                    if (settings.TelegramShare)
-                    {
-                        Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
-                    }
+                    Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
                 }
                 taskCompletionSource.SetResult(process.ExitCode);
                 process.Dispose();
             };
 
-            // Start bitcrack app
+            // Start the app
             process.Start();
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
@@ -194,10 +189,7 @@ namespace BitcrackRandomiser
             if (KeyFound)
             {
                 // Always send notification when key found
-                if (settings.TelegramShare)
-                {
-                    Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
-                }
+                Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
 
                 // Not on untrusted computer
                 if (!settings.UntrustedComputer)
@@ -213,7 +205,7 @@ namespace BitcrackRandomiser
             else
             {
                 // Send notification each key scanned
-                if (settings.TelegramShare && settings.TelegramShareEachKey)
+                if (settings.TelegramShareEachKey)
                 {
                     Helpers.ShareTelegram(string.Format("[{0}] scanned by [{1}].[{2}]", HEX, Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
                 }

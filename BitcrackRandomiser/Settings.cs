@@ -21,7 +21,7 @@ namespace BitcrackRandomiser
         /// Bitcrack args
         /// Example: -b 896 -t 256 -p 256
         /// </summary>
-        string _AppArgs;
+        string _AppArgs = "";
         public string AppArgs
         {
             get
@@ -45,7 +45,7 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Wallet address for worker
         /// </summary>
-        string _WalletAddress;
+        string _WalletAddress = "";
         public string WalletAddress { 
             get
             {
@@ -54,6 +54,12 @@ namespace BitcrackRandomiser
                     var Random = new Random();
                     _WalletAddress = string.Format("{0}.worker{1}", _WalletAddress, Random.Next(1000, 9999));
                 }
+
+                if (_WalletAddress.Length < 6)
+                {
+                    _WalletAddress = "Unknown";
+                }
+
                 return _WalletAddress;
             }
             set
@@ -132,11 +138,21 @@ namespace BitcrackRandomiser
         /// </summary>
         public bool TestMode { get; set; } = false;
 
-        public static Settings GetSettings()
+        public static Settings GetSettings(string[] args)
         {
             Settings settings = new Settings();
             string Path = AppDomain.CurrentDomain.BaseDirectory + "settings.txt";
-            foreach (var line in System.IO.File.ReadLines(Path))
+
+            // From file
+            string[] Lines = File.ReadLines(Path).ToArray();
+
+            // From arguments
+            if(args.Length > 0)
+            {
+                Lines = args;
+            }
+
+            foreach (var line in Lines)
             {
                 if (line.Contains('='))
                 {

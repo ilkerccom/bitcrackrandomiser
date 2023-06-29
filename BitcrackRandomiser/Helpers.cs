@@ -115,15 +115,17 @@ namespace BitcrackRandomiser
         /// <param name="_Settings"></param>
         public static async void ShareTelegram(string Message, Settings _Settings)
         {
-            try
+            if (_Settings.TelegramShare && _Settings.TelegramAccessToken.Length > 6 && _Settings.TelegramChatId.Length > 3)
             {
-                var botClient = new TelegramBotClient(_Settings.TelegramAccessToken);
-
-                Message _Message = await botClient.SendTextMessageAsync(
-                chatId: _Settings.TelegramChatId,
-                text: Message);
+                try
+                {
+                    var botClient = new TelegramBotClient(_Settings.TelegramAccessToken);
+                    Message _Message = await botClient.SendTextMessageAsync(
+                    chatId: _Settings.TelegramChatId,
+                    text: Message);
+                }
+                catch { }
             }
-            catch { }
         }
 
         /// <summary>
