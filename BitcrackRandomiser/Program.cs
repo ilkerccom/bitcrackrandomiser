@@ -28,23 +28,10 @@ namespace BitcrackRandomiser
 
             // Edit settings
             Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
-
-            // Wait for console for input or pass
-            int WaitConsole = 4;
-            while(!Console.KeyAvailable && WaitConsole > 0)
+            bool EditSettings = Task.Factory.StartNew(() => { if (!Console.IsInputRedirected) Console.ReadKey(); } ).Wait(TimeSpan.FromSeconds(3));
+            if (EditSettings)
             {
-                Thread.Sleep(250);
-                WaitConsole--;
-            }
-
-            // If interactive terminal
-            if (!Console.IsInputRedirected && Console.KeyAvailable)
-            {
-                bool EditSettings = Task.Factory.StartNew(() => Console.ReadKey()).Wait(TimeSpan.FromSeconds(3));
-                if (EditSettings)
-                {
-                    AppSettings = Settings.SetSettings();
-                }
+                AppSettings = Settings.SetSettings();
             }
 
             // Send worker start message to telegram if active
@@ -52,7 +39,7 @@ namespace BitcrackRandomiser
 
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
-            //RunBitcrack(AppSettings);
+            RunBitcrack(AppSettings);
             Console.ReadLine();
         }
 
