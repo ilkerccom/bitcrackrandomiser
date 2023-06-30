@@ -28,7 +28,7 @@ namespace BitcrackRandomiser
 
             // Edit settings
             Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
-            bool EditSettings = Task.Factory.StartNew(() => { try { Console.ReadKey(); } catch { } }).Wait(TimeSpan.FromSeconds(3));
+            bool EditSettings = Task.Factory.StartNew(() => Console.ReadKey()).Wait(TimeSpan.FromSeconds(3));
             if (EditSettings)
             {
                 AppSettings = Settings.SetSettings();
