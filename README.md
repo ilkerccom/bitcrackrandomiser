@@ -242,17 +242,17 @@ Run the application.
 
 Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
-## Simple Way
+## Short Way
 
-Use custom docker image `ilkercndk/bitcrackrandomiser` from [dockerhub](https://hub.docker.com/repository/docker/ilkercndk/bitcrackrandomiser/general) in "Template Slot" and run any instance.
+Use custom docker image `ilkercndk/bitcrackrandomiser` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
 
-Then connect to instance edit `settings.txt` file.
+Then connect to instance edit `settings.txt` file. Then run the app.
 
 ```bash
 $ dotnet BitcrackRandomiser.dll
 ```
 
-You can use arguments
+You can use arguments.
 
 ```bash
 $ dotnet BitcrackRandomiser.dll target_puzzle=66 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...
@@ -271,6 +271,12 @@ You can use env variables for docker entrypoint:
 -e BC_TELEGRAM_ACCESS_TOKEN="0"
 -e BC_TELEGRAM_CHAT_ID="0"
 -e BC_UNTRUSTED_COMPUTER="false"
+```
+
+Example docker create/run options
+
+```
+-e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_APP_ARGS="-b 896 -t 256 -p 256"
 ```
 
 ## Long Way
