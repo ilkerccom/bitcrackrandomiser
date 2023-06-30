@@ -194,13 +194,13 @@ namespace BitcrackRandomiser
                 // Not on untrusted computer
                 if (!settings.UntrustedComputer)
                 {
+                    Console.WriteLine(Environment.NewLine);
                     Helpers.WriteLine(PrivateKey, MessageType.success);
                     Helpers.SaveFile(PrivateKey, TargetAddress);
                 }
 
                 Helpers.WriteLine("Congratulations. Key found. Please check your folder.", MessageType.success);
                 Helpers.WriteLine("You can donate me; 1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw", MessageType.success);
-                Console.ReadLine();
             }
             else
             {
@@ -211,28 +211,7 @@ namespace BitcrackRandomiser
                 }
 
                 // Flag HEX as used
-                bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
-
-                // Try flagging
-                int FlagTries = 1;
-                int MaxTries = 6;
-                while (!FlagUsed && FlagTries <= MaxTries)
-                {
-                    FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
-                    Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
-                    Thread.Sleep(10000);
-                    FlagTries++;
-                }
-
-                // Info
-                if (FlagUsed)
-                {
-                    Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
-                }
-                else
-                {
-                    Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
-                }
+                FlagAsScanned(settings, HEX);
 
                 // Wait and restart
                 ProofKey = "";
@@ -240,6 +219,41 @@ namespace BitcrackRandomiser
                 Thread.Sleep(10000);
                 RunBitcrack(settings);
             }
+        }
+
+        /// <summary>
+        /// Flag HEX as scanned
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="HEX"></param>
+        /// <returns></returns>
+        private static bool FlagAsScanned(Settings settings, string HEX)
+        {
+            // Try flag
+            bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
+
+            // Try flagging
+            int FlagTries = 1;
+            int MaxTries = 6;
+            while (!FlagUsed && FlagTries <= MaxTries)
+            {
+                FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
+                Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
+                Thread.Sleep(10000);
+                FlagTries++;
+            }
+
+            // Info
+            if (FlagUsed)
+            {
+                Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
+            }
+            else
+            {
+                Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
+            }
+
+            return FlagUsed;
         }
 
         /// <summary>
@@ -280,8 +294,10 @@ namespace BitcrackRandomiser
                 }
                 else
                 {
-                    // If target address found
-                    process.Kill();
+                    if (settings.ForceContinue == false)
+                    {
+                        process.Kill();
+                    }
                     PrivateKey = Status.Content;
                     JobFinished(TargetAddress, HEX, settings, KeyFound: true);
                 }

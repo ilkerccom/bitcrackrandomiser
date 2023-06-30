@@ -64,7 +64,7 @@ namespace BitcrackRandomiser
         {
             if (e.Data != null)
             {
-                if (e.Data.Contains("Reached"))
+                if (e.Data.Contains("Reached") || e.Data.Contains("No targets remaining"))
                 {
                     Console.SetCursorPosition(0, 9);
                     string FinishedMessage = string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), "Scan completed.");

@@ -194,6 +194,15 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 
 <ins>[ProofValue]</ins> Proof of work value. Example: If [HexStart] = `2012E84`, create a BTC address in range `2012E840000000000` and `2012E84FFFFFFFFFF`.
 
+---
+
+### [**force_continue**] 
+
+`true` If the private key is found, the scan will continue until it is finished. The related range is marked as "scanned". The key found is publicly visible on the pool site. (With 1 missing character) 
+
+You can see the private key in the file created in the folder and if Telegram is active, notification will come.
+
+`false` If the private key is found, the scanning process is terminated. No data is sent to the pool.
 
 ---
 
@@ -279,6 +288,8 @@ Example docker create/run options
 -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_APP_ARGS="-b 896 -t 256 -p 256"
 ```
 
+Note: Set `app_path` value as `/app/BitCrack/bin/./cuBitCrack` for this image.
+
 ## Long Way
 
 (1) Select custom docker image `nvidia/cuda:12.0.0-devel-ubuntu20.04` in "Template Slot" and run any instance. (3090 or 4090 is fine)
@@ -305,8 +316,8 @@ Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` 
 ```
 target_puzzle=66
 app_type=bitcrack
-bitcrack_path=/root/BitCrack/bin/./cuBitCrack
-bitcrack_arguments=-b 896 -t 256 -p 256
+app_path=/root/BitCrack/bin/./cuBitCrack
+app_arguments=-b 896 -t 256 -p 256
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 ... other settings
 ```

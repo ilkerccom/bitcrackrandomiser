@@ -138,6 +138,17 @@ namespace BitcrackRandomiser
         /// </summary>
         public bool TestMode { get; set; } = false;
 
+        /// <summary>
+        /// Force continue to if key found
+        /// If true, scan will continue until it is finished and will marked as scanned
+        /// </summary>
+        public bool ForceContinue { get; set; } = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static Settings GetSettings(string[] args)
         {
             Settings settings = new Settings();
@@ -211,6 +222,11 @@ namespace BitcrackRandomiser
                             bool _t;
                             _ = bool.TryParse(value, out _t);
                             settings.TestMode = _t;
+                            break;
+                        case "force_continue":
+                            bool _f;
+                            _ = bool.TryParse(value, out _f);
+                            settings.ForceContinue = _f;
                             break;
                     }
                 }
