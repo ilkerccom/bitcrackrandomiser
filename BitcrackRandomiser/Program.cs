@@ -52,7 +52,7 @@ namespace BitcrackRandomiser
 
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
-            RunBitcrack(AppSettings);
+            //RunBitcrack(AppSettings);
             Console.ReadLine();
         }
 
