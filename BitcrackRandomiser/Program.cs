@@ -28,10 +28,13 @@ namespace BitcrackRandomiser
 
             // Edit settings
             Helpers.WriteLine(string.Format("Press <enter> to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
-            bool EditSettings = Task.Factory.StartNew(() => Console.ReadLine()).Wait(TimeSpan.FromSeconds(3));
-            if (EditSettings)
+            if (!Console.IsInputRedirected)
             {
-                AppSettings = Settings.SetSettings();
+                bool EditSettings = Task.Factory.StartNew(() => Console.ReadLine()).Wait(TimeSpan.FromSeconds(3));
+                if (EditSettings)
+                {
+                    AppSettings = Settings.SetSettings();
+                }
             }
 
             // Send worker start message to telegram if active
