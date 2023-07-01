@@ -47,7 +47,11 @@ I can scan each key in about 10 minutes on NVIDIA 3090. This actually means abou
 
 ## Settings
 
-You can update the application settings via the "settings.txt" file or in app.
+You can update the application settings via the "settings.txt" file or in app. You can pass arguments to the application as in the example below.
+
+```
+dotnet BitcrackRandomiser.dll target_puzzle=66 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
+```
 
 ---
 
@@ -253,16 +257,23 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 Use custom docker image `ilkercndk/bitcrackrandomiser` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
 
-Then connect to instance edit `settings.txt` file. Then run the app.
+Connect instance. Vast.ai doesnt support `--it` interactive arguments for docker image on SSH. You must go to main folder;
+
+```
+$ cd /app/bitcrackrandomiser
+```
+
+Then edit `settings.txt` file and run the app.
 
 ```bash
 $ dotnet BitcrackRandomiser.dll
 ```
 
-You can use arguments.
+(Optional) **Auto-start bitcrackrandomiser** on instance starts; enter your parameters to on-start script on vast.ai. You can use all the variables in the <ins>settings.txt</ins> file.
 
-```bash
-$ dotnet BitcrackRandomiser.dll target_puzzle=66 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...
+```
+cd /app/bitcrackrandomiser
+dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw.worker1907;
 ```
 
 You can use env variables for docker entrypoint:
@@ -285,8 +296,6 @@ Example docker create/run options
 ```
 -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_APP_ARGS="-b 896 -t 256 -p 256"
 ```
-
-Note: Set `app_path` value as `/app/BitCrack/bin/./cuBitCrack` for this image.
 
 ## Long Way
 

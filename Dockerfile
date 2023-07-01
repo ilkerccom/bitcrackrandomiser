@@ -34,11 +34,14 @@ ENV DOTNET_RUNNING_IN_CONTAINER=true \
 	DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 
 # Clone and build bitcrackrandomiser
-WORKDIR /app
+WORKDIR /app/cloned
 RUN git clone https://github.com/ilkerccom/bitcrackrandomiser.git
-WORKDIR /app/bitcrackrandomiser/BitcrackRandomiser
-RUN dotnet build --configuration Release
+WORKDIR /app/cloned/bitcrackrandomiser/BitcrackRandomiser
+RUN dotnet publish --configuration Release --output /app/bitcrackrandomiser
+
+# Copy correct settings.txt file for this image
+COPY settings.txt /app/bitcrackrandomiser
 
 # Run bitcrackrandomiser
-WORKDIR /app/bitcrackrandomiser/BitcrackRandomiser/bin/Release/net6.0
-ENTRYPOINT dotnet BitcrackRandomiser.dll app_path=${BC_APP} app_args=${BC_APP_ARGS} wallet_address=${BC_WALLET} target_puzzle=${BC_PUZZLE} scan_type=${BC_SCAN_TYPE} custom_range=${BC_CUSTOM_RANGE} telegram_share=${BC_TELEGRAM_SHARE} telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} telegram_chatid=${BC_TELEGRAM_CHAT_ID} untrusted_computer=${BC_UNTRUSTED_COMPUTER}
+WORKDIR /app/bitcrackrandomiser
+#ENTRYPOINT dotnet BitcrackRandomiser.dll app_path=${BC_APP} app_args=${BC_APP_ARGS} wallet_address=${BC_WALLET} target_puzzle=${BC_PUZZLE} scan_type=${BC_SCAN_TYPE} custom_range=${BC_CUSTOM_RANGE} telegram_share=${BC_TELEGRAM_SHARE} telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} telegram_chatid=${BC_TELEGRAM_CHAT_ID} untrusted_computer=${BC_UNTRUSTED_COMPUTER}
