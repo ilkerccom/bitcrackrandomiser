@@ -24,8 +24,8 @@ namespace BitcrackRandomiser
                 bool IncludeDefeatedRanges = settings.ScanType == ScanType.includeDefeatedRanges;
 
                 // Request
-                Result = await client.GetAsync(string.Format("hex/get?startswith={0}&puzzlecode={1}&includedefeatedranges={2}", StartsWith, TargetPuzzle, IncludeDefeatedRanges)).Result.Content.ReadAsStringAsync();
-                if (Result.Length >= 7 && Result.Length <= 128)
+                Result = await client.GetAsync(string.Format("hex/getv2?startswith={0}&puzzlecode={1}&includedefeatedranges={2}", StartsWith, TargetPuzzle, IncludeDefeatedRanges)).Result.Content.ReadAsStringAsync();
+                if (Result.Length >= 6 && Result.Length <= 160)
                 {
                     return Result;
                 }

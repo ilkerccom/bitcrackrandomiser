@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace BitcrackRandomiser
 {
@@ -159,6 +161,23 @@ namespace BitcrackRandomiser
                 foreach (string Line in Lines)
                     outputFile.WriteLine(Line);
             }
+        }
+
+        /// <summary>
+        /// SHA256 Hashing
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <returns></returns>
+        public static string SHA256Hash(string Data)
+        {
+            using SHA256 Sha256Hash = SHA256.Create();
+            byte[] Bytes = Sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(Data));
+            StringBuilder SB = new();
+            for (int i = 0; i < Bytes.Length; i++)
+            {
+                SB.Append(Bytes[i].ToString("x2"));
+            }
+            return SB.ToString();
         }
     }
 }

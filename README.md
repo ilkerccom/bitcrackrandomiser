@@ -21,11 +21,11 @@ It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number fro
 
 ## Proof of Work
 
-The pool always returns you a random secondary address on every scan job. The private key of secondary  address is scanned simultaneously. When the private key of the secondary address is found, it saves it as "**ProofKey**". This is to make sure your program is working correctly. I also want to make sure you have a really healthy scan.
+The pool always returns you a random **3 addresses** on every scan job. The private key of these addresses is scanned simultaneously. When the private key of the any address is found, it saves it as "**ProofKey**". This is to make sure your program is working correctly. I also want to make sure you have a really healthy scan.
 
-Example; pool returns `3E2ECB0` HEX value to scan. The pool randomly generates another private key within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
+Example; pool returns `3E2ECB0` HEX value to scan. The pool randomly generates <ins>extra 3 private keys</ins> within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
 
-When retrieving a random HEX value from the pool, the wallet address of the secondary private key is additionally returned. Marking is done with the secondary private key found.
+Marking is done with `SHA256(PROOFKEY1+PROOFKEY2+PROOFKEY3)`
 
 "**ProofKey**" is used only for data marking.
 
@@ -183,7 +183,6 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 1Cnrx6rxiGvVNw1UroYM5hRjVvqPnWC7fR // [TargetAddress]
 2012E83 // [HexStart]
 2012E84 // [HexEnd]
-1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai // [ProofValue]
 ```
 
 <ins>[TargetAddress]</ins> The private key you want to find
@@ -192,7 +191,6 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 
 <ins>[HexEnd]</ins> HEX range to stop scanning
 
-<ins>[ProofValue]</ins> Proof of work value. Example: If [HexStart] = `2012E84`, create a BTC address in range `2012E840000000000` and `2012E84FFFFFFFFFF`.
 
 ---
 

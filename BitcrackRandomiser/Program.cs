@@ -27,8 +27,8 @@ namespace BitcrackRandomiser
             var AppSettings = Settings.GetSettings(args);
 
             // Edit settings
-            Helpers.WriteLine(string.Format("Press any key to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
-            bool EditSettings = Task.Factory.StartNew(() => Console.ReadKey()).Wait(TimeSpan.FromSeconds(3));
+            Helpers.WriteLine(string.Format("Press <enter> to edit settings or wait for {0} seconds to load app with <settings.txt>", 3));
+            bool EditSettings = Task.Factory.StartNew(() => Console.ReadLine()).Wait(TimeSpan.FromSeconds(3));
             if (EditSettings)
             {
                 AppSettings = Settings.SetSettings();
@@ -83,8 +83,8 @@ namespace BitcrackRandomiser
 
             // Parse hex result
             string RandomHex = GetHex.Split(':')[0];
-            string ProofValue = GetHex.Split(':')[1];
-            if(ProofValue == TargetAddress)
+            List<string> ProofValues = GetHex.Split(':').Skip(1).ToList();
+            if (ProofValues.Contains(TargetAddress))
             {
                 // Impossible but, may be proof value == target address?
                 PrivateKey = GetHex.Split(':')[2];
@@ -107,19 +107,17 @@ namespace BitcrackRandomiser
                 TargetAddress = "1Cnrx6rxiGvVNw1UroYM5hRjVvqPnWC7fR";
                 StartHex = "2012E83";
                 EndHex = "2012E84";
-                ProofValue = "1Hz8wCQp9j71j8NGuzFE5KN9SV7PeRguai";
 
                 // Test with custom settings
                 string CustomTestFile = AppDomain.CurrentDomain.BaseDirectory + "customtest.txt";
                 if (File.Exists(CustomTestFile))
                 {
                     string[] lines = File.ReadAllLines(CustomTestFile);
-                    if(lines.Length == 4)
+                    if(lines.Length == 3)
                     {
                         TargetAddress = lines[0];
                         StartHex = lines[1];
                         EndHex = lines[2];
-                        ProofValue = lines[3];
                     }
                 }
             }
@@ -142,7 +140,7 @@ namespace BitcrackRandomiser
             if (settings.AppType == AppType.bitcrack)
             {
                 string Zeros = (settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10));
-                AppArguments = string.Format("{4} --keyspace {0}{5}:{1}{5} {2} {3}", StartHex, EndHex, TargetAddress, ProofValue, settings.AppArgs, Zeros);
+                AppArguments = string.Format("{3} --keyspace {0}{4}:{1}{4} {2} {5}", StartHex, EndHex, TargetAddress, settings.AppArgs, Zeros, string.Join(' ', ProofValues));
             }
 
             // Tcs
@@ -156,8 +154,8 @@ namespace BitcrackRandomiser
             };
 
             // Output from BitCrack
-            process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
-            process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValue, StartHex, settings, process);
+            process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process);
+            process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process);
 
             // App exited
             process.Exited += (sender, args) =>
@@ -229,6 +227,9 @@ namespace BitcrackRandomiser
         /// <returns></returns>
         private static bool FlagAsScanned(Settings settings, string HEX)
         {
+            // Hash all proof keys with SHA256
+            ProofKey = Helpers.SHA256Hash(ProofKey);
+
             // Try flag
             bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
 
@@ -266,7 +267,7 @@ namespace BitcrackRandomiser
         /// <param name="HEX">Selected HEX range</param>
         /// <param name="settings">Current settings</param>
         /// <param name="process">Active proccess</param>
-        private static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string TargetAddress, string ProofValue, string HEX, Settings settings, Process process)
+        private static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string TargetAddress, List<string> ProofValues, string HEX, Settings settings, Process process)
         {
             var Status = Helpers.CheckJobStatus(o, e);
             if (Status.OutputType == OutputType.finished)
@@ -276,21 +277,19 @@ namespace BitcrackRandomiser
             }
             else if (Status.OutputType == OutputType.address)
             {
-                // Check founded address is proof key
-                IsProofKey = Status.Content.Contains(ProofValue);
-                if (!IsProofKey)
+                IsProofKey = ProofValues.Any(Status.Content.Contains);
+                if(!IsProofKey)
                 {
                     // Check again for known Bitcrack bug - Remove first 10 characters
-                    string ParsedProofValue = ProofValue[10..];
-                    IsProofKey = Status.Content.Contains(ParsedProofValue);
+                    List<string> ParsedProofValues = ProofValues.Select(x => x[10..]).ToList();
+                    IsProofKey = ParsedProofValues.Any(Status.Content.Contains);
                 }
             }
             else if (Status.OutputType == OutputType.privateKeyFound)
             {
                 if (IsProofKey)
                 {
-                    // Check if proof key
-                    ProofKey = Status.Content;
+                    ProofKey += Status.Content;
                 }
                 else
                 {
