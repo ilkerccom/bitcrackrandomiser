@@ -24,7 +24,7 @@ custom_range=none
 telegram_share=false
 
 // Telegram access token
-telegram_acesstoken=0
+telegram_accesstoken=0
 
 // Telegram chat id
 telegram_chatid=0
