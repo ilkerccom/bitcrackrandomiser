@@ -44,4 +44,14 @@ COPY settings.txt /app/bitcrackrandomiser
 
 # Run bitcrackrandomiser
 WORKDIR /app/bitcrackrandomiser
-#ENTRYPOINT dotnet BitcrackRandomiser.dll app_path=${BC_APP} app_args=${BC_APP_ARGS} wallet_address=${BC_WALLET} target_puzzle=${BC_PUZZLE} scan_type=${BC_SCAN_TYPE} custom_range=${BC_CUSTOM_RANGE} telegram_share=${BC_TELEGRAM_SHARE} telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} telegram_chatid=${BC_TELEGRAM_CHAT_ID} untrusted_computer=${BC_UNTRUSTED_COMPUTER}
+ENTRYPOINT dotnet BitcrackRandomiser.dll \
+	app_path=${BC_APP} \
+	app_arguments="${BC_APP_ARGS}" \
+	wallet_address=${BC_WALLET} \
+	target_puzzle=${BC_PUZZLE} \
+	scan_type=${BC_SCAN_TYPE} \
+	custom_range=${BC_CUSTOM_RANGE} \
+	telegram_share=${BC_TELEGRAM_SHARE} \
+	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \ 
+	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
+	untrusted_computer=${BC_UNTRUSTED_COMPUTER}

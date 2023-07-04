@@ -255,7 +255,7 @@ Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
 
 ## Short Way
 
-Use custom docker image `ilkercndk/bitcrackrandomiser` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
+Use custom docker image `ilkercndk/bitcrackrandomiser:latest` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
 
 Connect instance. Vast.ai doesnt support `--it` interactive arguments for docker image on SSH. You must go to main folder;
 
@@ -276,7 +276,7 @@ cd /app/bitcrackrandomiser
 dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw.worker1907;
 ```
 
-You can use env variables for docker entrypoint:
+You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomiser:autorun` image:
 
 ```
 -e BC_PUZZLE=66

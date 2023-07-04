@@ -66,11 +66,17 @@ namespace BitcrackRandomiser
         {
             if (e.Data != null)
             {
+                int ConsoleWidth = 720;
+                if(Environment.UserInteractive && !Console.IsInputRedirected)
+                {
+                    ConsoleWidth = Console.WindowWidth;
+                }
+
                 if (e.Data.Contains("Reached") || e.Data.Contains("No targets remaining"))
                 {
                     Console.SetCursorPosition(0, 9);
                     string FinishedMessage = string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), "Scan completed.");
-                    Console.Write(FinishedMessage + new string(' ', Console.WindowWidth - FinishedMessage.Length));
+                    Console.Write(FinishedMessage + new string(' ', ConsoleWidth - FinishedMessage.Length));
                     return new Result { OutputType = OutputType.finished };
                 }
                 else if (e.Data.Contains("Address:"))
@@ -94,12 +100,12 @@ namespace BitcrackRandomiser
                         Console.SetCursorPosition(0, 9);
                         if (e.Data.Length > 0)
                         {
-                            Console.Write(e.Data + new string(' ', Console.WindowWidth - e.Data.Length));
+                            Console.Write(e.Data + new string(' ', ConsoleWidth - e.Data.Length));
                         }
                         else
                         {
                             string LoadingMessage = string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), "Running ...");
-                            Console.Write(LoadingMessage + new string(' ', Console.WindowWidth - LoadingMessage.Length));
+                            Console.Write(LoadingMessage + new string(' ', ConsoleWidth - LoadingMessage.Length));
                         }
                     }
                     catch { }
