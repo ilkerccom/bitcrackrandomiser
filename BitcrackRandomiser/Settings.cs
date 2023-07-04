@@ -322,7 +322,7 @@ namespace BitcrackRandomiser
                     "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
                     "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
                     "telegram_share=" + ConsoleSettings.TelegramShare + Environment.NewLine +
-                    "telegram_acesstoken=" + ConsoleSettings.TelegramAccessToken + Environment.NewLine +
+                    "telegram_accesstoken=" + ConsoleSettings.TelegramAccessToken + Environment.NewLine +
                     "telegram_chatid=" + ConsoleSettings.TelegramChatId + Environment.NewLine +
                     "telegram_share_eachkey=" + ConsoleSettings.TelegramShareEachKey + Environment.NewLine +
                     "untrusted_computer=" + ConsoleSettings.UntrustedComputer + Environment.NewLine +
