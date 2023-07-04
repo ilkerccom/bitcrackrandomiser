@@ -202,7 +202,7 @@ namespace BitcrackRandomiser
                             _ = bool.TryParse(value, out _v);
                             settings.TelegramShare = _v;
                             break;
-                        case "telegram_acesstoken":
+                        case "telegram_accesstoken":
                             settings.TelegramAccessToken = value;
                             break;
                         case "telegram_chatid":
