@@ -59,5 +59,63 @@ namespace BitcrackRandomiser
             }
             catch { return false; }
         }
+
+        /// <summary>
+        /// Share progress to your API
+        /// </summary>
+        /// <param name="apiShare"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static async Task<bool> SendApiShare(ApiShare apiShare, Settings settings)
+        {
+            try
+            {
+                if (settings.IsApiShare)
+                {
+                    bool isSuccess = false;
+                    using var client = new HttpClient { BaseAddress = new Uri(settings.ApiShare) };
+                    client.DefaultRequestHeaders.Add("Status", apiShare.Status.ToString());
+                    client.DefaultRequestHeaders.Add("HEX", apiShare.HEX);
+                    client.DefaultRequestHeaders.Add("PrivateKey", apiShare.PrivateKey);
+                    client.DefaultRequestHeaders.Add("TargetPuzzle", settings.TargetPuzzle);
+                    client.DefaultRequestHeaders.Add("WorkerAddress", settings.ParsedWalletAddress);
+                    client.DefaultRequestHeaders.Add("WorkerName", settings.ParsedWorkerName);
+                    client.DefaultRequestHeaders.Add("ScanType", settings.ScanType.ToString());
+                    string Result = await client.PostAsync("", null).Result.Content.ReadAsStringAsync();
+                    Boolean.TryParse(Result, out isSuccess);
+                    return isSuccess;
+                }
+
+                return false;
+            }
+            catch { return false; }
+        }
+    }
+
+    /// <summary>
+    /// Alternative for telegram. Share progress with your API
+    /// </summary>
+    public class ApiShare
+    {
+        // Current status
+        public ApiShareStatus Status { get; set; }
+
+        // Scanned HEX
+        public string HEX { get; set; } = "";
+
+        // Found private key
+        public string PrivateKey { get; set; } = "";
+    }
+
+    /// <summary>
+    /// Enum types for apishare
+    /// </summary>
+    public enum ApiShareStatus
+    {
+        workerStarted,
+        workerExited,
+        rangeScanned,
+        reachedOfKeySpace,
+        keyFound
     }
 }

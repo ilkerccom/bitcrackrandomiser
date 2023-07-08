@@ -40,6 +40,9 @@ namespace BitcrackRandomiser
             // Send worker start message to telegram if active
             Helpers.ShareTelegram(string.Format("[{0}].[{2}] started job for (Puzzle{1})", Helpers.StringParser(AppSettings.ParsedWalletAddress), AppSettings.TargetPuzzle, AppSettings.ParsedWorkerName), AppSettings);
 
+            // Send progress to api_share if active
+            _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.workerStarted }, AppSettings);
+
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
             RunBitcrack(AppSettings);
@@ -84,6 +87,7 @@ namespace BitcrackRandomiser
             {
                 Helpers.WriteLine("Reached of keyspace. No ranges left to scan.");
                 Helpers.ShareTelegram(string.Format("[{0}].[{1}] reached of keyspace", Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
+                _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.reachedOfKeySpace }, settings);
                 return Task.FromResult(0);
             }
 
@@ -136,7 +140,7 @@ namespace BitcrackRandomiser
             else if (settings.TargetPuzzle == "38") Helpers.WriteLine("Test pool 38 is active.", MessageType.error);
             else Helpers.WriteLine("Test mode is passive.", MessageType.info);
             Helpers.WriteLine(string.Format("Scan type: {0}", settings.ScanType.ToString()), MessageType.info);
-            Helpers.WriteLine(string.Format("Telegram share: {0}", settings.TelegramShare), MessageType.info);
+            Helpers.WriteLine(string.Format("API share: {0} / Telegram share: {1}", settings.IsApiShare, settings.TelegramShare), MessageType.info);
             Helpers.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
             Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
             Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
@@ -169,6 +173,7 @@ namespace BitcrackRandomiser
                 if (process.ExitCode != 0)
                 {
                     Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
+                    _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.workerExited }, settings);
                 }
                 taskCompletionSource.SetResult(process.ExitCode);
                 process.Dispose();
@@ -194,6 +199,7 @@ namespace BitcrackRandomiser
             {
                 // Always send notification when key found
                 Helpers.ShareTelegram(string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helpers.StringParser(settings.ParsedWalletAddress), PrivateKey, settings.ParsedWorkerName), settings);
+                _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.keyFound, PrivateKey = PrivateKey, HEX = HEX }, settings);
 
                 // Not on untrusted computer
                 if (!settings.UntrustedComputer)
@@ -208,6 +214,9 @@ namespace BitcrackRandomiser
             }
             else
             {
+                // Send request to custom API
+                _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.rangeScanned, HEX = HEX }, settings);
+
                 // Send notification each key scanned
                 if (settings.TelegramShareEachKey)
                 {

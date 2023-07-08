@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+
 namespace BitcrackRandomiser
 {
     internal class Settings
@@ -106,6 +109,27 @@ namespace BitcrackRandomiser
         public string CustomRange { get; set; } = "none";
 
         /// <summary>
+        /// Send POST request on each key scanned/key found
+        /// </summary>
+        public string ApiShare { get; set; } = "";
+
+        /// <summary>
+        /// Is API share is active
+        /// </summary>
+        public bool IsApiShare
+        {
+            get
+            {
+                if(Uri.IsWellFormedUriString(ApiShare, UriKind.Absolute))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Telegram share is active
         /// </summary>
         public bool TelegramShare { get; set; } = false;
@@ -197,6 +221,9 @@ namespace BitcrackRandomiser
                         case "custom_range":
                             settings.CustomRange = value;
                             break;
+                        case "api_share":
+                            settings.ApiShare = value;
+                            break;
                         case "telegram_share":
                             bool _v;
                             _ = bool.TryParse(value, out _v);
@@ -269,6 +296,9 @@ namespace BitcrackRandomiser
                 _CustomRange = "none";
             }
 
+            // API share
+            string _ApiShare = DetermineSettings("Send API request to URL (can be empty)");
+
             // Telegram share
             string _TelegramShare = DetermineSettings("Will telegram sharing be enabled?", new string[2] { "true", "false" });
 
@@ -296,6 +326,7 @@ namespace BitcrackRandomiser
             ConsoleSettings.WalletAddress = _WalletAddress;
             ConsoleSettings.ScanType = (ScanType)Enum.Parse(typeof(ScanType), _ScanType);
             ConsoleSettings.CustomRange = _CustomRange;
+            ConsoleSettings.ApiShare = _ApiShare;
             ConsoleSettings.TelegramShare = bool.Parse(_TelegramShare);
             ConsoleSettings.TelegramAccessToken = _TelegramAccessToken;
             ConsoleSettings.TelegramChatId = _TelegramChatId;
@@ -321,6 +352,7 @@ namespace BitcrackRandomiser
                     "wallet_address=" + ConsoleSettings.WalletAddress + Environment.NewLine +
                     "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
                     "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
+                    "api_share=" + ConsoleSettings.ApiShare + Environment.NewLine +
                     "telegram_share=" + ConsoleSettings.TelegramShare + Environment.NewLine +
                     "telegram_accesstoken=" + ConsoleSettings.TelegramAccessToken + Environment.NewLine +
                     "telegram_chatid=" + ConsoleSettings.TelegramChatId + Environment.NewLine +

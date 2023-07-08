@@ -7,9 +7,11 @@ ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
 ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
 ENV BC_SCAN_TYPE="includeDefeatedRanges"
 ENV BC_CUSTOM_RANGE="none"
+ENV BC_API_SHARE="none"
 ENV BC_TELEGRAM_SHARE="false"
 ENV BC_TELEGRAM_ACCESS_TOKEN="0"
 ENV BC_TELEGRAM_CHAT_ID="0"
+ENV BC_TELEGRAM_SHARE_EACHKEY="false"
 ENV BC_UNTRUSTED_COMPUTER="false"
 
 # Clone and build bitcrack
@@ -51,7 +53,9 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
 	custom_range=${BC_CUSTOM_RANGE} \
+	api_share=${BC_API_SHARE} \
 	telegram_share=${BC_TELEGRAM_SHARE} \
 	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \ 
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
-	untrusted_computer=${BC_UNTRUSTED_COMPUTER}
+	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
+	untrusted_computer=${BC_UNTRUSTED_COMPUTER} 

@@ -127,6 +127,62 @@ You can now specify ranges like `3400000:38FFFFF`. Incoming keys will be selecte
 
 ---
 
+### [**api_share**]
+
+`none` or `https://{your_api_url}`
+
+Receive the all actions as a POST request to your own server. All values are requested as "header". Below you can see what data is coming.
+
+```C
+status // [workerStarted, workerExited, rangeScanned, reachedOfKeySpace, keyFound]
+hex // Scanned HEX value
+privatekey // Private key if that found
+targetpuzzle // Which puzzle is being scanned [66,67,68 or 38]
+workeraddress // Worker wallet address [1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw]
+workername // Worker name [worker1039]
+scantype // Current scan type [default, includeDefeatedRanges]
+```
+
+I wrote a sample PHP script to get the data. It sends info to Telegram.
+
+```php
+<?php
+$headers = getallheaders();
+$status = $headers['Status'];
+$hex = $headers['Hex'];
+$workeraddress = $headers['Workeraddress'];
+$workername = $headers['Workername'];
+$privatekey = $headers['Privatekey'];
+$scantype = $headers['Scantype'];
+$targetpuzzle = $headers['Targetpuzzle'];
+
+if($status == "workerStarted"){
+	shareTelegram($workeraddress.$workername." started job!");
+}
+else if($status == "workerExited"){
+	shareTelegram($workeraddress.$workername." goes offline!");
+}
+else if($status == "rangeScanned"){
+	shareTelegram($hex." scanned by ".$workeraddress.$workername);
+}
+else if($status == "reachedOfKeySpace"){
+	shareTelegram($workeraddress.$workername." reached of keyspace!");
+}
+else if($status == "keyFound"){
+	shareTelegram("Congratulations! ".$workeraddress.$workername." found the key! Key is: ".$privatekey);
+}
+function shareTelegram($message){
+	$apiToken = "{telegram_api_token}";
+	$chatId= "{telegram_chat_id}";
+	$data = [ 
+	 "chat_id" => $chatId, 
+	 "text" => $message
+	]; 
+	$response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data) ); 
+}
+?>
+```
+
 ### [**telegram_share**]
 
 Share progress to Telegram
@@ -280,21 +336,22 @@ You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomis
 
 ```
 -e BC_PUZZLE=66
--e BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
--e BC_APP="/app/BitCrack/bin/./cuBitCrack"
+-e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+-e BC_APP=/app/BitCrack/bin/./cuBitCrack
 -e BC_APP_ARGS="-b 896 -t 256 -p 256"
--e BC_SCAN_TYPE="includeDefeatedRanges"
--e BC_CUSTOM_RANGE="none"
--e BC_TELEGRAM_SHARE="false"
--e BC_TELEGRAM_ACCESS_TOKEN="0"
--e BC_TELEGRAM_CHAT_ID="0"
--e BC_UNTRUSTED_COMPUTER="false"
+-e BC_SCAN_TYPE=includeDefeatedRanges
+-e BC_CUSTOM_RANGE=none
+-e BC_TELEGRAM_SHARE=false
+-e BC_TELEGRAM_ACCESS_TOKEN=0
+-e BC_TELEGRAM_CHAT_ID=0
+-e BC_TELEGRAM_SHARE_EACHKEY=false
+-e BC_UNTRUSTED_COMPUTER=false
 ```
 
 Example docker create/run options
 
 ```
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_APP_ARGS="-b 896 -t 256 -p 256"
+-e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_SCAN_TYPE=default -e BC_UNTRUSTED_COMPUTER=true
 ```
 
 ## Long Way
@@ -336,6 +393,10 @@ $ dotnet run
 ```
 
 You can press "<ins>CTRL+B</ins>" and then "<ins>D</ins>" to leave terminal without closing app.
+
+# Create Your Own Client
+
+Read the [API Documentation](https://github.com/ilkerccom/bitcrackrandomiser/issues/9#issuecomment-1607175662). You can use "test pool 38" for testing.
 
 # Donate 
 

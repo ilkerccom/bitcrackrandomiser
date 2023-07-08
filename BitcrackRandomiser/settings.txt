@@ -20,6 +20,9 @@ scan_type=includeDefeatedRanges
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]
 custom_range=none
 
+// Share progress with your API [https://yourwebsite/example.php]
+api_share=none
+
 // Send notifications to Telegram
 telegram_share=false
 
