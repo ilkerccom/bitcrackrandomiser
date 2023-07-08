@@ -59,7 +59,7 @@ namespace BitcrackRandomiser
         static Task<int> RunBitcrack(Settings settings)
         {
             // Check important area
-            if (!settings.TelegramShare && settings.UntrustedComputer)
+            if (!settings.TelegramShare && settings.UntrustedComputer && !settings.IsApiShare)
             {
                 Helpers.WriteLine("If the 'untrusted_computer' setting is 'true', the private key will only be sent to your Telegram address. Please change the 'telegram_share' to 'true' in settings.txt. Then enter your 'access token' and 'chat id'. Otherwise, even if the private key is found, you will not be able to see it anywhere!", MessageType.error, true);
                 Thread.Sleep(30000);
@@ -172,7 +172,7 @@ namespace BitcrackRandomiser
             {
                 if (process.ExitCode != 0)
                 {
-                    Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.WalletAddress), settings.ParsedWorkerName), settings);
+                    Helpers.ShareTelegram(string.Format("[{0}].[{1}] goes offline.", Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);
                     _ = Requests.SendApiShare(new ApiShare { Status = ApiShareStatus.workerExited }, settings);
                 }
                 taskCompletionSource.SetResult(process.ExitCode);

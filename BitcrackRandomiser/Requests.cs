@@ -17,14 +17,12 @@ namespace BitcrackRandomiser
                 // CustomRange
                 string StartsWith = settings.CustomRange;
                 string TargetPuzzle = settings.TargetPuzzle;
+                string ScanType = settings.ScanType;
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
 
-                // Include defeated ranges
-                bool IncludeDefeatedRanges = settings.ScanType == ScanType.includeDefeatedRanges;
-
                 // Request
-                Result = await client.GetAsync(string.Format("hex/getv2?startswith={0}&puzzlecode={1}&includedefeatedranges={2}", StartsWith, TargetPuzzle, IncludeDefeatedRanges)).Result.Content.ReadAsStringAsync();
+                Result = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType)).Result.Content.ReadAsStringAsync();
                 if (Result.Length >= 6 && Result.Length <= 160)
                 {
                     return Result;

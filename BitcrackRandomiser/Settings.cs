@@ -95,10 +95,14 @@ namespace BitcrackRandomiser
 
         /// <summary>
         /// Scan type
-        /// default: Exclude defeated ranges
+        /// default: Default
         /// includeDefeatedRanges: Include defeated ranges to scan
+        /// excludeIterated2: Exclude if HEX iterated 2
+        /// excludeIterated3: Exclude if HEX iterated 3
+        /// excludeIterated4: Exclude if HEX iterated 4 or more
+        /// excludeStartsWithXX: Exclude if HEX starts with XX [1-2 chars]
         /// </summary>
-        public ScanType ScanType { get; set; } = ScanType.@default;
+        public string ScanType { get; set; } = "default";
 
         /// <summary>
         /// Custom ranges to scan
@@ -214,9 +218,7 @@ namespace BitcrackRandomiser
                             settings.WalletAddress = value;
                             break;
                         case "scan_type":
-                            ScanType _e = ScanType.@default;
-                            _ = Enum.TryParse(value, true, out _e);
-                            settings.ScanType = _e;
+                            settings.ScanType = value;
                             break;
                         case "custom_range":
                             settings.CustomRange = value;
@@ -324,7 +326,7 @@ namespace BitcrackRandomiser
             ConsoleSettings.AppPath = _Folder;
             ConsoleSettings.AppArgs = _Arguments;
             ConsoleSettings.WalletAddress = _WalletAddress;
-            ConsoleSettings.ScanType = (ScanType)Enum.Parse(typeof(ScanType), _ScanType);
+            ConsoleSettings.ScanType = _ScanType;
             ConsoleSettings.CustomRange = _CustomRange;
             ConsoleSettings.ApiShare = _ApiShare;
             ConsoleSettings.TelegramShare = bool.Parse(_TelegramShare);
@@ -412,17 +414,6 @@ namespace BitcrackRandomiser
             Helpers.Write("-------------------------------\n");
             return _Value;
         }
-    }
-
-
-
-    /// <summary>
-    /// Scan type
-    /// </summary>
-    enum ScanType
-    {
-        @default = 0,
-        includeDefeatedRanges = 1
     }
 
     /// <summary>

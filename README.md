@@ -105,13 +105,35 @@ If you enter an invalid BTC address, it will show as "Unknown" in the system.
 
 ---
 
-### [**scantype**]
+### [**scan_type**]
 
-Select a scan type.
+Select a scan type. 
 
-`default` - Scan and exclude defeated ranges.
+`default` - Scan anything that isn't scanned.
 
-`includeDefeatedRanges` - Scan and include defeated ranges.
+`includeDefeatedRanges` - Include defeated ranges. This does not scan ranges that have already been scanned!
+
+`excludeIterated2` - Exclude iterated ranges (2 iterated). Not good choice. Example: 1A<ins>FF</ins>1B3 
+
+`excludeIterated3` - Exclude iterated ranges (3 iterated). May be good choice. Example: 1A<ins>FFF</ins>B3
+
+`excludeIterated4` - Exclude iterated ranges (4 iterated). Good choice. Example: 1A<ins>FFFF</ins>3
+
+`excludeStartsWith{XX}` - Exclude ranges that starts with. [Min 1, max 2 chars]. 
+
+Example [1]: `excludeStartsWith2` The range starting with 2 will not return.
+
+Example [2]: `excludeStartsWith2A` The range starting with 2A will not return.
+
+If you enter a value that you entered in the "**custom_range**" field, you will get a "reached of keyspace" error and the application will be stopped.
+
+You can make multiple settings using commas.
+
+```
+...
+scan_type=excludeIterated3,excludeStartsWith2A,excludeStartsWith2B,excludeStartsWith3F
+...
+```
 
 ---
 
