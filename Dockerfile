@@ -2,6 +2,7 @@ FROM nvidia/cuda:12.0.0-devel-ubuntu20.04
 
 # Variables
 ENV BC_PUZZLE=66
+ENV BC_USERTOKEN="0"
 ENV BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
 ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
 ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
@@ -13,6 +14,7 @@ ENV BC_TELEGRAM_ACCESS_TOKEN="0"
 ENV BC_TELEGRAM_CHAT_ID="0"
 ENV BC_TELEGRAM_SHARE_EACHKEY="false"
 ENV BC_UNTRUSTED_COMPUTER="false"
+ENV BC_FORCE_CONTINUE="false"
 
 # Clone and build bitcrack
 WORKDIR /app
@@ -49,6 +51,7 @@ WORKDIR /app/bitcrackrandomiser
 ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	app_path=${BC_APP} \
 	app_arguments="${BC_APP_ARGS}" \
+	user_token=${BC_USERTOKEN} \
 	wallet_address=${BC_WALLET} \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
@@ -58,4 +61,5 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \ 
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
 	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
-	untrusted_computer=${BC_UNTRUSTED_COMPUTER} 
+	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
+	force_continue=${BC_FORCE_CONTINUE}

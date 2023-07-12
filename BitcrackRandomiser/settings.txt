@@ -9,7 +9,10 @@ app_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitcrack.exe
 
 // App arguments
 // Example for bitcrack: -b 896 -t 256 -p 256
-app_arguments= -b 896 -t 256 -p 256
+app_arguments=-b 896 -t 256 -p 256
+
+// User token value. You can create it by logging into your account at btcpuzzle.info
+user_token=
 
 // Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw

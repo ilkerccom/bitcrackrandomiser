@@ -45,12 +45,62 @@ We now have about 33 million possible private keys to search. All possible priva
 
 I can scan each key in about 10 minutes on NVIDIA 3090. This actually means about 1,1 trillion private keys. When the private key is scanned, it is marked as scanned. So it won't show up anymore.
 
-## Settings
+For Puzzle 66: 2000000-2050000 (First ~%0.98) ranges and 3FAF000-3FFFFFF (Last ~%0.98) manually defeated in this pool. If you rescan a defeated range, it will now be marked as scanned normal.
+
+## Example
+
+Random key from database: **326FB80**
+
+The program tells Bitcrack to scan the following range: **326FB800000000000** / **326FB810000000000**
+
+When the range is scanned, a new private key is requested and the process proceeds in this way.
+
+# How to use?
+
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and obtain your user token.
+
+2 - Download latest released [Bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/releases) or build it yourself.
+
+3 - Download [Bitcrack](https://github.com/brichard19/BitCrack) or build it yourself (recommended) or download it from this repo (bitcrack.zip)
+
+4 - Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+
+5 - Edit the <ins>settings.txt</ins> file according to you.
+
+Run the application.
+
+---
+
+You can use docker image for a faster experience. You can also create your own docker image. "Dockerfile" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
+
+<ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
+
+
+
+### ilkercndk/bitcrackrandomiser:latest
+
+Everything is ready! Edit the settings.txt file and run the app!
+
+```
+$ docker run -it ilkercndk/bitcrackrandomiser:latest
+... edit settings file ...
+$ dotnet BitcrackRandomiser.dll
+```
+
+### ilkercndk/bitcrackrandomiser:autorun
+
+Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> starts automatically. You can see the Docker create/run settings in the example below. Does not need interactive console.
+
+```
+$ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
+```
+
+# Settings
 
 You can update the application settings via the "settings.txt" file or in app. You can pass arguments to the application as in the example below.
 
 ```
-dotnet BitcrackRandomiser.dll target_puzzle=66 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
+dotnet BitcrackRandomiser.dll target_puzzle=66 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
 ```
 
 ---
@@ -93,6 +143,19 @@ Note: Do not use `-o --keyspace` parameters.
 
 ---
 
+### [**user_token**]
+
+<ins>You can create user token value by logging into your account</ins> at btcpuzzle.info. If you do not have an account, you can create a new account using your wallet address.
+
+You can revoke the user token value at any time. However, when you do this, you must also enter the new value from the workers settings file.
+
+Example user token value;
+
+`VDGcruTrDZ62EuJsE9IQUCiRIKRhZpXw6RPtcnk1jBxbROn1nxZixBMql8L2zxKwD9QXb1UZoWgrDf8IwciRDUHxHzwkNrDzNBpio2UdAx4rLYsjMnI887eqWGauszBl`
+
+
+---
+
 ### [**wallet_address**]
 
 Enter the BTC wallet address here. 
@@ -102,6 +165,8 @@ Enter the BTC wallet address here.
 You can specify a **worker name** like `{wallet}.{worker}` Only alphanumeric is accepted. Max 16 characters. Do not use special characters. If you do not enter a worker name, it will be created automatically.
 
 If you enter an invalid BTC address, it will show as "Unknown" in the system.
+
+**Note: You can only enter your wallet address registered to your membership account. If you enter any other address, you will get an error.**
 
 ---
 
@@ -286,38 +351,13 @@ You can see the private key in the file created in the folder and if Telegram is
 
 ---
 
-For Puzzle 66: 2000000-2050000 (First ~%0.98) ranges and 3FAF000-3FFFFFF (Last ~%0.98) manually defeated in this pool. If you rescan a defeated range, it will now be marked as scanned normal.
-
-## Example
-
-Random key from database: **326FB80**
-
-The program tells Bitcrack to scan the following range: **326FB800000000000** / **326FB810000000000**
-
-When the range is scanned, a new private key is requested and the process proceeds in this way.
-
-# How to use?
-
-Download released version or build it yourself.
-
-Download [Bitcrack](https://github.com/brichard19/BitCrack) or build it yourself (recommended) or download it from this repo (bitcrack.zip) (recommended)
-
-Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-
-Edit the settings.txt file according to you.
-
-Run the application.
-
-# If found?
+## If found?
 
 `untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
 
----
-
 `untrusted_computer=true` If the private key is found, it will send your Telegram channel/group only.
 
-
-# Information
+# General Information
 
 1. This is <ins>not a shared pool</ins>.
 2. If the private key is found, <ins>only you can see it</ins>. No one else can see!
@@ -350,14 +390,15 @@ $ dotnet BitcrackRandomiser.dll
 (Optional) **Auto-start bitcrackrandomiser** on instance starts; enter your parameters to on-start script on vast.ai. You can use all the variables in the <ins>settings.txt</ins> file.
 
 ```
-cd /app/bitcrackrandomiser
-dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw.worker1907;
+$ cd /app/bitcrackrandomiser
+$ dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw;
 ```
 
 You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomiser:autorun` image:
 
 ```
 -e BC_PUZZLE=66
+-e BC_USER_TOKEN=0
 -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 -e BC_APP=/app/BitCrack/bin/./cuBitCrack
 -e BC_APP_ARGS="-b 896 -t 256 -p 256"
@@ -373,7 +414,7 @@ You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomis
 Example docker create/run options
 
 ```
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_SCAN_TYPE=default -e BC_UNTRUSTED_COMPUTER=true
+-e BC_USER_TOKEN=xxxx -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_SCAN_TYPE=default -e BC_UNTRUSTED_COMPUTER=true
 ```
 
 ## Long Way
@@ -404,6 +445,7 @@ target_puzzle=66
 app_type=bitcrack
 app_path=/root/BitCrack/bin/./cuBitCrack
 app_arguments=-b 896 -t 256 -p 256
+user_token=xxxxxxxxxxxxxxxxxx
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 ... other settings
 ```

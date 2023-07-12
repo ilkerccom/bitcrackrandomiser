@@ -62,7 +62,7 @@ namespace BitcrackRandomiser
             if (!settings.TelegramShare && settings.UntrustedComputer && !settings.IsApiShare)
             {
                 Helpers.WriteLine("If the 'untrusted_computer' setting is 'true', the private key will only be sent to your Telegram address. Please change the 'telegram_share' to 'true' in settings.txt. Then enter your 'access token' and 'chat id'. Otherwise, even if the private key is found, you will not be able to see it anywhere!", MessageType.error, true);
-                Thread.Sleep(30000);
+                Thread.Sleep(10000);
             }
 
             // Get random HEX value 
@@ -76,14 +76,28 @@ namespace BitcrackRandomiser
             // Cannot get HEX value
             if (GetHex == "")
             {
-                Helpers.WriteLine("Database connection error. Please wait...");
+                Helpers.WriteLine("Database connection error. Please wait...", MessageType.error);
                 Thread.Sleep(5000);
                 RunBitcrack(settings);
                 return Task.FromResult(0);
             }
 
+            // Invalid user token or wallet address
+            if (GetHex == "INVALID_USER_TOKEN")
+            {
+                Helpers.WriteLine("Invalid user token value or wallet address.", MessageType.error);
+                return Task.FromResult(0);
+            }
+
+            // Invalid user token or wallet address
+            if (GetHex == "NOT_ELIGIBLE_FOR_FREE")
+            {
+                Helpers.WriteLine("You are not eligible for free tier. For more information, log in to your account at btcpuzzle.info", MessageType.error);
+                return Task.FromResult(0);
+            }
+
             // No ranges left to scan
-            if(GetHex == "REACHED_OF_KEYSPACE")
+            if (GetHex == "REACHED_OF_KEYSPACE")
             {
                 Helpers.WriteLine("Reached of keyspace. No ranges left to scan.");
                 Helpers.ShareTelegram(string.Format("[{0}].[{1}] reached of keyspace", Helpers.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName), settings);

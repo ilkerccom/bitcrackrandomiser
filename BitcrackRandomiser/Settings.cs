@@ -46,6 +46,11 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
+        /// User token value
+        /// </summary>
+        public string UserToken { get; set; } = "";
+
+        /// <summary>
         /// Wallet address for worker
         /// </summary>
         string _WalletAddress = "";
@@ -214,6 +219,9 @@ namespace BitcrackRandomiser
                         case "app_arguments":
                             settings.AppArgs = value;
                             break;
+                        case "user_token":
+                            settings.UserToken = value;
+                            break;
                         case "wallet_address":
                             settings.WalletAddress = value;
                             break;
@@ -281,6 +289,9 @@ namespace BitcrackRandomiser
             // App arguments
             var _Arguments = DetermineSettings("Enter app arguments (can be empty)");
 
+            // User token
+            string _UserToken = DetermineSettings("Your user token value", null, 20);
+
             // Wallet address
             string _WalletAddress = DetermineSettings("Your BTC wallet address", null, 20);
 
@@ -321,10 +332,14 @@ namespace BitcrackRandomiser
             // Test mode
             string _TestMode = DetermineSettings("Enable test mode", new string[2] { "true", "false" });
 
+            // Force continue
+            string _ForceContinue = DetermineSettings("Enable force continue", new string[2] { "true", "false" });
+
             // Settings
             ConsoleSettings.TargetPuzzle = _Puzzle;
             ConsoleSettings.AppPath = _Folder;
             ConsoleSettings.AppArgs = _Arguments;
+            ConsoleSettings.UserToken = _UserToken;
             ConsoleSettings.WalletAddress = _WalletAddress;
             ConsoleSettings.ScanType = _ScanType;
             ConsoleSettings.CustomRange = _CustomRange;
@@ -335,6 +350,7 @@ namespace BitcrackRandomiser
             ConsoleSettings.TelegramShareEachKey = bool.Parse(_TelegramShareEachKey);
             ConsoleSettings.UntrustedComputer = bool.Parse(_UntrustedComputer);
             ConsoleSettings.TestMode = bool.Parse(_TestMode);
+            ConsoleSettings.ForceContinue = bool.Parse(_ForceContinue);
 
             // Will save settings
             string _SaveSettings = "";
@@ -351,6 +367,7 @@ namespace BitcrackRandomiser
                     "target_puzzle=" + ConsoleSettings.TargetPuzzle + Environment.NewLine +
                     "app_path=" + ConsoleSettings.AppPath + Environment.NewLine +
                     "app_arguments=" + ConsoleSettings.AppArgs + Environment.NewLine +
+                    "user_token=" + ConsoleSettings.UserToken + Environment.NewLine +
                     "wallet_address=" + ConsoleSettings.WalletAddress + Environment.NewLine +
                     "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
                     "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
@@ -360,7 +377,8 @@ namespace BitcrackRandomiser
                     "telegram_chatid=" + ConsoleSettings.TelegramChatId + Environment.NewLine +
                     "telegram_share_eachkey=" + ConsoleSettings.TelegramShareEachKey + Environment.NewLine +
                     "untrusted_computer=" + ConsoleSettings.UntrustedComputer + Environment.NewLine +
-                    "test_mode=" + ConsoleSettings.TestMode;
+                    "test_mode=" + ConsoleSettings.TestMode + Environment.NewLine +
+                    "force_continue=" + ConsoleSettings.ForceContinue;
                 string AppPath = AppDomain.CurrentDomain.BaseDirectory;
                 using (StreamWriter outputFile = new StreamWriter(Path.Combine(AppPath, "settings.txt")))
                 {

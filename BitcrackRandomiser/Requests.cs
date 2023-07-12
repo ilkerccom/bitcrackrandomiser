@@ -20,6 +20,8 @@ namespace BitcrackRandomiser
                 string ScanType = settings.ScanType;
                 string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
+                client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
+                client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
 
                 // Request
                 Result = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType)).Result.Content.ReadAsStringAsync();
