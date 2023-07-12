@@ -17,7 +17,7 @@ user_token=
 // Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 
-// Scan type [default,includeDefeatedRanges,excludeIterated2,excludeIterated3,excludeIterated4,excludeStartsWithXX]
+// Scan type [default,includeDefeatedRanges,excludeIterated2,excludeIterated3,excludeIterated4,excludeContains3,excludeContains4,excludeStartsWithXX]
 scan_type=default
 
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]

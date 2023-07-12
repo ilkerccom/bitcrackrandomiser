@@ -178,11 +178,15 @@ Select a scan type.
 
 `includeDefeatedRanges` - Include defeated ranges. This does not scan ranges that have already been scanned!
 
-`excludeIterated2` - Exclude iterated ranges (2 iterated). Not good choice. Example: 1A<ins>FF</ins>1B3 
+`excludeIterated2` - Exclude iterated ranges (2 iterated and more). Not good choice. Example: 1A<ins>FF</ins>1B3 
 
-`excludeIterated3` - Exclude iterated ranges (3 iterated). May be good choice. Example: 1A<ins>FFF</ins>B3
+`excludeIterated3` - Exclude iterated ranges (3 iterated and more). May be good choice. Example: 1A<ins>FFF</ins>B3
 
-`excludeIterated4` - Exclude iterated ranges (4 iterated). Good choice. Example: 1A<ins>FFFF</ins>3
+`excludeIterated4` - Exclude iterated ranges (4 iterated and more). Good choice. Example: 1A<ins>FFFF</ins>3
+
+`excludeContains3` - Exclude iterated ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
+
+`excludeContains4` - Exclude iterated ranges (4 and more). Not good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
 
 `excludeStartsWith{XX}` - Exclude ranges that starts with. [Min 1, max 2 chars]. 
 

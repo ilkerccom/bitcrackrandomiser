@@ -18,14 +18,14 @@ namespace BitcrackRandomiser
                 string StartsWith = settings.CustomRange;
                 string TargetPuzzle = settings.TargetPuzzle;
                 string ScanType = settings.ScanType;
-                string Result = "";
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
                 client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
 
                 // Request
-                Result = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType)).Result.Content.ReadAsStringAsync();
-                if (Result.Length >= 6 && Result.Length <= 160)
+                var Request = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType));
+                string Result = await Request.Content.ReadAsStringAsync();
+                if (Result.Length >= 6 && Result.Length <= 160 && Request.IsSuccessStatusCode)
                 {
                     return Result;
                 }
