@@ -1,4 +1,3 @@
-
 # Bitcrack-Randomiser
 
 Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works with Bitcrack.
@@ -9,11 +8,15 @@ Supports <ins>NVIDIA</ins> and <ins>AMD</ins> devices. (**AMD Bitcrack v0.30 onl
 
 ![alt text](https://i.ibb.co/vYHYsMq/bitcrackrandomiser.png)
 
-## Pool & Support
+## Related Links
 
-Go to pool > https://btcpuzzle.info/
+Website | Link
+--- | ---
+Pool website | [btcpuzzle.info](https://btcpuzzle.info/) 
+Support | [t.me/bitcrackrandomiser](https://t.me/bitcrackrandomiser)
+Github repo | [github.com/bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser)
+API Documentation | [API-DOCUMENTATION.MD](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/API-DOCUMENTATION.MD)
 
-For support > https://t.me/bitcrackrandomiser
 
 ## How it works?
 
@@ -57,6 +60,10 @@ When the range is scanned, a new private key is requested and the process procee
 
 # How to use?
 
+You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/HOW-TO-USE.md)
+
+### Simple Using
+
 1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and obtain your user token.
 
 2 - Download latest released [Bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/releases) or build it yourself.
@@ -67,9 +74,9 @@ When the range is scanned, a new private key is requested and the process procee
 
 5 - Edit the <ins>settings.txt</ins> file according to you.
 
-Run the application.
+6 - Run the application.
 
----
+### Docker Image Using
 
 You can use docker image for a faster experience. You can also create your own docker image. "Dockerfile" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
@@ -186,7 +193,9 @@ Select a scan type.
 
 `excludeContains3` - Exclude iterated ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
 
-`excludeContains4` - Exclude iterated ranges (4 and more). Not good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
+`excludeContains4` - Exclude iterated ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
+
+`excludeAlphanumericLoop` - Exclude if HEX contains only numbers or only letters. Example: <ins>2572441</ins> or <ins>BCAFFEB</ins>
 
 `excludeStartsWith{XX}` - Exclude ranges that starts with. [Min 1, max 2 chars]. 
 
@@ -353,9 +362,8 @@ You can see the private key in the file created in the folder and if Telegram is
 
 `false` If the private key is found, the scanning process is terminated. No data is sent to the pool.
 
----
 
-## If found?
+# If found?
 
 `untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
 
@@ -370,101 +378,6 @@ You can see the private key in the file created in the folder and if Telegram is
 5. You can see the percentage on the application.
 6. If you exit the application before the scan is not complete, the scanned HEX value will not be marked as scanned.
 7. Your luck; One in 33 million.
-
-# Try it on Vast.ai (Bitcoin accepted)
-
-Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
-
-## Short Way
-
-Use custom docker image `ilkercndk/bitcrackrandomiser:latest` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
-
-Connect instance. Vast.ai doesnt support `--it` interactive arguments for docker image on SSH. You must go to main folder;
-
-```
-$ cd /app/bitcrackrandomiser
-```
-
-Then edit `settings.txt` file and run the app.
-
-```bash
-$ dotnet BitcrackRandomiser.dll
-```
-
-(Optional) **Auto-start bitcrackrandomiser** on instance starts; enter your parameters to on-start script on vast.ai. You can use all the variables in the <ins>settings.txt</ins> file.
-
-```
-$ cd /app/bitcrackrandomiser
-$ dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw;
-```
-
-You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomiser:autorun` image:
-
-```
--e BC_PUZZLE=66
--e BC_USER_TOKEN=0
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
--e BC_APP=/app/BitCrack/bin/./cuBitCrack
--e BC_APP_ARGS="-b 896 -t 256 -p 256"
--e BC_SCAN_TYPE=includeDefeatedRanges
--e BC_CUSTOM_RANGE=none
--e BC_TELEGRAM_SHARE=false
--e BC_TELEGRAM_ACCESS_TOKEN=0
--e BC_TELEGRAM_CHAT_ID=0
--e BC_TELEGRAM_SHARE_EACHKEY=false
--e BC_UNTRUSTED_COMPUTER=false
-```
-
-Example docker create/run options
-
-```
--e BC_USER_TOKEN=xxxx -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_SCAN_TYPE=default -e BC_UNTRUSTED_COMPUTER=true
-```
-
-## Long Way
-
-(1) Select custom docker image `nvidia/cuda:12.0.0-devel-ubuntu20.04` in "Template Slot" and run any instance. (3090 or 4090 is fine)
-
-(2) Connect instance via SSH client (Like PuTTY). Follow commands:
-
-```bash
-$ sudo apt install nano
-$ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
-$ sudo chmod +x ./dotnet-install.sh
-$ ./dotnet-install.sh --version latest
-$ export DOTNET_ROOT=$HOME/.dotnet
-$ export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
-$ export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-$ git clone https://github.com/brichard19/BitCrack
-$ cd BitCrack
-$ make BUILD_CUDA=1 COMPUTE_CAP=86
-$ git clone https://github.com/ilkerccom/bitcrackrandomiser
-$ cd bitcrackrandomiser/BitcrackRandomiser
-```
-
-Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit *settings.txt* file. Example below:
-
-```
-target_puzzle=66
-app_type=bitcrack
-app_path=/root/BitCrack/bin/./cuBitCrack
-app_arguments=-b 896 -t 256 -p 256
-user_token=xxxxxxxxxxxxxxxxxx
-wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
-... other settings
-```
-
-Finally, run the app.
-
-```
-$ dotnet run
-```
-
-You can press "<ins>CTRL+B</ins>" and then "<ins>D</ins>" to leave terminal without closing app.
-
-# Create Your Own Client
-
-Read the [API Documentation](https://github.com/ilkerccom/bitcrackrandomiser/issues/9#issuecomment-1607175662). You can use "test pool 38" for testing.
 
 # Donate 
 
