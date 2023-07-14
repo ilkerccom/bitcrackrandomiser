@@ -214,6 +214,17 @@ namespace BitcrackRandomiser
                             settings.AppType = _at;
                             break;
                         case "app_path":
+                            if(value == "cuBitcrack" || value == "clBitcrack")
+                            {
+                                if(Environment.OSVersion.Platform == PlatformID.Win32NT)
+                                {
+                                    value = string.Format("{0}bitcrack\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
+                                }
+                                else if (Environment.OSVersion.Platform == PlatformID.Unix)
+                                {
+                                    value = string.Format("{0}bitcrack/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
+                                }
+                            }
                             settings.AppPath = value;
                             break;
                         case "app_arguments":
@@ -284,7 +295,7 @@ namespace BitcrackRandomiser
             string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "66", "67", "68" });
 
             // Select app path
-            string _Folder = DetermineSettings("Enter app folder path", null, 6);
+            string _Folder = DetermineSettings("Enter app folder path [cuBitcrack, clBitcrack or full path of Bitcrack]", null, 6);
 
             // App arguments
             var _Arguments = DetermineSettings("Enter app arguments (can be empty)");

@@ -68,13 +68,11 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 2 - Download latest released [Bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/releases) or build it yourself.
 
-3 - Download [Bitcrack](https://github.com/brichard19/BitCrack) or build it yourself (recommended) or download it from this repo (bitcrack.zip)
+3 - Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-4 - Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+4 - Edit the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file according to you.
 
-5 - Edit the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file according to you.
-
-6 - Run the application.
+5 - Run the application.
 
 ### Docker Image Using
 
@@ -130,11 +128,12 @@ Currently only `bitcrack` is available.
 
 ### [**app_path**]
 
-Add the folder where the Bitcrack application is located in the first line.
-
-On Windows: `C:\{BITCRACK_PATH}\cuBitCrack.exe`
-
-On Linux: `/root/{BITCRACK_PATH}/bin/./cuBitCrack`
+Possible Value|Description
+-|-
+`cuBitcrack`|For NVidia Cuda devices
+`clBitcrack`|For AMD devices
+`C:\{BITCRACK_PATH}\cuBitCrack.exe`|Example custom path on Windows
+`{BITCRACK_PATH}/./cuBitCrack`|Example custom path on Linux
 
 **NOTE: You can use OpenCL "clBitCrack.exe" for <ins>AMD devices on Bitcrack v0.30 only</ins>**
 

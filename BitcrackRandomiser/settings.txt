@@ -4,8 +4,8 @@ target_puzzle=66
 // which app will be used [bitcrack]
 app_type=bitcrack
 
-// App folder path [cuBitcrack, clBitcrack]
-app_path=C:\Users\ilker\OneDrive\Masaüstü\App\bitcrack\cuBitcrack.exe
+// App folder path [cuBitcrack, clBitcrack or full path of the Bitcrack app]
+app_path=cuBitcrack
 
 // App arguments
 // Example for bitcrack: -b 896 -t 256 -p 256
@@ -17,7 +17,7 @@ user_token=
 // Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 
-// Scan type [default,includeDefeatedRanges,excludeIterated2,excludeIterated3,excludeIterated4,excludeContains3,excludeContains4,excludeStartsWithXX]
+// Scan type [default,includeDefeatedRanges,excludeIterated{2/3/4},excludeContains{3/4},excludeStartsWith{XXX}]
 scan_type=default
 
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]

@@ -8,33 +8,15 @@ Download and install .NET 6.0.x runtimes for Windows from [Microsoft](https://do
 
 ![bitcrackrandomiser](https://i.ibb.co/S0MNrx1/1.png)
 
-3 - Download builded Bitcrack app from [ilkerccom/bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/bitcrack_nvidia.zip).
+3 - Edit `settings.txt` file from "bitcrackrandomiser" app folder.
 
-4 - Unzip "bitcrack_nvidia.zip"
+a. Enter "user_token" value. Get your "user_token" from [btcpuzzleinfo.com/dashboard](https://btcpuzzleinfo.com/dashboard) website.
 
-![bitcrack](https://i.ibb.co/YhnxLvT/2.png)
+b. Enter "wallet_address" value. You should use your BTC wallet address.
 
-5 - Copy full path of unzipped Bitcrack app.
+c. Save the file.
 
-Example: `C:\Users\ilker\Downloads\bitcrack_nvidia\cuKeyFinder`
-
-![bitcrack_path](https://i.ibb.co/sQrnrLF/3.png)
-
-6 - Open `settings.txt` file from "bitcrackrandomiser" app folder.
-
-![settings file](https://i.ibb.co/581b7Xm/4.png)
-
-You can now paste copied bitcrack app path to "app_path" value. Add "cuBitCrack.exe" to end of the line.
-
-`app_path=C:\Users\ilker\Downloads\bitcrack_nvidia\cuKeyFinder\cuBitCrack.exe`
-
-You can now change your worker wallet address from "wallet_address" line.
-
-You must enter "user_token" value. Get your "user_token" from [btcpuzzleinfo.com/dashboard](https://btcpuzzleinfo.com/dashboard) website.
-
-You can make other necessary settings by reading from the repo.
-
-7 - Run the "**BitcrackRandomiser.exe**"
+4 - Run the "**BitcrackRandomiser.exe**"
 
 ![bitcrackrandomiser](https://i.ibb.co/PgFkHSd/5.png)
 
