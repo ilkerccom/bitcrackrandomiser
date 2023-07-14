@@ -20,7 +20,7 @@ API Documentation | [API-DOCUMENTATION.MD](https://github.com/ilkerccom/bitcrack
 
 ## How it works?
 
-It only works with BTC Puzzle 66,67 and 68 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>settings.txt</ins> file.).
+It only works with BTC Puzzle 66, 67 and 68 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file.).
 
 ## Proof of Work
 
@@ -72,13 +72,13 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 4 - Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-5 - Edit the <ins>settings.txt</ins> file according to you.
+5 - Edit the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file according to you.
 
 6 - Run the application.
 
 ### Docker Image Using
 
-You can use docker image for a faster experience. You can also create your own docker image. "Dockerfile" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
+You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
 <ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
 
@@ -86,9 +86,9 @@ You can use docker image for a faster experience. You can also create your own d
 
 ### ilkercndk/bitcrackrandomiser:latest
 
-Everything is ready! Edit the settings.txt file and run the app!
+Everything is ready! Edit the [settings.txt](./BitcrackRandomiser/settings.txt) file and run the app!
 
-```
+```bash
 $ docker run -it ilkercndk/bitcrackrandomiser:latest
 ... edit settings file ...
 $ dotnet BitcrackRandomiser.dll
@@ -98,13 +98,13 @@ $ dotnet BitcrackRandomiser.dll
 
 Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> starts automatically. You can see the Docker create/run settings in the example below. Does not need interactive console.
 
-```
+```bash
 $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
 ```
 
 # Settings
 
-You can update the application settings via the "settings.txt" file or in app. You can pass arguments to the application as in the example below.
+You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.txt)" file or in app. You can pass arguments to the application as in the example below.
 
 ```
 dotnet BitcrackRandomiser.dll target_puzzle=66 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
@@ -379,8 +379,7 @@ You can see the private key in the file created in the folder and if Telegram is
 6. If you exit the application before the scan is not complete, the scanned HEX value will not be marked as scanned.
 7. Your luck; One in 33 million.
 
-# Donate 
-
-1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+# Donate
+`1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw`
 
 
