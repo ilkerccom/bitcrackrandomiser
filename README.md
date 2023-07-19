@@ -220,9 +220,13 @@ Scan custom range
 
 `none` Scan all of ranges.
 
-`2D` or `3BA` or `3FF1`  Enter the first [2-5] characters of the range you want to scan.
+`2D` or `3BA` or `3FF1`  Enter the first [2-5] characters of the range you want to scan. Only one value.
 
-You can now specify ranges like `3400000:38FFFFF`. Incoming keys will be selected from this range. You must write the range in full length. Make sure you enter the correct range.
+You can use specify ranges like `3400000:38FFFFF`. Incoming keys will be selected from this range. You must write the range in full length. Make sure you enter the correct range.
+
+You can use percentiles like `%5:%20`. In the example, only HEX values between 5% and 20% will be scanned.
+
+Note: You can specify only one setting for the custom range field.
 
 ---
 
