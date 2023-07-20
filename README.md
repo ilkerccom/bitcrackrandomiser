@@ -180,29 +180,18 @@ If you enter an invalid BTC address, it will show as "Unknown" in the system.
 
 Select a scan type. 
 
-`default` - Scan anything that isn't scanned.
-
-`includeDefeatedRanges` - Include defeated ranges. This does not scan ranges that have already been scanned!
-
-`excludeIterated2` - Exclude iterated ranges (2 iterated and more). Not good choice. Example: 1A<ins>FF</ins>1B3 
-
-`excludeIterated3` - Exclude iterated ranges (3 iterated and more). May be good choice. Example: 1A<ins>FFF</ins>B3
-
-`excludeIterated4` - Exclude iterated ranges (4 iterated and more). Good choice. Example: 1A<ins>FFFF</ins>3
-
-`excludeContains3` - Exclude iterated ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
-
-`excludeContains4` - Exclude iterated ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
-
-`excludeAlphanumericLoop` - Exclude if HEX contains only numbers or only letters. Example: <ins>2572441</ins> or <ins>BCAFFEB</ins>
-
-`excludeStartsWith{XX}` - Exclude ranges that starts with. [Min 1, max 2 chars]. 
-
-Example [1]: `excludeStartsWith2` The range starting with 2 will not return.
-
-Example [2]: `excludeStartsWith2A` The range starting with 2A will not return.
-
-If you enter a value that you entered in the "**custom_range**" field, you will get a "reached of keyspace" error and the application will be stopped.
+Possible Value|Description
+-|-
+`default`|Scan anything that isn't scanned.
+`includeDefeatedRanges`|Include defeated ranges. This does not scan ranges that have already been scanned!
+`excludeIterated2`|Exclude iterated ranges (2 iterated and more). Not good choice. Example: 1A<ins>FF</ins>1B3 
+`excludeIterated3`|Exclude iterated ranges (3 iterated and more). May be good choice. Example: 1A<ins>FFF</ins>B3
+`excludeIterated4`|Exclude iterated ranges (4 iterated and more). Good choice. Example: 1A<ins>FFFF</ins>3
+`excludeContains3`|Exclude iterated ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
+`excludeContains4`|Exclude iterated ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
+`excludeAlphanumericLoop`|Exclude if HEX contains only numbers or only letters. Example: <ins>2572441</ins> or <ins>BCAFFEB</ins>
+`excludeEven` <br/>or<br/> `excludeOdd`|Exclude the even or odd numbered HEX range.<br/><br/>You can only choose one. When you select any of them, the number of keys to be scanned decreases by 1/2.
+`excludeStartsWith{XX}`|Exclude ranges that starts with. [Min 1, max 2 chars]. <br/><br/>Example [1]: `excludeStartsWith2` The range starting with 2 will not return.<br/>Example [2]: `excludeStartsWith2A` The range starting with 2A will not return.<br/><br/>If you enter a value that you entered in the "**custom_range**" field, you will get a "reached of keyspace" error and the application will be stopped.
 
 You can make multiple settings using commas.
 
