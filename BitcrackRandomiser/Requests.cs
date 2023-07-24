@@ -21,6 +21,7 @@ namespace BitcrackRandomiser
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
                 client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
+                client.DefaultRequestHeaders.Add("PrivatePool", settings.PrivatePool);
 
                 // Request
                 var Request = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType));
@@ -43,7 +44,7 @@ namespace BitcrackRandomiser
         /// <param name="GPUName">Current GPU name</param>
         /// <param name="TargetPuzzle">Target Puzzle</param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string HEX, string WalletAddress, string ProofKey, string GPUName, string TargetPuzzle = "66")
+        public static async Task<bool> SetHex(string HEX, string WalletAddress, string ProofKey, string GPUName, string PrivatePool = "none", string TargetPuzzle = "66")
         {
             try
             {
@@ -51,6 +52,7 @@ namespace BitcrackRandomiser
                 using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
                 client.DefaultRequestHeaders.Add("HEX", HEX);
                 client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
+                client.DefaultRequestHeaders.Add("PrivatePool", PrivatePool);
                 client.DefaultRequestHeaders.Add("ProofKey", ProofKey);
                 client.DefaultRequestHeaders.Add("GPU", GPUName);
                 string Result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", TargetPuzzle), null).Result.Content.ReadAsStringAsync();

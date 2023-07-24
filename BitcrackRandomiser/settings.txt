@@ -46,3 +46,6 @@ test_mode=false
 
 // Force continue if key found
 force_continue=false
+
+// Private pool id
+private_pool=none

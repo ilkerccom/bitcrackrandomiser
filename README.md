@@ -355,6 +355,19 @@ You can see the private key in the file created in the folder and if Telegram is
 `false` If the private key is found, the scanning process is terminated. No data is sent to the pool.
 
 
+---
+
+### [**private_pool**] 
+
+`none` or `{private_pool_id}`
+
+You can create your own pool for Puzzle 66, 67 and 68. Only the user who created this pool can use it and no other user can join.
+
+Private pools use a database other than the main pool. That's why it's completely empty. Ranges scanned in the private pool just stay there. It is not transferred to another pool.
+
+Private pools can be created for $10 per month. You can reach me via Telegram for create your own puzzle pool.
+
+
 # If found?
 
 `untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)

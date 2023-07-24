@@ -96,6 +96,20 @@ namespace BitcrackRandomiser
                 return Task.FromResult(0);
             }
 
+            // Invalid user for private pool
+            if (GetHex == "INVALID_PRIVATE_POOL_USER")
+            {
+                Helpers.WriteLine("Only the user who created the private pool can join the private pool. Please check your user_token and wallet_address value.", MessageType.error);
+                return Task.FromResult(0);
+            }
+
+            // Invalid user for private pool
+            if (GetHex == "INVALID_PRIVATE_POOL")
+            {
+                Helpers.WriteLine("Invalid private pool. There is no such private pool. Check your private_pool value.", MessageType.error);
+                return Task.FromResult(0);
+            }
+
             // No ranges left to scan
             if (GetHex == "REACHED_OF_KEYSPACE")
             {
@@ -147,7 +161,7 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("[v{1}] {2} starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString().ToUpper()), MessageType.normal, true);
+            Helpers.WriteLine(string.Format("[v{1}] {2} starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.IsPrivatePool ? settings.PrivatePool : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString().ToUpper()), MessageType.normal, true);
             Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
             Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
             if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
@@ -260,7 +274,7 @@ namespace BitcrackRandomiser
             ProofKey = Helpers.SHA256Hash(ProofKey);
 
             // Try flag
-            bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
+            bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.PrivatePool, settings.TargetPuzzle).Result;
 
             // Try flagging
             int FlagTries = 1;

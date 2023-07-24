@@ -178,6 +178,27 @@ namespace BitcrackRandomiser
         public bool ForceContinue { get; set; } = false;
 
         /// <summary>
+        /// Private pool id
+        /// </summary>
+        public string PrivatePool { get; set; } = "none";
+
+        /// <summary>
+        /// Is private pool
+        /// </summary>
+        public bool IsPrivatePool
+        {
+            get
+            {
+                if(PrivatePool.Length == 8)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="args"></param>
@@ -276,6 +297,9 @@ namespace BitcrackRandomiser
                             _ = bool.TryParse(value, out _f);
                             settings.ForceContinue = _f;
                             break;
+                        case "private_pool":
+                            settings.PrivatePool = value;
+                            break;
                     }
                 }
             }
@@ -346,6 +370,9 @@ namespace BitcrackRandomiser
             // Force continue
             string _ForceContinue = DetermineSettings("Enable force continue", new string[2] { "true", "false" });
 
+            // Private pool
+            string _PrivatePool = DetermineSettings("Private pool id [none] or [pool_id]", null, 4);
+
             // Settings
             ConsoleSettings.TargetPuzzle = _Puzzle;
             ConsoleSettings.AppPath = _Folder;
@@ -362,6 +389,7 @@ namespace BitcrackRandomiser
             ConsoleSettings.UntrustedComputer = bool.Parse(_UntrustedComputer);
             ConsoleSettings.TestMode = bool.Parse(_TestMode);
             ConsoleSettings.ForceContinue = bool.Parse(_ForceContinue);
+            ConsoleSettings.PrivatePool = _PrivatePool;
 
             // Will save settings
             string _SaveSettings = "";
@@ -389,7 +417,8 @@ namespace BitcrackRandomiser
                     "telegram_share_eachkey=" + ConsoleSettings.TelegramShareEachKey + Environment.NewLine +
                     "untrusted_computer=" + ConsoleSettings.UntrustedComputer + Environment.NewLine +
                     "test_mode=" + ConsoleSettings.TestMode + Environment.NewLine +
-                    "force_continue=" + ConsoleSettings.ForceContinue;
+                    "force_continue=" + ConsoleSettings.ForceContinue + Environment.NewLine +
+                    "private_pool=" + ConsoleSettings.PrivatePool;
                 string AppPath = AppDomain.CurrentDomain.BaseDirectory;
                 using (StreamWriter outputFile = new StreamWriter(Path.Combine(AppPath, "settings.txt")))
                 {
