@@ -24,13 +24,11 @@ It only works with BTC Puzzle 66, 67 and 68 (You can change the puzzle number fr
 
 ## Proof of Work
 
-The pool always returns you a random **3 addresses** on every scan job. The private key of these addresses is scanned simultaneously. When the private key of the any address is found, it saves it as "**ProofKey**". This is to make sure your program is working correctly. I also want to make sure you have a really healthy scan.
+When requesting a range from the pool, **three wallet addresses** are also returned. The private key of these addresses is scanned simultaneously. To ensure that a range is scanned, the private key of three wallet addresses must be found. The private keys of the found addresses are hashed with SHA256. In this way, **"Proof Key"** is created. This is to make sure your program is working correctly. I also want to make sure you have a really healthy scan.
 
-Example; pool returns `3E2ECB0` HEX value to scan. The pool randomly generates <ins>extra 3 private keys</ins> within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
+Example; pool returns `3E2ECB0` HEX range to scan. The pool randomly generates <ins>extra three private keys</ins> within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
 
 Marking is done with `SHA256(PROOFKEY1+PROOFKEY2+PROOFKEY3)`
-
-"**ProofKey**" is used only for data marking.
 
 ## Example Puzzle 66 Scenario
 
@@ -44,19 +42,19 @@ If you want to **scan all private keys in  puzzle 66**; you need to do 36 quinti
 `2000000 to
 3ffffff`
 
-We now have about 33 million possible private keys to search. All possible private keys are **stored in the database**. A random value will come up each time a scan job is called and **will be marked as scanned** when the scan is complete. 
+We now have about 33 million possible ranges to search. All possible ranges are **stored in the database**. A random value will come up each time a scan job is called and **will be marked as scanned** when the scan is complete. Note: Each range contains 1,1 trillion private keys.
 
-I can scan each key in about 10 minutes on NVIDIA 3090. This actually means about 1,1 trillion private keys. When the private key is scanned, it is marked as scanned. So it won't show up anymore.
+I can scan each range in about 10 minutes on NVIDIA 3090. This actually means about 1,1 trillion private keys. When the range is scanned, it is marked as scanned. So it won't show up anymore.
 
 For Puzzle 66: 2000000-2050000 (First ~%0.98) ranges and 3FAF000-3FFFFFF (Last ~%0.98) manually defeated in this pool. If you rescan a defeated range, it will now be marked as scanned normal.
 
 ## Example
 
-Random key from database: **326FB80**
+Random range from database: **326FB80**
 
-The program tells Bitcrack to scan the following range: **326FB800000000000** / **326FB810000000000**
+The program tells Bitcrack to scan the following range: **326FB800000000000** / **326FB80FFFFFFFFFF** (Contains 1,1 trillion private keys)
 
-When the range is scanned, a new private key is requested and the process proceeds in this way.
+When the range is scanned, a new range is requested and the process proceeds in this way.
 
 # How to use?
 
@@ -102,7 +100,9 @@ $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser
 
 # Settings
 
-You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.txt)" file or in app. You can pass arguments to the application as in the example below.
+You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.txt)" file or in app. You can create your settings file on btcpuzzle.info dashboard.
+
+Also, You can pass arguments to the application as in the example below.
 
 ```
 dotnet BitcrackRandomiser.dll target_puzzle=66 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
@@ -116,7 +116,7 @@ Select the puzzle you want to scan. Default: 66
 
 `66` or `67` or `68`
 
-You can use `38` for test pool. There are 32 possible ranges in the test pool. You can find the test pool data on the website.Test pool data is reset every 30 minutes.
+You can use `38` for test pool. There are 32 possible ranges in the test pool. You can find the test pool data on the website. Test pool data is reset every 30 minutes.
 
 ---
 
@@ -170,7 +170,7 @@ Enter the BTC wallet address here.
 
 You can specify a **worker name** like `{wallet}.{worker}` Only alphanumeric is accepted. Max 16 characters. Do not use special characters. If you do not enter a worker name, it will be created automatically.
 
-If you enter an invalid BTC address, it will show as "Unknown" in the system.
+If you enter an invalid BTC address, it will show as "Unknown" in the system and you cannot follow your workers on your dashboard.
 
 **Note: You can only enter your wallet address registered to your membership account. If you enter any other address, you will get an error.**
 
@@ -187,10 +187,10 @@ Possible Value|Description
 `excludeIterated2`|Exclude iterated ranges (2 iterated and more). Not good choice. Example: 1A<ins>FF</ins>1B3 
 `excludeIterated3`|Exclude iterated ranges (3 iterated and more). May be good choice. Example: 1A<ins>FFF</ins>B3
 `excludeIterated4`|Exclude iterated ranges (4 iterated and more). Good choice. Example: 1A<ins>FFFF</ins>3
-`excludeContains3`|Exclude iterated ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
-`excludeContains4`|Exclude iterated ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
+`excludeContains3`|Exclude contains ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
+`excludeContains4`|Exclude contains ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
 `excludeAlphanumericLoop`|Exclude if HEX contains only numbers or only letters. Example: <ins>2572441</ins> or <ins>BCAFFEB</ins>
-`excludeEven` <br/>or<br/> `excludeOdd`|Exclude the even or odd numbered HEX range.<br/><br/>You can only choose one. When you select any of them, the number of keys to be scanned decreases by 1/2.
+`excludeEven` / `excludeOdd`|Exclude the even or odd numbered HEX range.<br/><br/>You can only choose one. When you select any of them, the number of keys to be scanned decreases by 1/2.
 `excludeStartsWith{XX}`|Exclude ranges that starts with. [Min 1, max 2 chars]. <br/><br/>Example [1]: `excludeStartsWith2` The range starting with 2 will not return.<br/>Example [2]: `excludeStartsWith2A` The range starting with 2A will not return.<br/><br/>If you enter a value that you entered in the "**custom_range**" field, you will get a "reached of keyspace" error and the application will be stopped.
 
 You can make multiple settings using commas.
@@ -319,7 +319,7 @@ Example: -9334716240
 
 Leave true if you are working on an untrusted computer
 
-`true` When private key is found, <ins>**it only sends it via Telegram**</ins>. Make sure your Telegram settings are correct. <ins>Otherwise, when the key is found, you will not be able to see it anywhere.</ins>
+`true` When private key is found, <ins>**it only sends it via Telegram or API share**</ins>. Make sure your Telegram settings are correct. <ins>Otherwise, when the key is found, you will not be able to see it anywhere.</ins>
 
 `false` When private key is found, The private key will be <ins>saved in a new text file</ins> and it <ins>appears on console screen</ins>. If Telegram share is active, notification will be sent.
 
@@ -348,12 +348,9 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 
 ### [**force_continue**] 
 
-`true` If the private key is found, the scan will continue until it is finished. The related range is marked as "scanned". The key found is publicly visible on the pool site. (With 1 missing character) 
+`true` If the private key is found, the scan will continue until it is finished. The related range is marked as "scanned" (like others). The scanned range will never be scanned by another user again. Telegram or api share feature must be active or insecure computer feature must be false. Because the scan will continue, the private key will not appear on the console screen.
 
-You can see the private key in the file created in the folder and if Telegram is active, notification will come.
-
-`false` If the private key is found, the scanning process is terminated. No data is sent to the pool.
-
+`false` If the private key is found, the scanning process is terminated. No data is sent to the pool. It can be scanned again by another user after 12 hours (even with very low probability).
 
 ---
 
@@ -365,8 +362,16 @@ You can create your own pool for Puzzle 66, 67 and 68. Only the user who created
 
 Private pools use a database other than the main pool. That's why it's completely empty. Ranges scanned in the private pool just stay there. It is not transferred to another pool.
 
-Private pools can be created for $10 per month. You can reach me via Telegram for create your own puzzle pool.
+Private pools can be created. You can reach me via Telegram for create your own puzzle pool.
 
+# Hints
+
+1. If you are working on someone else's computer, set "untrusted_computer" to "true". However, you need to change either "api_share" or "telegram_share" to "true".
+2. If possible, use "api_share" instead of "telegram_share". So you can save the private key in a file, send it via SMS or send it as mail.
+3. Set "app_arguments" according to GPU model. This will give you higher performance.
+4. I recommend using at least the "excludeIterated4" type in the scan type. It is very unlikely that such a private key will occur with hierarchically generated private keys.
+5. If you are scanning with more than one video card, you can split the ranges. Even with two graphics cards, you can easily double your chances.
+6. "DO NOT USE" closed-source bitcrack app. Use only the one in the original repo or a open sourced bitcrack application. Make sure you're really working for yourself or someone else.
 
 # If found?
 
@@ -380,9 +385,7 @@ Private pools can be created for $10 per month. You can reach me via Telegram fo
 2. If the private key is found, <ins>only you can see it</ins>. No one else can see!
 3. If the private key is found, <ins>it is not shared</ins>.
 4. Once a private key is scanned, it is not scanned again.
-5. You can see the percentage on the application.
-6. If you exit the application before the scan is not complete, the scanned HEX value will not be marked as scanned.
-7. Your luck; One in 33 million.
+5. Your luck; 1 in 33 million.
 
 # Donate
 `1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw`
