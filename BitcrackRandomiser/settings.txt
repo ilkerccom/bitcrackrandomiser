@@ -17,6 +17,9 @@ user_token=
 // Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
 wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 
+// Enter your GPU Count [1-32]
+gpu_count=1
+
 // Scan type [default,includeDefeatedRanges,excludeIterated{2/3/4},excludeContains{3/4},excludeStartsWith{XXX}]
 scan_type=default
 

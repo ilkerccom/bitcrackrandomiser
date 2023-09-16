@@ -74,7 +74,7 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 ### Docker Image Using
 
-You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
+You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Dockerfile/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
 <ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
 
@@ -173,6 +173,16 @@ You can specify a **worker name** like `{wallet}.{worker}` Only alphanumeric is 
 If you enter an invalid BTC address, it will show as "Unknown" in the system and you cannot follow your workers on your dashboard.
 
 **Note: You can only enter your wallet address registered to your membership account. If you enter any other address, you will get an error.**
+
+---
+
+### [**gpu_count**]
+
+Specify the number of GPUs to use. Default: 1. 
+
+Each GPU performs a separate range scan.
+
+If you are using more than one GPU, GPU indexes will be automatically added to the end of your worker address. Example: `{worker}_0` or `{worker}_1`
 
 ---
 

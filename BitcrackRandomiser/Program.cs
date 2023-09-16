@@ -1,5 +1,7 @@
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
+using static BitcrackRandomiser.Models;
 
 namespace BitcrackRandomiser
 {
@@ -12,7 +14,7 @@ namespace BitcrackRandomiser
         public static bool IsProofKey = false;
 
         // Proof of work key
-        public static string ProofKey = "";
+        public static List<ProofKey> ProofKey = new();
 
         // GPU Model name
         public static string GPUName = "-";
@@ -45,7 +47,11 @@ namespace BitcrackRandomiser
 
             // Run
             Helpers.WriteLine("Please wait while app is starting...", MessageType.normal, true);
-            RunBitcrack(AppSettings);
+            Parallel.For(0, AppSettings.GPUCount, i =>
+            {
+                ProofKey.Add(new ProofKey { Key = "", GPUIndex = i });
+                RunBitcrack(AppSettings, i);
+            });
             while (true)
             {
                 Console.ReadLine();
@@ -56,7 +62,7 @@ namespace BitcrackRandomiser
         /// 
         /// </summary>
         /// <returns></returns>
-        static Task<int> RunBitcrack(Settings settings)
+        static Task<int> RunBitcrack(Settings settings, int gpuIndex)
         {
             // Check important area
             if (!settings.TelegramShare && settings.UntrustedComputer && !settings.IsApiShare)
@@ -78,7 +84,7 @@ namespace BitcrackRandomiser
             {
                 Helpers.WriteLine("Database connection error. Please wait...", MessageType.error);
                 Thread.Sleep(5000);
-                RunBitcrack(settings);
+                RunBitcrack(settings, gpuIndex);
                 return Task.FromResult(0);
             }
 
@@ -126,7 +132,7 @@ namespace BitcrackRandomiser
             {
                 // Impossible but, may be proof value == target address?
                 PrivateKey = GetHex.Split(':')[2];
-                JobFinished(TargetAddress, RandomHex, settings, KeyFound: true);
+                JobFinished(TargetAddress, RandomHex, settings, KeyFound: true, gpuIndex);
                 return Task.FromResult(0);
             }
 
@@ -151,7 +157,7 @@ namespace BitcrackRandomiser
                 if (File.Exists(CustomTestFile))
                 {
                     string[] lines = File.ReadAllLines(CustomTestFile);
-                    if(lines.Length == 3)
+                    if (lines.Length == 3)
                     {
                         TargetAddress = lines[0];
                         StartHex = lines[1];
@@ -161,24 +167,27 @@ namespace BitcrackRandomiser
             }
 
             // Write info
-            Helpers.WriteLine(string.Format("[v{1}] {2} starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.IsPrivatePool ? settings.PrivatePool : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString().ToUpper()), MessageType.normal, true);
-            Helpers.WriteLine(string.Format("HEX range: {0}-{1}", StartHex, EndHex));
-            Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
-            if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
-            else if (settings.TargetPuzzle == "38") Helpers.WriteLine("Test pool 38 is active.", MessageType.error);
-            else Helpers.WriteLine("Test mode is passive.", MessageType.info);
-            Helpers.WriteLine(string.Format("Scan type: {0}", settings.ScanType.ToString()), MessageType.info);
-            Helpers.WriteLine(string.Format("API share: {0} / Telegram share: {1}", settings.IsApiShare, settings.TelegramShare), MessageType.info);
-            Helpers.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
-            Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
-            Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
+            if (gpuIndex == 0)
+            {
+                Helpers.WriteLine(string.Format("[v{1}] {2} starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.IsPrivatePool ? settings.PrivatePool : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString().ToUpper()), MessageType.normal, true);
+                Helpers.WriteLine(string.Format("HEX range: {0}-{1} / Total GPU(s): {2}", StartHex, EndHex, settings.GPUCount));
+                Helpers.WriteLine(string.Format("Target address: {0}", TargetAddress));
+                if (settings.TestMode) Helpers.WriteLine("Test mode is active.", MessageType.error);
+                else if (settings.TargetPuzzle == "38") Helpers.WriteLine("Test pool 38 is active.", MessageType.error);
+                else Helpers.WriteLine("Test mode is passive.", MessageType.info);
+                Helpers.WriteLine(string.Format("Scan type: {0}", settings.ScanType.ToString()), MessageType.info);
+                Helpers.WriteLine(string.Format("API share: {0} / Telegram share: {1}", settings.IsApiShare, settings.TelegramShare), MessageType.info);
+                Helpers.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
+                Helpers.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
+                Helpers.WriteLine(string.Format("Your wallet/worker name: {0}", settings.WalletAddress));
+            }
 
             // App arguments
             string AppArguments = "";
             if (settings.AppType == AppType.bitcrack)
             {
                 string Zeros = (settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10));
-                AppArguments = string.Format("{3} --keyspace {0}{4}:{1}{4} {2} {5}", StartHex, EndHex, TargetAddress, settings.AppArgs, Zeros, string.Join(' ', ProofValues));
+                AppArguments = string.Format("{3} --keyspace {0}{4}:{1}{4} {2} {5} -d {6}", StartHex, EndHex, TargetAddress, settings.AppArgs, Zeros, string.Join(' ', ProofValues), gpuIndex);
             }
 
             // Tcs
@@ -192,8 +201,8 @@ namespace BitcrackRandomiser
             };
 
             // Output from BitCrack
-            process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process);
-            process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process);
+            process.ErrorDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process, gpuIndex);
+            process.OutputDataReceived += (object o, DataReceivedEventArgs s) => OutputReceivedHandler(o, s, TargetAddress, ProofValues, StartHex, settings, process, gpuIndex);
 
             // App exited
             process.Exited += (sender, args) =>
@@ -221,7 +230,7 @@ namespace BitcrackRandomiser
         /// <param name="HEX">HEX range</param>
         /// <param name="settings">Current settings</param>
         /// <param name="KeyFound">Key found or not</param>
-        private static void JobFinished(string TargetAddress, string HEX, Settings settings, bool KeyFound = false)
+        private static void JobFinished(string TargetAddress, string HEX, Settings settings, bool KeyFound = false, int GPUIndex = 0)
         {
             if (KeyFound)
             {
@@ -252,13 +261,13 @@ namespace BitcrackRandomiser
                 }
 
                 // Flag HEX as used
-                FlagAsScanned(settings, HEX);
+                FlagAsScanned(settings, HEX, GPUIndex);
 
                 // Wait and restart
-                ProofKey = "";
+                ProofKey.FirstOrDefault(k => k.GPUIndex == GPUIndex).Key = "";
                 IsProofKey = false;
-                Thread.Sleep(10000);
-                RunBitcrack(settings);
+                Thread.Sleep(5000);
+                RunBitcrack(settings, GPUIndex);
             }
         }
 
@@ -268,21 +277,26 @@ namespace BitcrackRandomiser
         /// <param name="settings"></param>
         /// <param name="HEX"></param>
         /// <returns></returns>
-        private static bool FlagAsScanned(Settings settings, string HEX)
+        public static bool FlagAsScanned(Settings settings, string HEX, int GPUIndex)
         {
             // Hash all proof keys with SHA256
-            ProofKey = Helpers.SHA256Hash(ProofKey);
+            string HashedProofKey = Helpers.SHA256Hash(ProofKey.FirstOrDefault(p => p.GPUIndex == GPUIndex).Key);
 
             // Try flag
-            bool FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.PrivatePool, settings.TargetPuzzle).Result;
+            string WalletAddress = settings.WalletAddress;
+            if (settings.GPUCount > 1)
+            {
+                WalletAddress += "_" + GPUIndex;
+            }
+            bool FlagUsed = Requests.SetHex(HEX, WalletAddress, HashedProofKey, GPUName, settings.PrivatePool, settings.TargetPuzzle).Result;
 
             // Try flagging
             int FlagTries = 1;
             int MaxTries = 6;
             while (!FlagUsed && FlagTries <= MaxTries)
             {
-                FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, ProofKey, GPUName, settings.TargetPuzzle).Result;
-                Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1}", FlagTries, MaxTries));
+                FlagUsed = Requests.SetHex(HEX, settings.WalletAddress, HashedProofKey, GPUName, settings.TargetPuzzle).Result;
+                Helpers.WriteLine(string.Format("Flag error... Retrying... {0}/{1} [GPU{2}]", FlagTries, MaxTries, GPUIndex));
                 Thread.Sleep(10000);
                 FlagTries++;
             }
@@ -290,11 +304,11 @@ namespace BitcrackRandomiser
             // Info
             if (FlagUsed)
             {
-                Helpers.WriteLine("Range scanned and flagged successfully... Launching again... Please wait...");
+                Helpers.WriteLine(string.Format("Range scanned and flagged successfully... Launching again... Please wait... [GPU{0}]", GPUIndex));
             }
             else
             {
-                Helpers.WriteLine("Range scanned with flag error... Launching again... Please wait...");
+                Helpers.WriteLine(string.Format("Range scanned with flag error... Launching again... Please wait... [GPU{0}] {1}", GPUIndex, HashedProofKey));
             }
 
             return FlagUsed;
@@ -310,18 +324,18 @@ namespace BitcrackRandomiser
         /// <param name="HEX">Selected HEX range</param>
         /// <param name="settings">Current settings</param>
         /// <param name="process">Active proccess</param>
-        private static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string TargetAddress, List<string> ProofValues, string HEX, Settings settings, Process process)
+        public static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string TargetAddress, List<string> ProofValues, string HEX, Settings settings, Process process, int GPUIndex)
         {
             var Status = Helpers.CheckJobStatus(o, e);
             if (Status.OutputType == OutputType.finished)
             {
                 // Job finished normally
-                JobFinished(TargetAddress, HEX, settings);
+                JobFinished(TargetAddress, HEX, settings, KeyFound: false, GPUIndex);
             }
             else if (Status.OutputType == OutputType.address)
             {
                 IsProofKey = ProofValues.Any(Status.Content.Contains);
-                if(!IsProofKey)
+                if (!IsProofKey)
                 {
                     // Check again for known Bitcrack bug - Remove first 10 characters
                     List<string> ParsedProofValues = ProofValues.Select(x => x[10..]).ToList();
@@ -332,7 +346,7 @@ namespace BitcrackRandomiser
             {
                 if (IsProofKey)
                 {
-                    ProofKey += Status.Content;
+                    ProofKey.FirstOrDefault(p => p.GPUIndex == GPUIndex).Key += Status.Content;
                 }
                 else
                 {
@@ -341,7 +355,7 @@ namespace BitcrackRandomiser
                         process.Kill();
                     }
                     PrivateKey = Status.Content;
-                    JobFinished(TargetAddress, HEX, settings, KeyFound: true);
+                    JobFinished(TargetAddress, HEX, settings, KeyFound: true, GPUIndex);
                 }
             }
             else if (Status.OutputType == OutputType.gpuModel)

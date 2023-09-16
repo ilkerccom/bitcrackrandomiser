@@ -6,6 +6,7 @@ ENV BC_USERTOKEN="0"
 ENV BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
 ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
 ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
+ENV BC_GPUCOUNT="1"
 ENV BC_SCAN_TYPE="includeDefeatedRanges"
 ENV BC_CUSTOM_RANGE="none"
 ENV BC_API_SHARE="none"
@@ -15,13 +16,18 @@ ENV BC_TELEGRAM_CHAT_ID="0"
 ENV BC_TELEGRAM_SHARE_EACHKEY="false"
 ENV BC_UNTRUSTED_COMPUTER="false"
 ENV BC_FORCE_CONTINUE="false"
+ENV BC_PRIVATEPOOL="none"
 
-# Clone and build bitcrack
+# Clone and build bitcrack. For older graphics cards, you can lower the <COMPUTE_CAP> value.
 WORKDIR /app
 RUN apt-get update \
  && apt-get install git nano curl -y
 RUN git clone https://github.com/brichard19/BitCrack
 WORKDIR /app/BitCrack
+
+# Build for AMD and OpenCL devices
+#RUN make BUILD_OPENCL=1 COMPUTE_CAP=86
+# Build for NVIDIA CUDA devices
 RUN make BUILD_CUDA=1 COMPUTE_CAP=86
 
 # Install .NET Core
@@ -53,6 +59,7 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	app_arguments="${BC_APP_ARGS}" \
 	user_token=${BC_USERTOKEN} \
 	wallet_address=${BC_WALLET} \
+	gpu_count=${BC_GPUCOUNT} \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
 	custom_range=${BC_CUSTOM_RANGE} \
@@ -62,4 +69,5 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
 	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
 	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
-	force_continue=${BC_FORCE_CONTINUE}
+	force_continue=${BC_FORCE_CONTINUE} \ 
+	private_pool=${BC_PRIVATEPOOL}

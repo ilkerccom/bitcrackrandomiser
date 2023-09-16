@@ -54,10 +54,11 @@ namespace BitcrackRandomiser
         /// Wallet address for worker
         /// </summary>
         string _WalletAddress = "";
-        public string WalletAddress { 
+        public string WalletAddress
+        {
             get
             {
-                if(!_WalletAddress.Contains('.'))
+                if (!_WalletAddress.Contains('.'))
                 {
                     var Random = new Random();
                     _WalletAddress = string.Format("{0}.worker{1}", _WalletAddress, Random.Next(1000, 9999));
@@ -73,6 +74,31 @@ namespace BitcrackRandomiser
             set
             {
                 _WalletAddress = value;
+            }
+        }
+
+        /// <summary>
+        /// GPU count
+        /// </summary>
+        int _GPUCount = 1;
+        public int GPUCount
+        {
+            get
+            {
+                if (_GPUCount <= 0)
+                {
+                    return 1;
+                }
+                else if(_GPUCount > 32)
+                {
+                    return 32;
+                }
+
+                return _GPUCount;
+            }
+            set
+            {
+                _GPUCount = value;
             }
         }
 
@@ -129,7 +155,7 @@ namespace BitcrackRandomiser
         {
             get
             {
-                if(Uri.IsWellFormedUriString(ApiShare, UriKind.Absolute))
+                if (Uri.IsWellFormedUriString(ApiShare, UriKind.Absolute))
                 {
                     return true;
                 }
@@ -189,7 +215,7 @@ namespace BitcrackRandomiser
         {
             get
             {
-                if(PrivatePool.Length == 8)
+                if (PrivatePool.Length == 8)
                 {
                     return true;
                 }
@@ -212,7 +238,7 @@ namespace BitcrackRandomiser
             string[] Lines = File.ReadLines(Path).ToArray();
 
             // From arguments
-            if(args.Length > 0)
+            if (args.Length > 0)
             {
                 Lines = args;
             }
@@ -235,9 +261,9 @@ namespace BitcrackRandomiser
                             settings.AppType = _at;
                             break;
                         case "app_path":
-                            if(value == "cuBitcrack" || value == "clBitcrack")
+                            if (value == "cuBitcrack" || value == "clBitcrack")
                             {
-                                if(Environment.OSVersion.Platform == PlatformID.Win32NT)
+                                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                                 {
                                     value = string.Format("{0}bitcrack\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
                                 }
@@ -256,6 +282,11 @@ namespace BitcrackRandomiser
                             break;
                         case "wallet_address":
                             settings.WalletAddress = value;
+                            break;
+                        case "gpu_count":
+                            int _g;
+                            _ = int.TryParse(value, out  _g);
+                            settings.GPUCount = _g;
                             break;
                         case "scan_type":
                             settings.ScanType = value;
@@ -330,6 +361,9 @@ namespace BitcrackRandomiser
             // Wallet address
             string _WalletAddress = DetermineSettings("Your BTC wallet address", null, 20);
 
+            // Wallet address
+            string _GPUCount = DetermineSettings("Ener your GPU count [Min:1]", null, 1);
+
             // Scan type
             string _ScanType = DetermineSettings("Select a scan type", new string[2] { "default", "includeDefeatedRanges" });
 
@@ -379,6 +413,7 @@ namespace BitcrackRandomiser
             ConsoleSettings.AppArgs = _Arguments;
             ConsoleSettings.UserToken = _UserToken;
             ConsoleSettings.WalletAddress = _WalletAddress;
+            ConsoleSettings.GPUCount = int.Parse(_GPUCount);
             ConsoleSettings.ScanType = _ScanType;
             ConsoleSettings.CustomRange = _CustomRange;
             ConsoleSettings.ApiShare = _ApiShare;
@@ -402,12 +437,13 @@ namespace BitcrackRandomiser
             // Save settings
             if (_SaveSettings == "yes")
             {
-                string SavedSettings = 
+                string SavedSettings =
                     "target_puzzle=" + ConsoleSettings.TargetPuzzle + Environment.NewLine +
                     "app_path=" + ConsoleSettings.AppPath + Environment.NewLine +
                     "app_arguments=" + ConsoleSettings.AppArgs + Environment.NewLine +
                     "user_token=" + ConsoleSettings.UserToken + Environment.NewLine +
                     "wallet_address=" + ConsoleSettings.WalletAddress + Environment.NewLine +
+                    "gpu_count=" + ConsoleSettings.GPUCount + Environment.NewLine +
                     "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
                     "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
                     "api_share=" + ConsoleSettings.ApiShare + Environment.NewLine +

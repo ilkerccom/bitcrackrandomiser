@@ -22,6 +22,8 @@ c. Save the file.
 
 # Run on Windows as Docker Image
 
+<ins>NOTE: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
+
 [Download and install Docker](https://docs.docker.com/desktop/install/windows-install/) app
 
 There are two Docker images you can use for Bitcrackrandomiser.
@@ -87,7 +89,9 @@ You can use more settings for this docker image. See below;
 
 # Run on Vast.ai (Bitcoin accepted)
 
-Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s).
+<ins>NOTE: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
+
+Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s). 
 
 ## Short Way
 
