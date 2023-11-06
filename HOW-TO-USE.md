@@ -10,7 +10,7 @@ Download and install .NET 6.0.x runtimes for Windows from [Microsoft](https://do
 
 3 - Edit `settings.txt` file from "bitcrackrandomiser" app folder.
 
-a. Enter "user_token" value. Get your "user_token" from [btcpuzzleinfo.com/dashboard](https://btcpuzzleinfo.com/dashboard) website.
+a. Enter "user_token" value. Get your "user_token" from [btcpuzzle.info/dashboard](https://btcpuzzle.info/dashboard) website.
 
 b. Enter "wallet_address" value. You should use your BTC wallet address.
 
