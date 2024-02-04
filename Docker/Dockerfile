@@ -7,6 +7,7 @@ ENV BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
 ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
 ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
 ENV BC_GPUCOUNT="1"
+ENV BC_GPUINDEX="0"
 ENV BC_SCAN_TYPE="includeDefeatedRanges"
 ENV BC_CUSTOM_RANGE="none"
 ENV BC_API_SHARE="none"
@@ -60,6 +61,7 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	user_token=${BC_USERTOKEN} \
 	wallet_address=${BC_WALLET} \
 	gpu_count=${BC_GPUCOUNT} \
+	gpu_index=${BC_GPUINDEX} \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
 	custom_range=${BC_CUSTOM_RANGE} \
