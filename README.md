@@ -186,6 +186,14 @@ If you are using more than one GPU, GPU indexes will be automatically added to t
 
 ---
 
+### [**gpu_index**]
+
+Index number of the graphics card to be used. Use only if you are going to scan with a single graphics card.
+
+If you have a single video card, use the value "0". If you are scanning with more than one graphics card, this field is disabled.
+
+---
+
 ### [**scan_type**]
 
 Select a scan type. 

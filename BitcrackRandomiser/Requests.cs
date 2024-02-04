@@ -1,9 +1,11 @@
+using BitcrackRandomiser.Models;
+
 namespace BitcrackRandomiser
 {
     internal class Requests
     {
         // API URL endpoint
-        public static string ApiURL = "https://api.btcpuzzle.info/";
+        public static string apiURL = "https://api.btcpuzzle.info/";
 
         /// <summary>
         /// Get random HEX value from API
@@ -15,20 +17,20 @@ namespace BitcrackRandomiser
             try
             {
                 // CustomRange
-                string StartsWith = settings.CustomRange;
-                string TargetPuzzle = settings.TargetPuzzle;
-                string ScanType = settings.ScanType;
-                using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
+                string startsWith = settings.CustomRange;
+                string targetPuzzle = settings.TargetPuzzle;
+                string scanType = settings.ScanType;
+                using var client = new HttpClient { BaseAddress = new Uri(apiURL) };
                 client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
                 client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
                 client.DefaultRequestHeaders.Add("PrivatePool", settings.PrivatePool);
 
                 // Request
-                var Request = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", StartsWith, TargetPuzzle, ScanType));
-                string Result = await Request.Content.ReadAsStringAsync();
-                if (Result.Length >= 6 && Result.Length <= 160 && Request.IsSuccessStatusCode)
+                var request = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", startsWith, targetPuzzle, scanType));
+                string result = await request.Content.ReadAsStringAsync();
+                if (result.Length >= 6 && result.Length <= 160 && request.IsSuccessStatusCode)
                 {
-                    return Result;
+                    return result;
                 }
                 return "";
             }
@@ -44,19 +46,19 @@ namespace BitcrackRandomiser
         /// <param name="GPUName">Current GPU name</param>
         /// <param name="TargetPuzzle">Target Puzzle</param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string HEX, string WalletAddress, string ProofKey, string GPUName, string PrivatePool = "none", string TargetPuzzle = "66")
+        public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "66")
         {
             try
             {
                 bool isSuccess = false;
-                using var client = new HttpClient { BaseAddress = new Uri(ApiURL) };
-                client.DefaultRequestHeaders.Add("HEX", HEX);
-                client.DefaultRequestHeaders.Add("WalletAddress", WalletAddress);
-                client.DefaultRequestHeaders.Add("PrivatePool", PrivatePool);
-                client.DefaultRequestHeaders.Add("ProofKey", ProofKey);
-                client.DefaultRequestHeaders.Add("GPU", GPUName);
-                string Result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", TargetPuzzle), null).Result.Content.ReadAsStringAsync();
-                Boolean.TryParse(Result, out isSuccess);
+                using var client = new HttpClient { BaseAddress = new Uri(apiURL) };
+                client.DefaultRequestHeaders.Add("HEX", hex);
+                client.DefaultRequestHeaders.Add("WalletAddress", walletAddress);
+                client.DefaultRequestHeaders.Add("PrivatePool", privatePool);
+                client.DefaultRequestHeaders.Add("ProofKey", proofKey);
+                client.DefaultRequestHeaders.Add("GPU", gpuName);
+                string result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", targetPuzzle), null).Result.Content.ReadAsStringAsync();
+                Boolean.TryParse(result, out isSuccess);
                 return isSuccess;
             }
             catch { return false; }
@@ -83,8 +85,8 @@ namespace BitcrackRandomiser
                     client.DefaultRequestHeaders.Add("WorkerAddress", settings.ParsedWalletAddress);
                     client.DefaultRequestHeaders.Add("WorkerName", settings.ParsedWorkerName);
                     client.DefaultRequestHeaders.Add("ScanType", settings.ScanType.ToString());
-                    string Result = await client.PostAsync("", null).Result.Content.ReadAsStringAsync();
-                    Boolean.TryParse(Result, out isSuccess);
+                    string result = await client.PostAsync("", null).Result.Content.ReadAsStringAsync();
+                    Boolean.TryParse(result, out isSuccess);
                     return isSuccess;
                 }
 
@@ -92,32 +94,5 @@ namespace BitcrackRandomiser
             }
             catch { return false; }
         }
-    }
-
-    /// <summary>
-    /// Alternative for telegram. Share progress with your API
-    /// </summary>
-    public class ApiShare
-    {
-        // Current status
-        public ApiShareStatus Status { get; set; }
-
-        // Scanned HEX
-        public string HEX { get; set; } = "";
-
-        // Found private key
-        public string PrivateKey { get; set; } = "";
-    }
-
-    /// <summary>
-    /// Enum types for apishare
-    /// </summary>
-    public enum ApiShareStatus
-    {
-        workerStarted,
-        workerExited,
-        rangeScanned,
-        reachedOfKeySpace,
-        keyFound
     }
 }

@@ -1,12 +1,11 @@
-using System;
-using System.Diagnostics;
+using BitcrackRandomiser.Enums;
 
 namespace BitcrackRandomiser
 {
     internal class Settings
     {
         /// <summary>
-        /// Target puzzle number. [66,67,68]
+        /// Target puzzle number. [66,67,68 or 38]
         /// </summary>
         public string TargetPuzzle { get; set; } = "66";
 
@@ -24,26 +23,7 @@ namespace BitcrackRandomiser
         /// Bitcrack args
         /// Example: -b 896 -t 256 -p 256
         /// </summary>
-        string _AppArgs = "";
-        public string AppArgs
-        {
-            get
-            {
-                if (_AppArgs.Contains("-o"))
-                {
-                    return _AppArgs.Replace("-o", "x");
-                }
-                else if (_AppArgs.Contains("--keyspace"))
-                {
-                    return _AppArgs.Replace("--keyspace", "x");
-                }
-                return _AppArgs;
-            }
-            set
-            {
-                _AppArgs = value;
-            }
-        }
+        public string AppArgs { get; set; } = "";
 
         /// <summary>
         /// User token value
@@ -58,16 +38,10 @@ namespace BitcrackRandomiser
         {
             get
             {
-                if (!_WalletAddress.Contains('.'))
-                {
-                    var Random = new Random();
-                    _WalletAddress = string.Format("{0}.worker{1}", _WalletAddress, Random.Next(1000, 9999));
-                }
-
                 if (_WalletAddress.Length < 6)
-                {
                     _WalletAddress = "Unknown";
-                }
+                else if (!_WalletAddress.Contains('.'))
+                    _WalletAddress = string.Format("{0}.worker{1}", _WalletAddress, new Random().Next(1000, 9999));
 
                 return _WalletAddress;
             }
@@ -78,7 +52,7 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
-        /// GPU count
+        /// GPU count. Max 16 GPUs
         /// </summary>
         int _GPUCount = 1;
         public int GPUCount
@@ -86,19 +60,34 @@ namespace BitcrackRandomiser
             get
             {
                 if (_GPUCount <= 0)
-                {
                     return 1;
-                }
-                else if(_GPUCount > 32)
-                {
-                    return 32;
-                }
+                else if (_GPUCount > 16)
+                    return 16;
 
                 return _GPUCount;
             }
             set
             {
                 _GPUCount = value;
+            }
+        }
+
+        /// <summary>
+        /// Active GPU for scanning.
+        /// </summary>
+        int _GPUIndex = 0;
+        public int GPUIndex
+        {
+            get
+            {
+                if (_GPUIndex <= 0 || _GPUIndex > 16)
+                    return 0;
+
+                return _GPUIndex;
+            }
+            set
+            {
+                _GPUIndex = value;
             }
         }
 
@@ -156,9 +145,7 @@ namespace BitcrackRandomiser
             get
             {
                 if (Uri.IsWellFormedUriString(ApiShare, UriKind.Absolute))
-                {
                     return true;
-                }
 
                 return false;
             }
@@ -232,18 +219,18 @@ namespace BitcrackRandomiser
         public static Settings GetSettings(string[] args)
         {
             Settings settings = new Settings();
-            string Path = AppDomain.CurrentDomain.BaseDirectory + "settings.txt";
+            string path = AppDomain.CurrentDomain.BaseDirectory + "settings.txt";
 
             // From file
-            string[] Lines = File.ReadLines(Path).ToArray();
+            string[] lines = File.ReadLines(path).ToArray();
 
             // From arguments
             if (args.Length > 0)
             {
-                Lines = args;
+                lines = args;
             }
 
-            foreach (var line in Lines)
+            foreach (var line in lines)
             {
                 if (line.Contains('='))
                 {
@@ -285,8 +272,13 @@ namespace BitcrackRandomiser
                             break;
                         case "gpu_count":
                             int _g;
-                            _ = int.TryParse(value, out  _g);
+                            _ = int.TryParse(value, out _g);
                             settings.GPUCount = _g;
+                            break;
+                        case "gpu_index":
+                            int _gi;
+                            _ = int.TryParse(value, out _gi);
+                            settings.GPUIndex = _gi;
                             break;
                         case "scan_type":
                             settings.ScanType = value;
@@ -344,7 +336,7 @@ namespace BitcrackRandomiser
         public static Settings SetSettings()
         {
             Console.Clear();
-            var ConsoleSettings = new Settings();
+            var consoleSettings = new Settings();
 
             // Select puzzle
             string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "66", "67", "68" });
@@ -361,8 +353,11 @@ namespace BitcrackRandomiser
             // Wallet address
             string _WalletAddress = DetermineSettings("Your BTC wallet address", null, 20);
 
-            // Wallet address
-            string _GPUCount = DetermineSettings("Ener your GPU count [Min:1]", null, 1);
+            // GPU Count
+            string _GPUCount = DetermineSettings("Enter your GPU count [Min:1, Max:16]", null, 1);
+
+            // GPU Index
+            string _GPUIndex = DetermineSettings("Enter your GPU Index [Default:0]", null, 1);
 
             // Scan type
             string _ScanType = DetermineSettings("Select a scan type", new string[2] { "default", "includeDefeatedRanges" });
@@ -408,57 +403,59 @@ namespace BitcrackRandomiser
             string _PrivatePool = DetermineSettings("Private pool id [none] or [pool_id]", null, 4);
 
             // Settings
-            ConsoleSettings.TargetPuzzle = _Puzzle;
-            ConsoleSettings.AppPath = _Folder;
-            ConsoleSettings.AppArgs = _Arguments;
-            ConsoleSettings.UserToken = _UserToken;
-            ConsoleSettings.WalletAddress = _WalletAddress;
-            ConsoleSettings.GPUCount = int.Parse(_GPUCount);
-            ConsoleSettings.ScanType = _ScanType;
-            ConsoleSettings.CustomRange = _CustomRange;
-            ConsoleSettings.ApiShare = _ApiShare;
-            ConsoleSettings.TelegramShare = bool.Parse(_TelegramShare);
-            ConsoleSettings.TelegramAccessToken = _TelegramAccessToken;
-            ConsoleSettings.TelegramChatId = _TelegramChatId;
-            ConsoleSettings.TelegramShareEachKey = bool.Parse(_TelegramShareEachKey);
-            ConsoleSettings.UntrustedComputer = bool.Parse(_UntrustedComputer);
-            ConsoleSettings.TestMode = bool.Parse(_TestMode);
-            ConsoleSettings.ForceContinue = bool.Parse(_ForceContinue);
-            ConsoleSettings.PrivatePool = _PrivatePool;
+            consoleSettings.TargetPuzzle = _Puzzle;
+            consoleSettings.AppPath = _Folder;
+            consoleSettings.AppArgs = _Arguments;
+            consoleSettings.UserToken = _UserToken;
+            consoleSettings.WalletAddress = _WalletAddress;
+            consoleSettings.GPUCount = int.Parse(_GPUCount);
+            consoleSettings.GPUIndex = int.Parse(_GPUIndex);
+            consoleSettings.ScanType = _ScanType;
+            consoleSettings.CustomRange = _CustomRange;
+            consoleSettings.ApiShare = _ApiShare;
+            consoleSettings.TelegramShare = bool.Parse(_TelegramShare);
+            consoleSettings.TelegramAccessToken = _TelegramAccessToken;
+            consoleSettings.TelegramChatId = _TelegramChatId;
+            consoleSettings.TelegramShareEachKey = bool.Parse(_TelegramShareEachKey);
+            consoleSettings.UntrustedComputer = bool.Parse(_UntrustedComputer);
+            consoleSettings.TestMode = bool.Parse(_TestMode);
+            consoleSettings.ForceContinue = bool.Parse(_ForceContinue);
+            consoleSettings.PrivatePool = _PrivatePool;
 
             // Will save settings
-            string _SaveSettings = "";
-            while (_SaveSettings != "yes" && _SaveSettings != "no")
+            string saveSettings = "";
+            while (saveSettings != "yes" && saveSettings != "no")
             {
                 Helpers.Write("Do you want to save settings to settings.txt? (yes/no) : ", ConsoleColor.Cyan);
-                _SaveSettings = Console.ReadLine() ?? "";
+                saveSettings = Console.ReadLine() ?? "";
             }
 
             // Save settings
-            if (_SaveSettings == "yes")
+            if (saveSettings == "yes")
             {
-                string SavedSettings =
-                    "target_puzzle=" + ConsoleSettings.TargetPuzzle + Environment.NewLine +
-                    "app_path=" + ConsoleSettings.AppPath + Environment.NewLine +
-                    "app_arguments=" + ConsoleSettings.AppArgs + Environment.NewLine +
-                    "user_token=" + ConsoleSettings.UserToken + Environment.NewLine +
-                    "wallet_address=" + ConsoleSettings.WalletAddress + Environment.NewLine +
-                    "gpu_count=" + ConsoleSettings.GPUCount + Environment.NewLine +
-                    "scan_type=" + ConsoleSettings.ScanType + Environment.NewLine +
-                    "custom_range=" + ConsoleSettings.CustomRange + Environment.NewLine +
-                    "api_share=" + ConsoleSettings.ApiShare + Environment.NewLine +
-                    "telegram_share=" + ConsoleSettings.TelegramShare + Environment.NewLine +
-                    "telegram_accesstoken=" + ConsoleSettings.TelegramAccessToken + Environment.NewLine +
-                    "telegram_chatid=" + ConsoleSettings.TelegramChatId + Environment.NewLine +
-                    "telegram_share_eachkey=" + ConsoleSettings.TelegramShareEachKey + Environment.NewLine +
-                    "untrusted_computer=" + ConsoleSettings.UntrustedComputer + Environment.NewLine +
-                    "test_mode=" + ConsoleSettings.TestMode + Environment.NewLine +
-                    "force_continue=" + ConsoleSettings.ForceContinue + Environment.NewLine +
-                    "private_pool=" + ConsoleSettings.PrivatePool;
-                string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(AppPath, "settings.txt")))
+                string savedSettings =
+                    "target_puzzle=" + consoleSettings.TargetPuzzle + Environment.NewLine +
+                    "app_path=" + consoleSettings.AppPath + Environment.NewLine +
+                    "app_arguments=" + consoleSettings.AppArgs + Environment.NewLine +
+                    "user_token=" + consoleSettings.UserToken + Environment.NewLine +
+                    "wallet_address=" + consoleSettings.WalletAddress + Environment.NewLine +
+                    "gpu_count=" + consoleSettings.GPUCount + Environment.NewLine +
+                    "gpu_index=" + consoleSettings.GPUIndex + Environment.NewLine +
+                    "scan_type=" + consoleSettings.ScanType + Environment.NewLine +
+                    "custom_range=" + consoleSettings.CustomRange + Environment.NewLine +
+                    "api_share=" + consoleSettings.ApiShare + Environment.NewLine +
+                    "telegram_share=" + consoleSettings.TelegramShare + Environment.NewLine +
+                    "telegram_accesstoken=" + consoleSettings.TelegramAccessToken + Environment.NewLine +
+                    "telegram_chatid=" + consoleSettings.TelegramChatId + Environment.NewLine +
+                    "telegram_share_eachkey=" + consoleSettings.TelegramShareEachKey + Environment.NewLine +
+                    "untrusted_computer=" + consoleSettings.UntrustedComputer + Environment.NewLine +
+                    "test_mode=" + consoleSettings.TestMode + Environment.NewLine +
+                    "force_continue=" + consoleSettings.ForceContinue + Environment.NewLine +
+                    "private_pool=" + consoleSettings.PrivatePool;
+                string appPath = AppDomain.CurrentDomain.BaseDirectory;
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine(appPath, "settings.txt")))
                 {
-                    outputFile.WriteLine(SavedSettings);
+                    outputFile.WriteLine(savedSettings);
                 }
                 Helpers.Write("\nSettings saved successfully. App starting ...", ConsoleColor.Green);
                 Thread.Sleep(2000);
@@ -469,64 +466,44 @@ namespace BitcrackRandomiser
                 Thread.Sleep(2000);
             }
 
-            return ConsoleSettings;
+            return consoleSettings;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="Values"></param>
-        /// <param name="MinLength"></param>
+        /// <param name="message"></param>
+        /// <param name="values"></param>
+        /// <param name="minLength"></param>
         /// <returns></returns>
-        private static string DetermineSettings(string Message, string[]? Values = null, int MinLength = 0)
+        private static string DetermineSettings(string message, string[]? values = null, int minLength = 0)
         {
-            string _Value = "";
-            string MessageFormat = Values == null ? string.Format("[Settings] {0} : ", Message) : string.Format("[Settings] {0} ({1}) : ", Message, string.Join('/', Values));
+            string value = "";
+            string messageFormat = values == null ? string.Format("[Settings] {0} : ", message) : string.Format("[Settings] {0} ({1}) : ", message, string.Join('/', values));
 
-            if (MinLength > 0)
+            if (minLength > 0)
             {
-                while (_Value.Length < MinLength)
+                while (value.Length < minLength)
                 {
-                    Helpers.Write(MessageFormat);
-                    _Value = Console.ReadLine() ?? "";
+                    Helpers.Write(messageFormat);
+                    value = Console.ReadLine() ?? "";
                 }
             }
-            else if (Values != null)
+            else if (values != null)
             {
-                while (!Values.Contains(_Value))
+                while (!values.Contains(value))
                 {
-                    Helpers.Write(MessageFormat);
-                    _Value = Console.ReadLine() ?? "";
+                    Helpers.Write(messageFormat);
+                    value = Console.ReadLine() ?? "";
                 }
             }
             else
             {
-                Helpers.Write(MessageFormat);
-                _Value = Console.ReadLine() ?? "";
+                Helpers.Write(messageFormat);
+                value = Console.ReadLine() ?? "";
             }
             Helpers.Write("-------------------------------\n");
-            return _Value;
+            return value;
         }
-    }
-
-    /// <summary>
-    /// Console message type
-    /// </summary>
-    enum MessageType
-    {
-        normal,
-        success,
-        info,
-        error
-    }
-
-    /// <summary>
-    /// Apps to scan
-    /// </summary>
-    enum AppType
-    {
-        bitcrack,
-        keyhunt
     }
 }
