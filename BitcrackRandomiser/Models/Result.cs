@@ -1,12 +1,10 @@
 ﻿using BitcrackRandomiser.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BitcrackRandomiser.Models
 {
+    /// <summary>
+    /// Result of external app with output.
+    /// </summary>
     internal class Result
     {
         /// <summary>

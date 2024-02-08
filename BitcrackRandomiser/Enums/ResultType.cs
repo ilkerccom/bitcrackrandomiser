@@ -1,17 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BitcrackRandomiser.Enums
+﻿namespace BitcrackRandomiser.Enums
 {
+    /// <summary>
+    /// Result types for share data. Telegram or API share
+    /// </summary>
     public enum ResultType
     {
+        /// <summary>
+        /// Worker started to scan
+        /// </summary>
         workerStarted,
+        /// <summary>
+        /// Worker gone offline
+        /// </summary>
         workerExited,
+        /// <summary>
+        /// A range scanned
+        /// </summary>
         rangeScanned,
+        /// <summary>
+        /// Reached of key space
+        /// </summary>
         reachedOfKeySpace,
+        /// <summary>
+        /// Private key found of target address
+        /// </summary>
         keyFound
     }
 }

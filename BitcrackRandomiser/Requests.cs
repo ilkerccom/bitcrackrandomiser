@@ -2,9 +2,14 @@ using BitcrackRandomiser.Models;
 
 namespace BitcrackRandomiser
 {
+    /// <summary>
+    /// API requests only
+    /// </summary>
     internal class Requests
     {
-        // API URL endpoint
+        /// <summary>
+        /// API URL endpoint
+        /// </summary>
         public static string apiURL = "https://api.btcpuzzle.info/";
 
         /// <summary>
@@ -24,14 +29,13 @@ namespace BitcrackRandomiser
                 client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
                 client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
                 client.DefaultRequestHeaders.Add("PrivatePool", settings.PrivatePool);
+                client.DefaultRequestHeaders.Add("SecurityHash", settings.SecurityHash);
 
                 // Request
-                var request = await client.GetAsync(string.Format("hex/getv3?startswith={0}&puzzlecode={1}&scantype={2}", startsWith, targetPuzzle, scanType));
+                var request = await client.GetAsync($"hex/getv3?startswith={startsWith}&puzzlecode={targetPuzzle}&scantype={scanType}");
                 string result = await request.Content.ReadAsStringAsync();
                 if (result.Length >= 6 && result.Length <= 160 && request.IsSuccessStatusCode)
-                {
                     return result;
-                }
                 return "";
             }
             catch { return ""; }
@@ -40,25 +44,25 @@ namespace BitcrackRandomiser
         /// <summary>
         /// HEX will be flagged as scanned
         /// </summary>
-        /// <param name="HEX">Scanned HEX</param>
-        /// <param name="WalletAddress">Worker wallet address</param>
-        /// <param name="ProofKey">Proof key for marking</param>
-        /// <param name="GPUName">Current GPU name</param>
-        /// <param name="TargetPuzzle">Target Puzzle</param>
+        /// <param name="hex">Scanned HEX</param>
+        /// <param name="walletAddress">Worker wallet address</param>
+        /// <param name="proofKey">Proof key for marking</param>
+        /// <param name="gpuName">Current GPU name</param>
+        /// <param name="privatePool">Private pool ID</param>
+        /// <param name="targetPuzzle">Target Puzzle</param>
         /// <returns></returns>
         public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "66")
         {
             try
             {
-                bool isSuccess = false;
                 using var client = new HttpClient { BaseAddress = new Uri(apiURL) };
                 client.DefaultRequestHeaders.Add("HEX", hex);
                 client.DefaultRequestHeaders.Add("WalletAddress", walletAddress);
                 client.DefaultRequestHeaders.Add("PrivatePool", privatePool);
                 client.DefaultRequestHeaders.Add("ProofKey", proofKey);
                 client.DefaultRequestHeaders.Add("GPU", gpuName);
-                string result = await client.PostAsync(string.Format("hex/flag?puzzlecode={0}", targetPuzzle), null).Result.Content.ReadAsStringAsync();
-                Boolean.TryParse(result, out isSuccess);
+                string result = await client.PostAsync($"hex/flag?puzzlecode={targetPuzzle}", null).Result.Content.ReadAsStringAsync();
+                _ = bool.TryParse(result, out bool isSuccess);
                 return isSuccess;
             }
             catch { return false; }
@@ -76,7 +80,6 @@ namespace BitcrackRandomiser
             {
                 if (settings.IsApiShare)
                 {
-                    bool isSuccess = false;
                     using var client = new HttpClient { BaseAddress = new Uri(settings.ApiShare) };
                     client.DefaultRequestHeaders.Add("Status", apiShare.Status.ToString());
                     client.DefaultRequestHeaders.Add("HEX", apiShare.HEX);
@@ -86,7 +89,7 @@ namespace BitcrackRandomiser
                     client.DefaultRequestHeaders.Add("WorkerName", settings.ParsedWorkerName);
                     client.DefaultRequestHeaders.Add("ScanType", settings.ScanType.ToString());
                     string result = await client.PostAsync("", null).Result.Content.ReadAsStringAsync();
-                    Boolean.TryParse(result, out isSuccess);
+                    _ = bool.TryParse(result, out bool isSuccess);
                     return isSuccess;
                 }
 

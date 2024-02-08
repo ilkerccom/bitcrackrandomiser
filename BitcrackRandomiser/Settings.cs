@@ -1,4 +1,6 @@
 using BitcrackRandomiser.Enums;
+using BitcrackRandomiser.Helpers;
+using System.Reflection;
 
 namespace BitcrackRandomiser
 {
@@ -80,7 +82,7 @@ namespace BitcrackRandomiser
         {
             get
             {
-                if (_GPUIndex <= 0 || _GPUIndex > 16)
+                if (_GPUIndex < 0 || _GPUIndex >= 16)
                     return 0;
 
                 return _GPUIndex;
@@ -212,6 +214,21 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
+        /// Hashed settings for untrusted computers.
+        /// When the any setting changes, the hash value also changes.
+        /// </summary>
+        public string SecurityHash
+        {
+            get
+            {
+                string buildId = Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToString();
+                string data = $"{TargetPuzzle}-{AppPath}-{AppArgs}-{ParsedWalletAddress}-{ApiShare}-{TelegramShare}-" +
+                    $"{TelegramChatId}-{ScanType}-{CustomRange}-{UntrustedComputer}-{ForceContinue}-{UserToken}-{buildId}";
+                return Helper.StringParser(value: Helper.SHA256Hash(data), length: 5, addDots: false);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="args"></param>
@@ -226,9 +243,7 @@ namespace BitcrackRandomiser
 
             // From arguments
             if (args.Length > 0)
-            {
                 lines = args;
-            }
 
             foreach (var line in lines)
             {
@@ -254,7 +269,7 @@ namespace BitcrackRandomiser
                                 {
                                     value = string.Format("{0}bitcrack\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
                                 }
-                                else if (Environment.OSVersion.Platform == PlatformID.Unix)
+                                else
                                 {
                                     value = string.Format("{0}bitcrack/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
                                 }
@@ -426,7 +441,7 @@ namespace BitcrackRandomiser
             string saveSettings = "";
             while (saveSettings != "yes" && saveSettings != "no")
             {
-                Helpers.Write("Do you want to save settings to settings.txt? (yes/no) : ", ConsoleColor.Cyan);
+                Helper.Write("Do you want to save settings to settings.txt? (yes/no) : ", ConsoleColor.Cyan);
                 saveSettings = Console.ReadLine() ?? "";
             }
 
@@ -457,12 +472,12 @@ namespace BitcrackRandomiser
                 {
                     outputFile.WriteLine(savedSettings);
                 }
-                Helpers.Write("\nSettings saved successfully. App starting ...", ConsoleColor.Green);
+                Helper.Write("\nSettings saved successfully. App starting ...", ConsoleColor.Green);
                 Thread.Sleep(2000);
             }
             else
             {
-                Helpers.Write("\nApp starting ...", ConsoleColor.Green);
+                Helper.Write("\nApp starting ...", ConsoleColor.Green);
                 Thread.Sleep(2000);
             }
 
@@ -485,7 +500,7 @@ namespace BitcrackRandomiser
             {
                 while (value.Length < minLength)
                 {
-                    Helpers.Write(messageFormat);
+                    Helper.Write(messageFormat);
                     value = Console.ReadLine() ?? "";
                 }
             }
@@ -493,16 +508,16 @@ namespace BitcrackRandomiser
             {
                 while (!values.Contains(value))
                 {
-                    Helpers.Write(messageFormat);
+                    Helper.Write(messageFormat);
                     value = Console.ReadLine() ?? "";
                 }
             }
             else
             {
-                Helpers.Write(messageFormat);
+                Helper.Write(messageFormat);
                 value = Console.ReadLine() ?? "";
             }
-            Helpers.Write("-------------------------------\n");
+            Helper.Write("-------------------------------\n");
             return value;
         }
     }

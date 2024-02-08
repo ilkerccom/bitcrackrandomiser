@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BitcrackRandomiser.Enums
+﻿namespace BitcrackRandomiser.Enums
 {
+    /// <summary>
+    /// Type of external app.
+    /// </summary>
     public enum AppType
     {
-        bitcrack,
-        keyhunt
+        /// <summary>
+        /// Bitcrack
+        /// </summary>
+        bitcrack
     }
 }
