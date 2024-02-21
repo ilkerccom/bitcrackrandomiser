@@ -7,6 +7,11 @@ namespace BitcrackRandomiser
     class Program
     {
         /// <summary>
+        /// Reward list
+        /// </summary>
+        public static List<string> rewardAddresses = new();
+
+        /// <summary>
         /// Bitcrackrandomiser
         /// </summary>
         /// <param name="args"></param>
@@ -26,6 +31,12 @@ namespace BitcrackRandomiser
 
             // Send worker start message to telegram or api if active
             Share.Send(ResultType.workerStarted, appSettings);
+
+            // Get rewards from pool for current puzzle
+            if (appSettings.ScanRewards)
+                rewardAddresses = Requests.GetRewards(appSettings.TargetPuzzle).Result.Split("|")
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Distinct().ToList();
 
             // Run
             Helper.WriteLine("Please wait while app is starting...", MessageType.normal, true);

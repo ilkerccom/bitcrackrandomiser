@@ -38,7 +38,10 @@ namespace BitcrackRandomiser.Helpers
                     return new Result { OutputType = OutputType.finished };
                 }
                 else if (e.Data.Contains("Address:"))
-                    return new Result { OutputType = OutputType.address, Content = e.Data.Trim() };
+                {
+                    string address = e.Data.Split(':').Last().Trim();
+                    return new Result { OutputType = OutputType.address, Content = address };
+                }
                 else if (e.Data.Contains("Private key:"))
                 {
                     string key = e.Data.Replace(" ", "").ToLower().Trim().Replace("privatekey:", "").Trim().ToUpper();

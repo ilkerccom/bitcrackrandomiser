@@ -9,6 +9,7 @@ ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
 ENV BC_GPUCOUNT="1"
 ENV BC_GPUINDEX="0"
 ENV BC_SCAN_TYPE="includeDefeatedRanges"
+ENV BC_SCAN_REWARDS="false"
 ENV BC_CUSTOM_RANGE="none"
 ENV BC_API_SHARE="none"
 ENV BC_TELEGRAM_SHARE="false"
@@ -64,6 +65,7 @@ ENTRYPOINT dotnet BitcrackRandomiser.dll \
 	gpu_index=${BC_GPUINDEX} \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
+	scan_rewards=${BC_SCAN_REWARDS} \
 	custom_range=${BC_CUSTOM_RANGE} \
 	api_share=${BC_API_SHARE} \
 	telegram_share=${BC_TELEGRAM_SHARE} \

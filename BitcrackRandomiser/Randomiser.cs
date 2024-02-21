@@ -19,6 +19,12 @@ namespace BitcrackRandomiser
         // Proof of work keys list.
         public static string[] proofKeys = new string[16];
 
+        // Is reward key
+        public static bool[] isRewardKeys = new bool[16];
+
+        // Addresses for rewards
+        public static string[] rewardAddresses = new string[16];
+
         // GPU Model names
         public static string[] gpuNames = new string[16];
 
@@ -41,7 +47,7 @@ namespace BitcrackRandomiser
             }
 
             // Get random HEX value from API
-            string hex = Requests.GetHex(settings).Result;
+            string hex = Requests.GetHex(settings, gpuIndex).Result;
             string targetAddress =
                 settings.TargetPuzzle == "38" ? "1HBtApAFA9B2YZw3G2YKSMCtb3dVnjuNe2" :
                 settings.TargetPuzzle == "66" ? "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so" :
@@ -146,9 +152,10 @@ namespace BitcrackRandomiser
                 var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
                 var initialArgs = settings.AppArgs;
                 var proofAddressList = string.Join(' ', proofValues);
+                var rewardAddressList = settings.ScanRewards ? string.Join(' ', Program.rewardAddresses) : "";
                 var currentGpuIndex = settings.GPUCount > 1 ? gpuIndex : settings.GPUIndex;
 
-                appArguments = $"{initialArgs} --keyspace {startHex}{totalZeros}:{endHex}{totalZeros} {targetAddress} {proofAddressList} -d {currentGpuIndex}";
+                appArguments = $"{initialArgs} --keyspace {startHex}{totalZeros}:{endHex}{totalZeros} {targetAddress} {proofAddressList} {rewardAddressList} -d {currentGpuIndex}";
             }
 
             // Check app is exists
@@ -256,8 +263,15 @@ namespace BitcrackRandomiser
                 if (!isProofKeys[gpuIndex])
                 {
                     // Check again for known Bitcrack bug - Remove first 10 characters
-                    List<string> parsedProofValues = proofValues.Select(x => x[10..]).ToList();
+                    var parsedProofValues = proofValues.Select(x => x[10..]).ToList();
                     isProofKeys[gpuIndex] = parsedProofValues.Any(status.Content.Contains);
+                }
+
+                // An address found. Check it is private key of reward address.
+                if (Program.rewardAddresses.Select(x => x[5..]).ToList().Any(status.Content.Contains))
+                {
+                    isRewardKeys[gpuIndex] = true;
+                    rewardAddresses[gpuIndex] = status.Content;
                 }
             }
             else if (status.OutputType == OutputType.privateKeyFound)
@@ -265,8 +279,18 @@ namespace BitcrackRandomiser
                 // A private key found
                 if (isProofKeys[gpuIndex])
                     proofKeys[gpuIndex] += status.Content;
+                else if (isRewardKeys[gpuIndex])
+                {
+                    // Reward found
+                    string rewardResult = $"[Address={rewardAddresses[gpuIndex]}]->[Key={status.Content}]";
+                    Share.Send(ResultType.rewardFound, settings, rewardResult);
+                    Helper.SaveFile(rewardResult, $"reward_{rewardAddresses[gpuIndex]}");
+                    isRewardKeys[gpuIndex] = false;
+                    rewardAddresses[gpuIndex] = "";
+                }
                 else
                 {
+                    // Private key found
                     if (settings.ForceContinue == false)
                         process.Kill();
                     privateKey = status.Content;

@@ -17,17 +17,22 @@ namespace BitcrackRandomiser
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static async Task<string> GetHex(Settings settings)
+        public static async Task<string> GetHex(Settings settings, int gpuIndex)
         {
             try
             {
+                // Wallet address
+                string walletAddress = settings.WalletAddress;
+                if (settings.GPUCount > 1)
+                    walletAddress += "_" + gpuIndex;
+
                 // CustomRange
                 string startsWith = settings.CustomRange;
                 string targetPuzzle = settings.TargetPuzzle;
                 string scanType = settings.ScanType;
                 using var client = new HttpClient { BaseAddress = new Uri(apiURL) };
                 client.DefaultRequestHeaders.Add("UserToken", settings.UserToken);
-                client.DefaultRequestHeaders.Add("WalletAddress", settings.WalletAddress);
+                client.DefaultRequestHeaders.Add("WalletAddress", walletAddress);
                 client.DefaultRequestHeaders.Add("PrivatePool", settings.PrivatePool);
                 client.DefaultRequestHeaders.Add("SecurityHash", settings.SecurityHash);
 
@@ -69,6 +74,22 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
+        /// Get rewards from pool
+        /// </summary>
+        /// <param name="targetPuzzle">Target puzzle code</param>
+        /// <returns></returns>
+        public static async Task<string> GetRewards(string targetPuzzle = "66")
+        {
+            try
+            {
+                using var client = new HttpClient { BaseAddress = new Uri(apiURL), Timeout = TimeSpan.FromSeconds(10) };
+                string result = await client.GetAsync($"hex/rewards?puzzlecode={targetPuzzle}").Result.Content.ReadAsStringAsync();
+                return result;
+            }
+            catch { return ""; }
+        }
+
+        /// <summary>
         /// Share progress to your API
         /// </summary>
         /// <param name="apiShare"></param>
@@ -81,6 +102,7 @@ namespace BitcrackRandomiser
                 if (settings.IsApiShare)
                 {
                     using var client = new HttpClient { BaseAddress = new Uri(settings.ApiShare) };
+                    client.Timeout = TimeSpan.FromSeconds(10);
                     client.DefaultRequestHeaders.Add("Status", apiShare.Status.ToString());
                     client.DefaultRequestHeaders.Add("HEX", apiShare.HEX);
                     client.DefaultRequestHeaders.Add("PrivateKey", apiShare.PrivateKey);

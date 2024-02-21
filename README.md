@@ -98,6 +98,29 @@ Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> start
 $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
 ```
 
+### Docker options with default settings
+
+```bash
+BC_PUZZLE=66
+BC_USERTOKEN="0"
+BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
+BC_APP="/app/BitCrack/bin/./cuBitCrack"
+BC_APP_ARGS="-b 896 -t 256 -p 256"
+BC_GPUCOUNT="1"
+BC_GPUINDEX="0"
+BC_SCAN_TYPE="includeDefeatedRanges"
+BC_SCAN_REWARDS="true"
+BC_CUSTOM_RANGE="none"
+BC_API_SHARE="none"
+BC_TELEGRAM_SHARE="false"
+BC_TELEGRAM_ACCESS_TOKEN="0"
+BC_TELEGRAM_CHAT_ID="0"
+BC_TELEGRAM_SHARE_EACHKEY="false"
+BC_UNTRUSTED_COMPUTER="false"
+BC_FORCE_CONTINUE="false"
+BC_PRIVATEPOOL="none"
+```
+
 # Settings
 
 You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.txt)" file or in app. You can create your settings file on btcpuzzle.info dashboard.
@@ -218,6 +241,20 @@ You can make multiple settings using commas.
 scan_type=excludeIterated3,excludeStartsWith2A,excludeStartsWith2B,excludeStartsWith3F
 ...
 ```
+
+---
+
+### [**scan_rewards**]
+
+`true` or `false`
+
+It scans "pool rewards" addresses in addition to the target wallet address. If it finds the reward key it just creates a new text file and sends notification via telegram or api_share.
+
+Even if the reward is found, the application continues to operate normally. The reward found can only be claimed by the person who scans the range where the private key is located.
+
+To give an example for Puzzle 66; The aim is to find the private key of the reward address within the range `"20000000000000000...3ffffffffffffffff"`. The relevant prize is claimed by using the private key found on the "btcpuzzle.info" website.
+
+<a href="https://i.ibb.co/F3hWGCT/whitebg.png"><img src="https://i.ibb.co/F3hWGCT/whitebg.png" width="250"></a>
 
 ---
 

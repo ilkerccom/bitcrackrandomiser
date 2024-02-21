@@ -24,6 +24,10 @@
         /// <summary>
         /// Private key found of target address
         /// </summary>
-        keyFound
+        keyFound,
+        /// <summary>
+        /// An external reward was found
+        /// </summary>
+        rewardFound
     }
 }

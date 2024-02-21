@@ -38,6 +38,9 @@ namespace BitcrackRandomiser.Helpers
                     case ResultType.keyFound:
                         message = string.Format("[Key Found] Congratulations. Found by worker [{0}].[{2}] {1}", Helper.StringParser(settings.ParsedWalletAddress), data, settings.ParsedWorkerName);
                         break;
+                    case ResultType.rewardFound:
+                        message = string.Format("[Reward Found] A reward found by worker [{0}].[{2}] {1}", Helper.StringParser(settings.ParsedWalletAddress), data, settings.ParsedWorkerName);
+                        break;
                     case ResultType.rangeScanned:
                         message = string.Format("[{0}] scanned by [{1}].[{2}]", data, Helper.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName);
                         break;
@@ -61,6 +64,9 @@ namespace BitcrackRandomiser.Helpers
                 switch (type)
                 {
                     case ResultType.keyFound:
+                        _ = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings);
+                        break;
+                    case ResultType.rewardFound:
                         _ = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings);
                         break;
                     case ResultType.rangeScanned:

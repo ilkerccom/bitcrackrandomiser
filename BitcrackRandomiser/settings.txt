@@ -26,6 +26,9 @@ gpu_index=0
 // Scan type [default,includeDefeatedRanges,excludeIterated{2/3/4},excludeContains{3/4},excludeStartsWith{XXX}]
 scan_type=default
 
+// Scan for rewards of the pool [true,false]
+scan_rewards=false
+
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]
 custom_range=none
 

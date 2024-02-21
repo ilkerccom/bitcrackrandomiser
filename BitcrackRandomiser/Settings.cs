@@ -127,6 +127,11 @@ namespace BitcrackRandomiser
         public string ScanType { get; set; } = "default";
 
         /// <summary>
+        /// Scan for rewards in the pool.
+        /// </summary>
+        public bool ScanRewards { get; set; } = false;
+
+        /// <summary>
         /// Custom ranges to scan
         /// Min length 2
         /// Max length 5
@@ -258,8 +263,7 @@ namespace BitcrackRandomiser
                             settings.TargetPuzzle = value;
                             break;
                         case "app_type":
-                            AppType _at = AppType.bitcrack;
-                            _ = Enum.TryParse(value, true, out _at);
+                            _ = Enum.TryParse(value, true, out AppType _at);
                             settings.AppType = _at;
                             break;
                         case "app_path":
@@ -286,17 +290,19 @@ namespace BitcrackRandomiser
                             settings.WalletAddress = value;
                             break;
                         case "gpu_count":
-                            int _g;
-                            _ = int.TryParse(value, out _g);
+                            _ = int.TryParse(value, out int _g);
                             settings.GPUCount = _g;
                             break;
                         case "gpu_index":
-                            int _gi;
-                            _ = int.TryParse(value, out _gi);
+                            _ = int.TryParse(value, out int _gi);
                             settings.GPUIndex = _gi;
                             break;
                         case "scan_type":
                             settings.ScanType = value;
+                            break;
+                        case "scan_rewards":
+                            _ = bool.TryParse(value, out bool _r);
+                            settings.ScanRewards = _r;
                             break;
                         case "custom_range":
                             settings.CustomRange = value;
@@ -305,8 +311,7 @@ namespace BitcrackRandomiser
                             settings.ApiShare = value;
                             break;
                         case "telegram_share":
-                            bool _v;
-                            _ = bool.TryParse(value, out _v);
+                            _ = bool.TryParse(value, out bool _v);
                             settings.TelegramShare = _v;
                             break;
                         case "telegram_accesstoken":
@@ -316,23 +321,19 @@ namespace BitcrackRandomiser
                             settings.TelegramChatId = value;
                             break;
                         case "telegram_share_eachkey":
-                            bool _s;
-                            _ = bool.TryParse(value, out _s);
+                            _ = bool.TryParse(value, out bool _s);
                             settings.TelegramShareEachKey = _s;
                             break;
                         case "untrusted_computer":
-                            bool _u;
-                            _ = bool.TryParse(value, out _u);
+                            _ = bool.TryParse(value, out bool _u);
                             settings.UntrustedComputer = _u;
                             break;
                         case "test_mode":
-                            bool _t;
-                            _ = bool.TryParse(value, out _t);
+                            _ = bool.TryParse(value, out bool _t);
                             settings.TestMode = _t;
                             break;
                         case "force_continue":
-                            bool _f;
-                            _ = bool.TryParse(value, out _f);
+                            _ = bool.TryParse(value, out bool _f);
                             settings.ForceContinue = _f;
                             break;
                         case "private_pool":
@@ -376,6 +377,9 @@ namespace BitcrackRandomiser
 
             // Scan type
             string _ScanType = DetermineSettings("Select a scan type", new string[2] { "default", "includeDefeatedRanges" });
+
+            // Scan rewards
+            string _ScanRewards = DetermineSettings("Scan for rewards of the pool?", new string[2] { "true", "false" });
 
             // Custom range
             string _CustomRange = DetermineSettings("Do you want scan custom range?", new string[2] { "yes", "no" });
@@ -426,6 +430,7 @@ namespace BitcrackRandomiser
             consoleSettings.GPUCount = int.Parse(_GPUCount);
             consoleSettings.GPUIndex = int.Parse(_GPUIndex);
             consoleSettings.ScanType = _ScanType;
+            consoleSettings.ScanRewards = bool.Parse(_ScanRewards);
             consoleSettings.CustomRange = _CustomRange;
             consoleSettings.ApiShare = _ApiShare;
             consoleSettings.TelegramShare = bool.Parse(_TelegramShare);
@@ -457,6 +462,7 @@ namespace BitcrackRandomiser
                     "gpu_count=" + consoleSettings.GPUCount + Environment.NewLine +
                     "gpu_index=" + consoleSettings.GPUIndex + Environment.NewLine +
                     "scan_type=" + consoleSettings.ScanType + Environment.NewLine +
+                    "scan_rewards=" + consoleSettings.ScanRewards + Environment.NewLine +
                     "custom_range=" + consoleSettings.CustomRange + Environment.NewLine +
                     "api_share=" + consoleSettings.ApiShare + Environment.NewLine +
                     "telegram_share=" + consoleSettings.TelegramShare + Environment.NewLine +
