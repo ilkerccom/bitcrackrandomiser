@@ -252,9 +252,8 @@ It scans "pool rewards" addresses in addition to the target wallet address. If i
 
 Even if the reward is found, the application continues to operate normally. The reward found can only be claimed by the person who scans the range where the private key is located.
 
-To give an example for Puzzle 66; The aim is to find the private key of the reward address within the range `"20000000000000000...3ffffffffffffffff"`. The relevant prize is claimed by using the private key found on the "btcpuzzle.info" website.
 
-<a href="https://i.ibb.co/F3hWGCT/whitebg.png"><img src="https://i.ibb.co/F3hWGCT/whitebg.png" width="250"></a>
+Click for detailed **"[reward creation and claiming](https://btcpuzzle.info/reward.pdf)"**  diagram in PDF.
 
 ---
 
