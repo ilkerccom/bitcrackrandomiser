@@ -98,12 +98,25 @@ Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> start
 $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
 ```
 
+Example run Bitcrack with args on Vast.ai;
+
+```bash
+$ docker run -e BC_APP_ARGS="-b 896 -t 256 -p 256" ilkercndk/bitcrackrandomiser:autorun
+```
+
+Example run VanitySearch on Vast.ai;
+
+```bash
+$ docker run -e BC_APP_TYPE=vanitysearch -e BC_APP=/app/VanitySearch/./vanitysearch -e BC_APP_ARGS= ilkercndk/bitcrackrandomiser:autorun
+```
+
 ### Docker options with default settings
 
 ```bash
 BC_PUZZLE=66
 BC_USERTOKEN="0"
 BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
+BC_APP_TYPE="bitcrack"
 BC_APP="/app/BitCrack/bin/./cuBitCrack"
 BC_APP_ARGS="-b 896 -t 256 -p 256"
 BC_GPUCOUNT="1"

@@ -4,6 +4,7 @@ FROM nvidia/cuda:12.0.0-devel-ubuntu20.04
 ENV BC_PUZZLE=66
 ENV BC_USERTOKEN="0"
 ENV BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
+ENV BC_APP_TYPE="bitcrack"
 ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
 ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
 ENV BC_GPUCOUNT="1"
@@ -32,6 +33,16 @@ WORKDIR /app/BitCrack
 # Build for NVIDIA CUDA devices
 RUN make BUILD_CUDA=1 COMPUTE_CAP=86
 
+# Clone and build vanitysearch.
+WORKDIR /app
+RUN git clone https://github.com/ilkerccom/VanitySearch
+WORKDIR /app/VanitySearch
+
+# Build for CPU
+#RUN make all
+# Build for NVIDIA CUDA devices
+RUN make gpu=1 CCAP=2.0 all
+
 # Install .NET Core
 ENV DOTNET_SDK_VERSION 6.0.411
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
@@ -57,6 +68,7 @@ COPY settings.txt /app/bitcrackrandomiser
 # Run bitcrackrandomiser
 WORKDIR /app/bitcrackrandomiser
 ENTRYPOINT dotnet BitcrackRandomiser.dll \
+	app_type=${BC_APP_TYPE} \
 	app_path=${BC_APP} \
 	app_arguments="${BC_APP_ARGS}" \
 	user_token=${BC_USERTOKEN} \

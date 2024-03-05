@@ -88,6 +88,8 @@ namespace BitcrackRandomiser.Helpers
                     else if (e.Data.Contains("Priv (HEX):"))
                     {
                         string key = e.Data.Split(':').Last().Trim().Replace("0x", "").Trim();
+                        if(key.Length != 64)
+                            key = new String('0', (64 - key.Length)) + key;
                         return new Result { OutputType = OutputType.privateKeyFound, Content = key };
                     }
                     else if (e.Data.Contains("GPU:"))

@@ -1,10 +1,13 @@
 // Select puzzle number [66,67,68] or [38] for test pool
 target_puzzle=66
 
-// which app will be used [bitcrack]
+// which app will be used [bitcrack,vanitysearch,cpu]
 app_type=bitcrack
 
-// App folder path [cuBitcrack, clBitcrack or full path of the Bitcrack app]
+// App folder path
+// [cuBitcrack, clBitcrack or full path of the Bitcrack app]
+// [vanitysearch or full path of the Vanitysearch app]
+// [vanitysearch for CPU support]
 app_path=/app/BitCrack/bin/./cuBitCrack
 
 // App arguments
@@ -27,7 +30,7 @@ gpu_index=0
 scan_type=default
 
 // Scan for rewards of the pool [true,false]
-scan_rewards=false
+scan_rewards=true
 
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]
 custom_range=none

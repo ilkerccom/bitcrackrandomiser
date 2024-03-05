@@ -66,6 +66,9 @@
     <None Update="bitcrack\cudart64_101.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="vanitysearch\vanitysearch">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="vanitysearch\vanitysearch.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
