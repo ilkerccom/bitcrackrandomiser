@@ -103,6 +103,20 @@ namespace BitcrackRandomiser.Helpers
         }
 
         /// <summary>
+        /// Save address for vanity
+        /// </summary>
+        /// <param name="lines"></param>
+        public static bool SaveAddressVanity(List<string> lines)
+        {
+            string appPath = string.Format("{0}", AppDomain.CurrentDomain.BaseDirectory);
+            using StreamWriter outputFile = new(Path.Combine(appPath, "vanitysearch.txt"));
+            foreach (string line in lines)
+                outputFile.WriteLine(line);
+
+            return true;
+        }
+
+        /// <summary>
         /// SHA256 Hashing
         /// </summary>
         /// <param name="data"></param>

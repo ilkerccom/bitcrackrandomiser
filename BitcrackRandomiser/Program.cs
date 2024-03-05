@@ -40,10 +40,16 @@ namespace BitcrackRandomiser
 
             // Run
             Helper.WriteLine("Please wait while app is starting...", MessageType.normal, true);
-            Parallel.For(0, appSettings.GPUCount, i =>
+            if(appSettings.AppType == AppType.bitcrack)
             {
-                Randomiser.Scan(appSettings, i);
-            });
+                Parallel.For(0, appSettings.GPUCount, i =>
+                {
+                    Randomiser.Scan(appSettings, i);
+                });
+            }
+            else if(appSettings.AppType == AppType.vanitysearch || appSettings.AppType == AppType.cpu)
+                Randomiser.Scan(appSettings, 0);
+
             while (true) Console.ReadLine();
         }
     }

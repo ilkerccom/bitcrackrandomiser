@@ -270,14 +270,15 @@ namespace BitcrackRandomiser
                             if (value == "cuBitcrack" || value == "clBitcrack")
                             {
                                 if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                                {
                                     value = string.Format("{0}bitcrack\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
-                                }
                                 else
-                                {
                                     value = string.Format("{0}bitcrack/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
-                                }
                             }
+                            else if(value == "vanitysearch")
+                                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                                    value = string.Format("{0}vanitysearch\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
+                                else
+                                    value = string.Format("{0}vanitysearch/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
                             settings.AppPath = value;
                             break;
                         case "app_arguments":

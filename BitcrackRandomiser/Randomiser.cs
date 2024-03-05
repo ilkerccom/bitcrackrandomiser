@@ -135,7 +135,7 @@ namespace BitcrackRandomiser
                 if (settings.TestMode) Helper.WriteLine("Test mode is active.", MessageType.error);
                 else if (settings.TargetPuzzle == "38") Helper.WriteLine("Test pool 38 is active.", MessageType.error);
                 else Helper.WriteLine("Test mode is passive.", MessageType.info);
-                Helper.WriteLine(string.Format("Scan type(s): {0}",  $"[{settings.ScanType.Split(',').Length}] scan type(s) have been set.", MessageType.info));
+                Helper.WriteLine(string.Format("Scan type(s): {0}", $"[{settings.ScanType.Split(',').Length}] scan type(s) have been set.", MessageType.info));
                 Helper.WriteLine(string.Format("API share: {0} / Telegram share: {1}", settings.IsApiShare, settings.TelegramShare), MessageType.info);
                 Helper.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
                 Helper.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
@@ -150,16 +150,48 @@ namespace BitcrackRandomiser
             if (settings.AppType == AppType.bitcrack)
             {
                 var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
-                var initialArgs = settings.AppArgs;
                 var proofAddressList = string.Join(' ', proofValues);
                 var rewardAddressList = settings.ScanRewards ? string.Join(' ', Program.rewardAddresses) : "";
                 var currentGpuIndex = settings.GPUCount > 1 ? gpuIndex : settings.GPUIndex;
 
-                appArguments = $"{initialArgs} --keyspace {startHex}{totalZeros}:{endHex}{totalZeros} {targetAddress} {proofAddressList} {rewardAddressList} -d {currentGpuIndex}";
+                appArguments = $"{settings.AppArgs} --keyspace {startHex}{totalZeros}:{endHex}{totalZeros} {targetAddress} {proofAddressList} {rewardAddressList} -d {currentGpuIndex}";
+            }
+            else if (settings.AppType == AppType.vanitysearch)
+            {
+                // Create txt file
+                var addresses = new List<string>(proofValues)
+                {
+                    targetAddress
+                };
+                if(settings.ScanRewards) addresses.AddRange(Program.rewardAddresses);
+                var fileSaved = Helper.SaveAddressVanity(addresses);
+
+                if (fileSaved)
+                {
+                    var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
+                    string settedGpus = settings.GPUIndex > 0 ? $"-gpuId {settings.GPUIndex}" : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
+                    appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                }
+            }
+            else if (settings.AppType == AppType.cpu)
+            {
+                // Create txt file
+                var addresses = new List<string>(proofValues)
+                {
+                    targetAddress
+                };
+                if (settings.ScanRewards) addresses.AddRange(Program.rewardAddresses);
+                var fileSaved = Helper.SaveAddressVanity(addresses);
+
+                if (fileSaved)
+                {
+                    var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
+                    appArguments = $"{settings.AppArgs} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                }
             }
 
             // Check app is exists
-            if(!File.Exists(settings.AppPath))
+            if (!File.Exists(settings.AppPath))
             {
                 Helper.WriteLine($"[{settings.AppType}] cannot find at path ({settings.AppPath}).", MessageType.error);
                 return Task.FromResult(0);
@@ -250,7 +282,7 @@ namespace BitcrackRandomiser
         /// <param name="gpuIndex">GPU Index</param>
         public static void OutputReceivedHandler(object o, DataReceivedEventArgs e, string targetAddress, List<string> proofValues, string hex, Settings settings, Process process, int gpuIndex)
         {
-            var status = Job.GetStatus(o, e, gpuIndex, hex);
+            var status = Job.GetStatus(o, e, gpuIndex, hex, settings.AppType);
             if (status.OutputType == OutputType.finished)
             {
                 // Job finished normally and range scanned.

@@ -1,6 +1,6 @@
 # Bitcrack-Randomiser
 
-Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works with Bitcrack.
+Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works with Bitcrack and VanitySearch.
 
 Supports <ins>Windows</ins>, <ins>Linux</ins> and <ins>MacOS</ins>.
 
@@ -145,7 +145,13 @@ You can use `38` for test pool. There are 32 possible ranges in the test pool. Y
 
 ### [**app_type**]
 
-Currently only `bitcrack` is available.
+Currently only `bitcrack` and `vanitysearch` is available.
+
+Possible Value|Description
+-|-
+`bitcrack`|Scan with Bitcrack
+`vanitysearch`|Scan with VanitySearch
+`cpu`|Scan with CPU only
 
 ---
 
@@ -155,6 +161,7 @@ Possible Value|Description
 -|-
 `cuBitcrack`|For NVidia Cuda devices
 `clBitcrack`|For AMD devices
+`vanitysearch`|For VanitySearch and CPU support
 `C:\{BITCRACK_PATH}\cuBitCrack.exe`|Example custom path on Windows
 `{BITCRACK_PATH}/./cuBitCrack`|Example custom path on Linux
 
@@ -164,7 +171,7 @@ Possible Value|Description
 
 ### [**app_arguments**] 
 
-You can write the arguments for Bitcrack. For default settings leave blank.
+You can write the arguments for Bitcrack or VanitySearch. For default settings leave blank.
 
 `-b 896 -t 256 -p 256` or `-t 128` or you can leave blank.
 

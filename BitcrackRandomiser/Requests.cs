@@ -65,7 +65,7 @@ namespace BitcrackRandomiser
                 client.DefaultRequestHeaders.Add("WalletAddress", walletAddress);
                 client.DefaultRequestHeaders.Add("PrivatePool", privatePool);
                 client.DefaultRequestHeaders.Add("ProofKey", proofKey);
-                client.DefaultRequestHeaders.Add("GPU", gpuName);
+                client.DefaultRequestHeaders.Add("GPU", gpuName ?? "-");
                 string result = await client.PostAsync($"hex/flag?puzzlecode={targetPuzzle}", null).Result.Content.ReadAsStringAsync();
                 _ = bool.TryParse(result, out bool isSuccess);
                 return isSuccess;

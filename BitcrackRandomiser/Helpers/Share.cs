@@ -42,20 +42,24 @@ namespace BitcrackRandomiser.Helpers
                         message = string.Format("[Reward Found] A reward found by worker [{0}].[{2}] {1}", Helper.StringParser(settings.ParsedWalletAddress), data, settings.ParsedWorkerName);
                         break;
                     case ResultType.rangeScanned:
-                        message = string.Format("[{0}] scanned by [{1}].[{2}]", data, Helper.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName);
+                        if (!settings.TelegramShareEachKey) message = "";
+                        else message = string.Format("[{0}] scanned by [{1}].[{2}]", data, Helper.StringParser(settings.ParsedWalletAddress), settings.ParsedWorkerName);
                         break;
                     default:
                         break;
                 }
 
-                try
+                if (message.Length > 0)
                 {
-                    var botClient = new TelegramBotClient(settings.TelegramAccessToken);
-                    Message _Message = await botClient.SendTextMessageAsync(
-                    chatId: settings.TelegramChatId,
-                    text: message);
+                    try
+                    {
+                        var botClient = new TelegramBotClient(settings.TelegramAccessToken);
+                        Message _Message = await botClient.SendTextMessageAsync(
+                        chatId: settings.TelegramChatId,
+                        text: message);
+                    }
+                    catch { }
                 }
-                catch { }
             }
 
             /// API Share

@@ -8,6 +8,14 @@
         /// <summary>
         /// Bitcrack
         /// </summary>
-        bitcrack
+        bitcrack,
+        /// <summary>
+        /// Vanitysearch
+        /// </summary>
+        vanitysearch,
+        /// <summary>
+        /// CPU support with VanitySearch
+        /// </summary>
+        cpu
     }
 }
