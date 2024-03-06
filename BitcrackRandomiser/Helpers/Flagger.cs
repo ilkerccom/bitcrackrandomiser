@@ -23,24 +23,25 @@ namespace BitcrackRandomiser.Helpers
         {
             // Hash all proof keys with SHA256
             string hashedProofKey = Helper.SHA256Hash(proofKey);
-            if(settings.AppType == AppType.vanitysearch || settings.AppType == AppType.cpu)
+            if (settings.AppType == AppType.vanitysearch || settings.AppType == AppType.cpu)
             {
                 var proofKeys = Enumerable.Range(0, proofKey.Length / 64).Select(i => proofKey.Substring(i * 64, 64)).OrderBy(p => p).ToArray();
                 hashedProofKey = Helper.SHA256Hash(string.Join(string.Empty, proofKeys));
             }
 
             // Try flag
+            int gpuCount = settings.AppType == AppType.bitcrack ? 1 : settings.GPUCount;
             string walletAddress = settings.WalletAddress;
             if (settings.GPUCount > 1)
                 walletAddress += "_" + gpuIndex;
-            bool flagUsed = Requests.SetHex(hex, walletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle).Result;
+            bool flagUsed = Requests.SetHex(hex, walletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle, gpuCount).Result;
 
             // Try flagging
             int flagTries = 1;
             int maxTries = 6;
             while (!flagUsed && flagTries <= maxTries)
             {
-                flagUsed = Requests.SetHex(hex, settings.WalletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle).Result;
+                flagUsed = Requests.SetHex(hex, settings.WalletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle, gpuCount).Result;
                 Helper.WriteLine(string.Format("Flag error... Retrying... {0}/{1} [GPU{2}]", flagTries, maxTries, gpuIndex), MessageType.externalApp, gpuIndex: gpuIndex);
                 Thread.Sleep(10000);
                 flagTries++;

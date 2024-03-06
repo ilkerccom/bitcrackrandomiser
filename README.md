@@ -110,6 +110,10 @@ Example run VanitySearch on Vast.ai;
 $ docker run -e BC_APP_TYPE=vanitysearch -e BC_APP=/app/VanitySearch/./vanitysearch -e BC_APP_ARGS= ilkercndk/bitcrackrandomiser:autorun
 ```
 
+If you will not use arguments for VanitySearch, send an empty value such as ```-e BC_APP_ARGS=``` Otherwise, the application will give an error.
+
+
+
 ### Docker options with default settings
 
 ```bash
