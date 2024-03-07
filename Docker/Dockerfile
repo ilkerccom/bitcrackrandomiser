@@ -65,25 +65,10 @@ RUN dotnet publish --configuration Release --output /app/bitcrackrandomiser
 # Copy correct settings.txt file for this image
 COPY settings.txt /app/bitcrackrandomiser
 
+# Copy entrypoint
+COPY bitcrackrandomiser.sh /app/bitcrackrandomiser
+RUN chmod +x /app/bitcrackrandomiser/bitcrackrandomiser.sh
+
 # Run bitcrackrandomiser
 WORKDIR /app/bitcrackrandomiser
-ENTRYPOINT dotnet BitcrackRandomiser.dll \
-	app_type=${BC_APP_TYPE} \
-	app_path=${BC_APP} \
-	app_arguments="${BC_APP_ARGS}" \
-	user_token=${BC_USERTOKEN} \
-	wallet_address=${BC_WALLET} \
-	gpu_count=${BC_GPUCOUNT} \
-	gpu_index=${BC_GPUINDEX} \
-	target_puzzle=${BC_PUZZLE} \
-	scan_type=${BC_SCAN_TYPE} \
-	scan_rewards=${BC_SCAN_REWARDS} \
-	custom_range=${BC_CUSTOM_RANGE} \
-	api_share=${BC_API_SHARE} \
-	telegram_share=${BC_TELEGRAM_SHARE} \
-	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \ 
-	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
-	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
-	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
-	force_continue=${BC_FORCE_CONTINUE} \ 
-	private_pool=${BC_PRIVATEPOOL}
+CMD ["/app/bitcrackrandomiser/bitcrackrandomiser.sh"]

@@ -98,19 +98,19 @@ Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> start
 $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
 ```
 
-Example run Bitcrack with args on Vast.ai;
+Example run Bitcrack  on Vast.ai;
 
 ```bash
-$ docker run -e BC_APP_ARGS="-b 896 -t 256 -p 256" ilkercndk/bitcrackrandomiser:autorun
+$ docker run -e ilkercndk/bitcrackrandomiser:autorun
 ```
 
 Example run VanitySearch on Vast.ai;
 
 ```bash
-$ docker run -e BC_APP_TYPE=vanitysearch -e BC_APP=/app/VanitySearch/./vanitysearch -e BC_APP_ARGS= ilkercndk/bitcrackrandomiser:autorun
+$ docker run -e BC_APP_TYPE=vanitysearch -e ilkercndk/bitcrackrandomiser:autorun
 ```
 
-If you will not use arguments for VanitySearch, send an empty value such as ```-e BC_APP_ARGS=``` Otherwise, the application will give an error.
+If you do not send the ```BC_APP_TYPE``` value, "bitcrack" will run by default. You do not need to send the ```BC_GPUCOUNT``` value. The number of GPUs will automatically calculate the total number of graphics cards on the instance and the application will be run.
 
 
 

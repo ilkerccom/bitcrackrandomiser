@@ -112,7 +112,7 @@ namespace BitcrackRandomiser.Helpers
             using StreamWriter outputFile = new(Path.Combine(appPath, "vanitysearch.txt"));
             foreach (string line in lines)
                 outputFile.WriteLine(line);
-
+            outputFile.Close();
             return true;
         }
 
