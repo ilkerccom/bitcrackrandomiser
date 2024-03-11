@@ -22,12 +22,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="settings.txt" />
+    <None Remove="settings.example.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="icon.ico" />
-    <Content Include="settings.txt">
+    <Content Include="settings.example.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
