@@ -4,9 +4,9 @@ FROM nvidia/cuda:12.0.0-devel-ubuntu20.04
 ENV BC_PUZZLE=66
 ENV BC_USERTOKEN="0"
 ENV BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
-ENV BC_APP_TYPE="bitcrack"
-ENV BC_APP="/app/BitCrack/bin/./cuBitCrack"
-ENV BC_APP_ARGS="-b 896 -t 256 -p 256"
+ENV BC_APP_TYPE="vanitysearch"
+ENV BC_APP="/app/VanitySearch/./vanitysearch"
+ENV BC_APP_ARGS=""
 ENV BC_GPUCOUNT="1"
 ENV BC_GPUINDEX="0"
 ENV BC_SCAN_TYPE="includeDefeatedRanges"
@@ -61,9 +61,6 @@ WORKDIR /app/cloned
 RUN git clone https://github.com/ilkerccom/bitcrackrandomiser.git
 WORKDIR /app/cloned/bitcrackrandomiser/BitcrackRandomiser
 RUN dotnet publish --configuration Release --output /app/bitcrackrandomiser
-
-# Copy correct settings.txt file for this image
-COPY settings.txt /app/bitcrackrandomiser
 
 # Copy entrypoint
 COPY bitcrackrandomiser.sh /app/bitcrackrandomiser

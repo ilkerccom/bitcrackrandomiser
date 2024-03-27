@@ -14,7 +14,7 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Which app will be used.
         /// </summary>
-        public AppType AppType { get; set; } = AppType.bitcrack;
+        public AppType AppType { get; set; } = AppType.vanitysearch;
 
         /// <summary>
         /// Bitcrack app folder path
@@ -274,11 +274,13 @@ namespace BitcrackRandomiser
                                 else
                                     value = string.Format("{0}bitcrack/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
                             }
-                            else if(value == "vanitysearch")
+                            else if (value == "vanitysearch")
+                            {
                                 if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                                     value = string.Format("{0}vanitysearch\\{1}.exe", AppDomain.CurrentDomain.BaseDirectory, value);
                                 else
                                     value = string.Format("{0}vanitysearch/./{1}", AppDomain.CurrentDomain.BaseDirectory, value);
+                            }
                             settings.AppPath = value;
                             break;
                         case "app_arguments":
@@ -359,7 +361,7 @@ namespace BitcrackRandomiser
             string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "66", "67", "68" });
 
             // Select app path
-            string _Folder = DetermineSettings("Enter app folder path [cuBitcrack, clBitcrack or full path of Bitcrack]", null, 6);
+            string _Folder = DetermineSettings("Enter app folder path [cuBitcrack, clBitcrack, vanitysearch or full path]", null, 6);
 
             // App arguments
             var _Arguments = DetermineSettings("Enter app arguments (can be empty)");

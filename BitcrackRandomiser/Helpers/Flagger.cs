@@ -32,8 +32,8 @@ namespace BitcrackRandomiser.Helpers
             // Try flag
             int gpuCount = settings.AppType == AppType.bitcrack ? 1 : settings.GPUCount;
             string walletAddress = settings.WalletAddress;
-            if (settings.GPUCount > 1)
-                walletAddress += "_" + gpuIndex;
+            if (settings.AppType == Enums.AppType.bitcrack && settings.GPUCount > 1)
+                    walletAddress += "_" + gpuIndex;
             bool flagUsed = Requests.SetHex(hex, walletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle, gpuCount).Result;
 
             // Try flagging

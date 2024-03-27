@@ -2,17 +2,17 @@
 target_puzzle=66
 
 // which app will be used [bitcrack,vanitysearch,cpu]
-app_type=bitcrack
+app_type=vanitysearch
 
 // App folder path
 // [cuBitcrack, clBitcrack or full path of the Bitcrack app]
 // [vanitysearch or full path of the Vanitysearch app]
 // [vanitysearch for CPU support]
-app_path=cuBitcrack
+app_path=vanitysearch
 
 // App arguments
 // Example for bitcrack: -b 896 -t 256 -p 256
-app_arguments=-b 896 -t 256 -p 256
+app_arguments=
 
 // User token value. You can create it by logging into your account at btcpuzzle.info
 user_token=

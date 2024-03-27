@@ -28,9 +28,9 @@ dotnet BitcrackRandomiser.dll \
 	custom_range=${BC_CUSTOM_RANGE} \
 	api_share=${BC_API_SHARE} \
 	telegram_share=${BC_TELEGRAM_SHARE} \
-	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \ 
+	telegram_accesstoken=${BC_TELEGRAM_ACCESS_TOKEN} \
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
 	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
 	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
-	force_continue=${BC_FORCE_CONTINUE} \ 
+	force_continue=${BC_FORCE_CONTINUE} \
 	private_pool=${BC_PRIVATEPOOL}
