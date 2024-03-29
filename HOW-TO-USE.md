@@ -2,11 +2,11 @@
 
 Download and install .NET 6.0.x runtimes for Windows from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 
-1 - Go to [ilkerccom/bitcrackrandomiser/releases](https://github.com/ilkerccom/bitcrackrandomiser/releases/tag/v1.0.6) and download latest released "bitcrackrandomiser.zip" file.
+1 - Go to [ilkerccom/bitcrackrandomiser/releases](https://github.com/ilkerccom/bitcrackrandomiser/releases) and download latest released "bitcrackrandomiser.zip" file.
 
 2 - Unzip downloaded file.
 
-![bitcrackrandomiser](https://i.ibb.co/S0MNrx1/1.png)
+![bitcrackrandomiser](https://i.ibb.co/5TWRSW9/ff.png)
 
 3 - Edit `settings.txt` file from "bitcrackrandomiser" app folder.
 
@@ -18,7 +18,7 @@ c. Save the file.
 
 4 - Run the "**BitcrackRandomiser.exe**"
 
-![bitcrackrandomiser](https://i.ibb.co/PgFkHSd/5.png)
+![bitcrackrandomiser](https://i.ibb.co/X542Gbw/bitcrack.png)
 
 # Run on Windows as Docker Image
 
@@ -68,21 +68,28 @@ $ dotnet BitcrackRandomiser.dll
 docker run --gpus all -e BC_USER_TOKEN={your_user_token} -e BC_WALLET={your_wallet_address} ilkercndk/bitcrackrandomiser:autorun
 ```
 
-You can use more settings for this docker image. See below;
+You can use more settings for this docker image. See below (default settings);
 
 ```
 -e BC_PUZZLE=66
--e BC_USER_TOKEN=0
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
--e BC_APP=/app/BitCrack/bin/./cuBitCrack
+-e BC_USERTOKEN="0"
+-e BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
+-e BC_APP_TYPE="bitcrack"
+-e BC_APP="/app/BitCrack/bin/./cuBitCrack"
 -e BC_APP_ARGS="-b 896 -t 256 -p 256"
--e BC_SCAN_TYPE=includeDefeatedRanges
--e BC_CUSTOM_RANGE=none
--e BC_TELEGRAM_SHARE=false
--e BC_TELEGRAM_ACCESS_TOKEN=0
--e BC_TELEGRAM_CHAT_ID=0
--e BC_TELEGRAM_SHARE_EACHKEY=false
--e BC_UNTRUSTED_COMPUTER=false
+-e BC_GPUCOUNT="1"
+-e BC_GPUINDEX="0"
+-e BC_SCAN_TYPE="includeDefeatedRanges"
+-e BC_SCAN_REWARDS="true"
+-e BC_CUSTOM_RANGE="none"
+-e BC_API_SHARE="none"
+-e BC_TELEGRAM_SHARE="false"
+-e BC_TELEGRAM_ACCESS_TOKEN="0"
+-e BC_TELEGRAM_CHAT_ID="0"
+-e BC_TELEGRAM_SHARE_EACHKEY="false"
+-e BC_UNTRUSTED_COMPUTER="false"
+-e BC_FORCE_CONTINUE="false"
+-e BC_PRIVATEPOOL="none"
 ```
 
 2 - No more step. The application started automatically.
@@ -91,7 +98,19 @@ You can use more settings for this docker image. See below;
 
 <ins>NOTE: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
 
-Register [Vast.ai](https://cloud.vast.ai/?ref=69296) to rent GPU(s). 
+Register [Vast.ai](https://cloud.vast.ai/?ref_id=69296) to rent GPU(s). 
+
+## Easiest way
+
+Use custom docker image `ilkercndk/bitcrackrandomiser:autorun` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
+
+![vast ai console](https://i.ibb.co/1Lzj0zb/vast.png)
+
+You can enter any settings you want in the "Docker options" field. "wallet_addres" and "user_token" values are entered in this field.
+
+You can create a template similar to the one above and rent the instance you want with this template. When you rent instance, bitcrackrandomiser will be run automatically according to the settings you enter. Make sure any of the Telegram or Api Share settings are active. It is also a useful setting to set the "untrusted_computer" value to "true" when using vast.ai. Thus, when the key is found, it is not saved anywhere in the running instance.
+
+![vast ai console instance](https://i.ibb.co/565gP7L/vast2.png)
 
 ## Short Way
 
