@@ -303,6 +303,8 @@ Note: You can specify only one setting for the custom range field.
 
 Receive the all actions as a POST request to your own server. All values are requested as "header". Below you can see what data is coming.
 
+IMPORTANT: If the key is found and an unsuccessful result is received from the API (body), it makes a unlimited attempts.
+
 ```C
 status // [workerStarted, workerExited, rangeScanned, reachedOfKeySpace, keyFound]
 hex // Scanned HEX value
@@ -350,8 +352,13 @@ function shareTelegram($message){
 	]; 
 	$response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data) ); 
 }
+
+echo 'true';
+
 ?>
 ```
+
+You must return `true` as a result from the API. The returned value is checked only when the key is found and new requests are sent until it receives a 'true' response from the API (Unlimited attempts).
 
 ### [**telegram_share**]
 
@@ -366,6 +373,8 @@ It sends a notification to Telegram when the private key is found. If you set "*
 If your Telegram settings are correct, you will receive a notification that the worker has started working.
 
 Suggestion: If you are on an untrusted computer, make the settings via the console and proceed without saving.
+
+IMPORTANT: If the key is found and Telegram cannot transmit the key to you, it will make  unlimited attempts.
 
 ---
 

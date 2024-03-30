@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BitcrackRandomiser.Helpers;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using System.Diagnostics;
 
 namespace BitcrackRandomiser.Helpers
 {
@@ -51,34 +52,51 @@ namespace BitcrackRandomiser.Helpers
 
                 if (message.Length > 0)
                 {
-                    try
+                    bool isSent = false;
+                    int sendTries = 0, maxTries = 1;
+                    if (type == ResultType.keyFound) maxTries = int.MaxValue;
+                    while (!isSent && sendTries < maxTries)
                     {
-                        var botClient = new TelegramBotClient(settings.TelegramAccessToken);
-                        Message _Message = await botClient.SendTextMessageAsync(
-                        chatId: settings.TelegramChatId,
-                        text: message);
+                        try
+                        {
+                            var botClient = new TelegramBotClient(settings.TelegramAccessToken);
+                            Message _Message = await botClient.SendTextMessageAsync(
+                            chatId: settings.TelegramChatId,
+                            text: message);
+                            isSent = true;
+                        }
+                        catch {}
+                        if (type == ResultType.keyFound) Thread.Sleep(10000);
+                        sendTries++;
                     }
-                    catch { }
                 }
             }
 
             /// API Share
             if (settings.IsApiShare)
             {
-                switch (type)
+                bool isSent = false;
+                int sendTries = 0, maxTries = 1;
+                if (type == ResultType.keyFound) maxTries = int.MaxValue;
+                while (!isSent && sendTries < maxTries)
                 {
-                    case ResultType.keyFound:
-                        _ = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings);
-                        break;
-                    case ResultType.rewardFound:
-                        _ = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings);
-                        break;
-                    case ResultType.rangeScanned:
-                        _ = Requests.SendApiShare(new ApiShare { Status = type, HEX = data }, settings);
-                        break;
-                    default:
-                        _ = Requests.SendApiShare(new ApiShare { Status = type }, settings);
-                        break;
+                    switch (type)
+                    {
+                        case ResultType.keyFound:
+                            isSent = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings).Result;
+                            break;
+                        case ResultType.rewardFound:
+                            isSent = Requests.SendApiShare(new ApiShare { Status = type, PrivateKey = data, HEX = data }, settings).Result;
+                            break;
+                        case ResultType.rangeScanned:
+                            isSent = Requests.SendApiShare(new ApiShare { Status = type, HEX = data }, settings).Result;
+                            break;
+                        default:
+                            isSent = Requests.SendApiShare(new ApiShare { Status = type }, settings).Result;
+                            break;
+                    }
+                    if (type == ResultType.keyFound) Thread.Sleep(10000);
+                    sendTries++;
                 }
             }
         }
