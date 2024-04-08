@@ -74,9 +74,9 @@ You can use more settings for this docker image. See below (default settings);
 -e BC_PUZZLE=66
 -e BC_USERTOKEN="0"
 -e BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
--e BC_APP_TYPE="bitcrack"
--e BC_APP="/app/BitCrack/bin/./cuBitCrack"
--e BC_APP_ARGS="-b 896 -t 256 -p 256"
+-e BC_APP_TYPE="vanitysearch"
+-e BC_APP="/app/VanitySearch/./vanitysearch"
+-e BC_APP_ARGS=""
 -e BC_GPUCOUNT="1"
 -e BC_GPUINDEX="0"
 -e BC_SCAN_TYPE="includeDefeatedRanges"
@@ -96,7 +96,21 @@ You can use more settings for this docker image. See below (default settings);
 
 # Run on Vast.ai (Bitcoin accepted)
 
-<ins>NOTE: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
+<ins>NOTE [1]: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
+
+<ins>NOTE [2]:</ins> When you use Vast.ai or similar, I recommend setting the value of "untrusted_computer" to "true" and turning on Telegram or Api share. Api share is always a better option instead of Telegram. If you don't, when the key is found it will be saved to the running instance. If you have not selected any sharing options, you will not receive a notification when the key is found.
+
+Example docker options;
+
+```
+-e BC_UNTRUSTED_COMPUTER=true -e BC_API_SHARE=https://yourapiwebsite.com ...any other settings
+```
+
+For more information about API share, [go to related page](https://github.com/ilkerccom/bitcrackrandomiser?tab=readme-ov-file#api_share).
+
+![security hash](https://gcdnb.pbrd.co/images/c3DzPemuL3Go.png?o=1)
+
+Additionally, the "security hash" value (in your dashboard) that I underlined in red above is simple security information. This value changes when there is a change in the settings in which you run the application or when there is any code change in the application. With each new version (bitcrackrandomiser), new values are generated even if your settings remain the same.
 
 Register [Vast.ai](https://cloud.vast.ai/?ref_id=69296) to rent GPU(s). 
 
@@ -111,6 +125,20 @@ You can enter any settings you want in the "Docker options" field. "wallet_addre
 You can create a template similar to the one above and rent the instance you want with this template. When you rent instance, bitcrackrandomiser will be run automatically according to the settings you enter. Make sure any of the Telegram or Api Share settings are active. It is also a useful setting to set the "untrusted_computer" value to "true" when using vast.ai. Thus, when the key is found, it is not saved anywhere in the running instance.
 
 ![vast ai console instance](https://i.ibb.co/565gP7L/vast2.png)
+
+### Example
+
+Using `ilkercndk/bitcrackrandomiser:autorun` image.
+
+#### Docker options
+
+```bash
+-e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_USERTOKEN {YOUR_USERTOKEN_VALUE} -e BC_SCAN_TYPE=excludeIterated4
+```
+
+#### Launch mode
+
+[x] Docker Run: use docker ENTRYPOINT.
 
 ## Short Way
 

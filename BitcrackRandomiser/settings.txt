@@ -61,3 +61,6 @@ force_continue=false
 
 // Private pool id
 private_pool=none
+
+// Enable or disable error/information logging
+enable_logging=false

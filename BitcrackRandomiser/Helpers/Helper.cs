@@ -47,7 +47,7 @@ namespace BitcrackRandomiser.Helpers
                 Console.SetCursorPosition(0, 9 + gpuIndex);
                 Console.Write(string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), message));
             }
-            else if(type == MessageType.seperator)
+            else if (type == MessageType.seperator)
             {
                 Console.WriteLine(new string('-', consoleWidth));
             }
@@ -70,6 +70,48 @@ namespace BitcrackRandomiser.Helpers
         }
 
         /// <summary>
+        /// Get target address of puzzle
+        /// </summary>
+        /// <param name="puzzleCode"></param>
+        /// <returns></returns>
+        public static string GetTargetAddress(string puzzleCode = "38")
+        {
+            _ = int.TryParse(puzzleCode.Trim(), out int puzzle);
+            return puzzle switch
+            {
+                38 => "1HBtApAFA9B2YZw3G2YKSMCtb3dVnjuNe2",
+                66 => "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so",
+                67 => "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9",
+                68 => "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ",
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
+        /// Create zeros.
+        /// </summary>
+        /// <param name="puzzleCode"></param>
+        /// <returns></returns>
+        public static string GetZeros(string puzzleCode = "38")
+        {
+            _ = int.TryParse(puzzleCode.Trim(), out int puzzle);
+            return puzzle switch
+            {
+                38 => new String('0', 8),
+                65 or 66 or 67 or 68 => new String('0', 10),
+                69 or 70 or 71 or 72 => new String('0', 11),
+                73 or 74 or 75 or 76 => new String('0', 12),
+                77 or 78 or 79 or 80 => new String('0', 13),
+                81 or 82 or 83 or 84 => new String('0', 14),
+                85 or 86 or 87 or 88 => new String('0', 15),
+                89 or 90 or 91 or 92 => new String('0', 16),
+                93 or 94 or 95 or 96 => new String('0', 17),
+                97 or 98 or 99 or 100 => new String('0', 18),
+                _ => new String('0', 8),
+            };
+        }
+
+        /// <summary>
         /// String parser. Example; 1eosEvve...m1TLFBtw
         /// </summary>
         /// <param name="value">Value to parse</param>
@@ -82,7 +124,7 @@ namespace BitcrackRandomiser.Helpers
                 string start = value[..length];
                 string end = value[^length..];
 
-                if(!addDots) return $"{start}{end}";
+                if (!addDots) return $"{start}{end}";
                 return $"{start}...{end}";
             }
             return value;
@@ -127,7 +169,7 @@ namespace BitcrackRandomiser.Helpers
             byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(data));
             StringBuilder sb = new();
             for (int i = 0; i < bytes.Length; i++)
-            sb.Append(bytes[i].ToString("x2"));
+                sb.Append(bytes[i].ToString("x2"));
             return sb.ToString();
         }
     }

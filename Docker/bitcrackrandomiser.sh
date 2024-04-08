@@ -13,6 +13,14 @@ if [ "${BC_APP_TYPE}" = "vanitysearch" ]; then
 	fi
 fi
 
+# Set bitcrack path and args
+if [ "${BC_APP_TYPE}" = "bitcrack" ]; then 
+	APPPATH="/app/BitCrack/bin/./cuBitCrack"
+	if [ "${BC_APP_ARGS}" = "" ]; then
+		APPARGS="-b 896 -t 256 -p 256"
+	fi
+fi
+
 # Run bitcrackrandomiser
 dotnet BitcrackRandomiser.dll \
 	app_type=${BC_APP_TYPE} \

@@ -203,6 +203,11 @@ namespace BitcrackRandomiser
         public string PrivatePool { get; set; } = "none";
 
         /// <summary>
+        /// Enable log mechanism
+        /// </summary>
+        public bool EnableLogging { get; set; } = false;
+
+        /// <summary>
         /// Is private pool
         /// </summary>
         public bool IsPrivatePool
@@ -342,6 +347,10 @@ namespace BitcrackRandomiser
                         case "private_pool":
                             settings.PrivatePool = value;
                             break;
+                        case "enable_logging":
+                            _ = bool.TryParse(value, out bool _l);
+                            settings.EnableLogging = _l;
+                            break;
                     }
                 }
             }
@@ -395,6 +404,9 @@ namespace BitcrackRandomiser
                 _CustomRange = "none";
             }
 
+            // Logging
+            string _EnableLogging = DetermineSettings("Enable error logging?", new string[2] { "true", "false" });
+
             // API share
             string _ApiShare = DetermineSettings("Send API request to URL (can be empty)");
 
@@ -444,6 +456,7 @@ namespace BitcrackRandomiser
             consoleSettings.TestMode = bool.Parse(_TestMode);
             consoleSettings.ForceContinue = bool.Parse(_ForceContinue);
             consoleSettings.PrivatePool = _PrivatePool;
+            consoleSettings.EnableLogging = bool.Parse(_EnableLogging);
 
             // Will save settings
             string saveSettings = "";
@@ -475,7 +488,8 @@ namespace BitcrackRandomiser
                     "untrusted_computer=" + consoleSettings.UntrustedComputer + Environment.NewLine +
                     "test_mode=" + consoleSettings.TestMode + Environment.NewLine +
                     "force_continue=" + consoleSettings.ForceContinue + Environment.NewLine +
-                    "private_pool=" + consoleSettings.PrivatePool;
+                    "private_pool=" + consoleSettings.PrivatePool + Environment.NewLine +
+                    "enable_logging=" + consoleSettings.EnableLogging;
                 string appPath = AppDomain.CurrentDomain.BaseDirectory;
                 using (StreamWriter outputFile = new StreamWriter(Path.Combine(appPath, "settings.txt")))
                 {

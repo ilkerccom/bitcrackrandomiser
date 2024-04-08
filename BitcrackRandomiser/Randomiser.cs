@@ -28,6 +28,9 @@ namespace BitcrackRandomiser
         // GPU Model names
         public static string[] gpuNames = new string[16];
 
+        // Scan completed
+        public static bool[] scanCompleted = new bool[16];
+
         // Check if app started
         public static bool appStarted = false;
 
@@ -45,14 +48,15 @@ namespace BitcrackRandomiser
                 Helper.WriteLine("If the 'untrusted_computer' setting is 'true', the private key will only be sent to your Telegram address. Please change the 'telegram_share' to 'true' in settings.txt. Then enter your 'access token' and 'chat id'. Otherwise, even if the private key is found, you will not be able to see it anywhere!", MessageType.error, true);
                 Thread.Sleep(10000);
             }
+            if(settings.ForceContinue && settings.UntrustedComputer && (!settings.TelegramShare && !settings.IsApiShare))
+            {
+                Helper.WriteLine("The settings you enter will never show you the key. The application will be closed. Disable \"force_continue\" setting.", MessageType.error, true);
+                return Task.FromResult(0);
+            }
 
             // Get random HEX value from API
             string hex = Requests.GetHex(settings, gpuIndex).Result;
-            string targetAddress =
-                settings.TargetPuzzle == "38" ? "1HBtApAFA9B2YZw3G2YKSMCtb3dVnjuNe2" :
-                settings.TargetPuzzle == "66" ? "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so" :
-                settings.TargetPuzzle == "67" ? "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9" :
-                settings.TargetPuzzle == "68" ? "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ" : "Unknown";
+            string targetAddress = Helper.GetTargetAddress(settings.TargetPuzzle);
 
             // Cannot get HEX value
             if (hex == "")
@@ -130,7 +134,7 @@ namespace BitcrackRandomiser
             // Write info
             if (!appStarted)
             {
-                Helper.WriteLine(string.Format("[v{1}] <{2}> starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.IsPrivatePool ? settings.PrivatePool : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString()), MessageType.normal, true);
+                Helper.WriteLine(string.Format("[v{1}] [{2}] starting... Puzzle: [{0}]", settings.TestMode ? "TEST" : settings.IsPrivatePool ? settings.PrivatePool : settings.TargetPuzzle, Assembly.GetEntryAssembly()?.GetName().Version, settings.AppType.ToString()), MessageType.normal, true);
                 Helper.WriteLine(string.Format("Target address: {0}", targetAddress));
                 if (settings.TestMode) Helper.WriteLine("Test mode is active.", MessageType.error);
                 else if (settings.TargetPuzzle == "38") Helper.WriteLine("Test pool 38 is active.", MessageType.error);
@@ -138,7 +142,7 @@ namespace BitcrackRandomiser
                 Helper.WriteLine(string.Format("Scan type(s): {0}", $"[{settings.ScanType.Split(',').Length}] scan type(s) have been set.", MessageType.info));
                 Helper.WriteLine(string.Format("API share: {0} / Telegram share: {1}", settings.IsApiShare, settings.TelegramShare), MessageType.info);
                 Helper.WriteLine(string.Format("Untrusted computer: {0}", settings.UntrustedComputer), MessageType.info);
-                Helper.WriteLine(string.Format("Progress: {0}", "Visit the <btcpuzzle.info> for statistics."));
+                Helper.WriteLine(string.Format("Progress: {0}", "Visit the [btcpuzzle.info] for statistics."));
                 Helper.WriteLine(string.Format("Worker name: {0}", settings.WalletAddress));
                 Helper.WriteLine("", MessageType.seperator);
 
@@ -147,35 +151,17 @@ namespace BitcrackRandomiser
 
             // App arguments
             string appArguments = "";
+            string totalZeros = Helper.GetZeros(settings.TargetPuzzle);
             if (settings.AppType == AppType.bitcrack)
             {
-                var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
                 var proofAddressList = string.Join(' ', proofValues);
                 var rewardAddressList = settings.ScanRewards ? string.Join(' ', Program.rewardAddresses) : "";
                 var currentGpuIndex = settings.GPUCount > 1 ? gpuIndex : settings.GPUIndex;
 
                 appArguments = $"{settings.AppArgs} --keyspace {startHex}{totalZeros}:{endHex}{totalZeros} {targetAddress} {proofAddressList} {rewardAddressList} -d {currentGpuIndex}";
             }
-            else if (settings.AppType == AppType.vanitysearch)
+            else if (settings.AppType == AppType.vanitysearch ^ settings.AppType == AppType.cpu)
             {
-                // Create txt file
-                var addresses = new List<string>(proofValues)
-                {
-                    targetAddress
-                };
-                if(settings.ScanRewards) addresses.AddRange(Program.rewardAddresses);
-                var fileSaved = Helper.SaveAddressVanity(addresses);
-
-                if (fileSaved)
-                {
-                    var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
-                    string settedGpus = settings.GPUIndex > 0 ? $"-gpuId {settings.GPUIndex}" : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
-                    appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
-                }
-            }
-            else if (settings.AppType == AppType.cpu)
-            {
-                // Create txt file
                 var addresses = new List<string>(proofValues)
                 {
                     targetAddress
@@ -185,8 +171,16 @@ namespace BitcrackRandomiser
 
                 if (fileSaved)
                 {
-                    var totalZeros = settings.TargetPuzzle == "38" ? new String('0', 8) : new String('0', 10);
-                    appArguments = $"{settings.AppArgs} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                    switch (settings.AppType)
+                    {
+                        case AppType.vanitysearch:
+                            string settedGpus = settings.GPUIndex > 0 ? $"-gpuId {settings.GPUIndex}" : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
+                            appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                            break;
+                        case AppType.cpu:
+                            appArguments = $"{settings.AppArgs} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                            break;
+                    }
                 }
             }
 
@@ -214,8 +208,20 @@ namespace BitcrackRandomiser
             // App exited
             process.Exited += (sender, args) =>
             {
-                if (process.ExitCode != 0)
+                int checkTries = 0, maxTries = 20;
+                while (!scanCompleted[gpuIndex] && checkTries < maxTries)
+                {
+                    checkTries++;
+                    Thread.Sleep(200);
+                }
+
+                if (!scanCompleted[gpuIndex])
+                {
+                    Logger.LogError(null, $"App [{settings.AppType}] exited with [{process.ExitCode}] code.");
+                    Helper.WriteLine($"App [{settings.AppType}] exited with [{process.ExitCode}] code.");
                     Share.Send(ResultType.workerExited, settings);
+                }
+
                 taskCompletionSource.SetResult(process.ExitCode);
                 process.Dispose();
             };
@@ -265,6 +271,7 @@ namespace BitcrackRandomiser
                 proofKeys[gpuIndex] = "";
                 isProofKeys[gpuIndex] = false;
                 Thread.Sleep(5000);
+                scanCompleted[gpuIndex] = false;
                 Scan(settings, gpuIndex);
             }
         }
@@ -286,6 +293,7 @@ namespace BitcrackRandomiser
             if (status.OutputType == OutputType.finished)
             {
                 // Job finished normally and range scanned.
+                scanCompleted[gpuIndex] = true;
                 JobFinished(targetAddress, hex, settings, keyFound: false, gpuIndex);
             }
             else if (status.OutputType == OutputType.address)

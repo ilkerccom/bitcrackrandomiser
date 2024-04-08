@@ -21,6 +21,10 @@ ENV BC_UNTRUSTED_COMPUTER="false"
 ENV BC_FORCE_CONTINUE="false"
 ENV BC_PRIVATEPOOL="none"
 
+# Build Variables
+ENV BITCRACKCCAP=86
+ENV VANITYCCAP=2.0
+
 # Clone and build bitcrack. For older graphics cards, you can lower the <COMPUTE_CAP> value.
 WORKDIR /app
 RUN apt-get update \
@@ -29,9 +33,9 @@ RUN git clone https://github.com/brichard19/BitCrack
 WORKDIR /app/BitCrack
 
 # Build for AMD and OpenCL devices
-#RUN make BUILD_OPENCL=1 COMPUTE_CAP=86
+#RUN make BUILD_OPENCL=1 COMPUTE_CAP=${BITCRACKCCAP}
 # Build for NVIDIA CUDA devices
-RUN make BUILD_CUDA=1 COMPUTE_CAP=86
+RUN make BUILD_CUDA=1 COMPUTE_CAP=${BITCRACKCCAP}
 
 # Clone and build vanitysearch.
 WORKDIR /app
@@ -41,7 +45,7 @@ WORKDIR /app/VanitySearch
 # Build for CPU
 #RUN make all
 # Build for NVIDIA CUDA devices
-RUN make gpu=1 CCAP=2.0 all
+RUN make gpu=1 CCAP=${VANITYCCAP} all
 
 # Install .NET Core
 ENV DOTNET_SDK_VERSION 6.0.411
@@ -59,6 +63,7 @@ ENV DOTNET_RUNNING_IN_CONTAINER=true \
 # Clone and build bitcrackrandomiser
 WORKDIR /app/cloned
 RUN git clone https://github.com/ilkerccom/bitcrackrandomiser.git
+#COPY bitcrackrandomiser /app/cloned/bitcrackrandomiser/BitcrackRandomiser
 WORKDIR /app/cloned/bitcrackrandomiser/BitcrackRandomiser
 RUN dotnet publish --configuration Release --output /app/bitcrackrandomiser
 

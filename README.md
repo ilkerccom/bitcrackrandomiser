@@ -1,21 +1,34 @@
 # Bitcrack-Randomiser
 
-Bitcrackrandomiser is a solo pool for Bitcoin puzzle **66, 67 and 68**. It works with Bitcrack and VanitySearch.
+Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **66, 67 and 68**. (Technically supports up to Puzzle 100). It works with Bitcrack and VanitySearch.
 
 Supports <ins>Windows</ins>, <ins>Linux</ins> and <ins>MacOS</ins>.
 
-Supports <ins>NVIDIA</ins> and <ins>AMD</ins> devices. (**AMD Bitcrack v0.30 only**)
+Supports <ins>NVIDIA</ins> / <ins>AMD</ins> devices and <ins>CPU</ins>. (**AMD Bitcrack v0.30 only, CPU VanitySearch only**)
 
-![alt text](https://i.ibb.co/vYHYsMq/bitcrackrandomiser.png)
+![alt text](https://i.ibb.co/sC3KDxB/app.png)
 
 ## Related Links
 
-Website | Link
---- | ---
-Pool website | [btcpuzzle.info](https://btcpuzzle.info/) 
-Support | [t.me/bitcrackrandomiser](https://t.me/bitcrackrandomiser)
-Github repo | [github.com/bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser)
-API Documentation | [API-DOCUMENTATION.MD](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/API-DOCUMENTATION.MD)
+Website | Link | Name
+--- | --- | ---
+Pool website | [btcpuzzle.info](https://btcpuzzle.info/) | ![btcpuzzle.info logo](https://i.ibb.co/XLWWn8G/btcpuzzle-info-120.png)
+Support | [t.me/bitcrackrandomiser](https://t.me/bitcrackrandomiser) | ![btcpuzzle.info logo](https://i.ibb.co/XLWWn8G/btcpuzzle-info-120.png)
+Github repo | [github.com/bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser) | -
+Docker images | [hub.docker.com/u/ilkercndk](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) | -
+API Documentation | [API-DOCUMENTATION.MD](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/API-DOCUMENTATION.MD) | -
+
+### Build it yourself
+
+You can build the client and all the applications used yourself. %100 open-source client & apps.
+
+![build it yourself](https://i.ibb.co/7Gv3ZRk/b350.png)
+
+- Bitcrack ([Go repo](https://github.com/brichard19/BitCrack))
+- VanitySearch ([Go repo](https://github.com/ilkerccom/VanitySearch))
+- Bitcrackrandomiser (This repo)
+
+Endless thanks to everyone involved in the development of Bitcrack and VanitySearch applications.
 
 
 ## How it works?
@@ -29,6 +42,8 @@ When requesting a range from the pool, **three wallet addresses** are also retur
 Example; pool returns `3E2ECB0` HEX range to scan. The pool randomly generates <ins>extra three private keys</ins> within the returned HEX range. `3E2ECB00000000000` and `3E2ECB0FFFFFFFFFF`. 
 
 Marking is done with `SHA256(PROOFKEY1+PROOFKEY2+PROOFKEY3)`
+
+<ins>**Note:** The number of proof keys can be increased/decreased dynamically by the API. By standard the total number is 3.</ins>
 
 ## Example Puzzle 66 Scenario
 
@@ -52,7 +67,7 @@ For Puzzle 66: 2000000-2050000 (First ~%0.98) ranges and 3FAF000-3FFFFFF (Last ~
 
 Random range from database: **326FB80**
 
-The program tells Bitcrack to scan the following range: **326FB800000000000** / **326FB80FFFFFFFFFF** (Contains 1,1 trillion private keys)
+The program tells Bitcrack/VanitySearch to scan the following range: **326FB800000000000** / **326FB80FFFFFFFFFF** (Contains 1,1 trillion private keys)
 
 When the range is scanned, a new range is requested and the process proceeds in this way.
 
@@ -80,7 +95,7 @@ You can use docker image for a faster experience. You can also create your own d
 
 
 
-### ilkercndk/bitcrackrandomiser:latest
+#### # ilkercndk/bitcrackrandomiser:latest
 
 Everything is ready! Edit the [settings.txt](./BitcrackRandomiser/settings.txt) file and run the app!
 
@@ -90,7 +105,13 @@ $ docker run -it ilkercndk/bitcrackrandomiser:latest
 $ dotnet BitcrackRandomiser.dll
 ```
 
-### ilkercndk/bitcrackrandomiser:autorun
+Don't forget to add the `--gpus all` flag when running on your local computer.
+
+```bash
+$ docker run --gpus all -it ilkercndk/bitcrackrandomiser:latest
+```
+
+#### # ilkercndk/bitcrackrandomiser:autorun
 
 Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> starts automatically. You can see the Docker create/run settings in the example below. Does not need interactive console.
 
@@ -101,16 +122,16 @@ $ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser
 Example run Bitcrack  on Vast.ai;
 
 ```bash
-$ docker run -e ilkercndk/bitcrackrandomiser:autorun
+$ docker run -e BC_APP_TYPE=bitcrack ilkercndk/bitcrackrandomiser:autorun
 ```
 
 Example run VanitySearch on Vast.ai;
 
 ```bash
-$ docker run -e BC_APP_TYPE=vanitysearch -e ilkercndk/bitcrackrandomiser:autorun
+$ docker run -e BC_APP_TYPE=vanitysearch ilkercndk/bitcrackrandomiser:autorun
 ```
 
-If you do not send the ```BC_APP_TYPE``` value, "bitcrack" will run by default. You do not need to send the ```BC_GPUCOUNT``` value. The number of GPUs will automatically calculate the total number of graphics cards on the instance and the application will be run.
+If you do not send the ```BC_APP_TYPE``` value, "vanitysearch" will run by default. You do not need to send the ```BC_GPUCOUNT``` value. The number of GPUs will automatically calculate the total number of graphics cards on the instance and the application will be run.
 
 
 
@@ -120,9 +141,9 @@ If you do not send the ```BC_APP_TYPE``` value, "bitcrack" will run by default. 
 BC_PUZZLE=66
 BC_USERTOKEN="0"
 BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
-BC_APP_TYPE="bitcrack"
-BC_APP="/app/BitCrack/bin/./cuBitCrack"
-BC_APP_ARGS="-b 896 -t 256 -p 256"
+BC_APP_TYPE="vanitysearch"
+BC_APP="/app/VanitySearch/./vanitysearch"
+BC_APP_ARGS=""
 BC_GPUCOUNT="1"
 BC_GPUINDEX="0"
 BC_SCAN_TYPE="includeDefeatedRanges"
@@ -451,20 +472,46 @@ Private pools use a database other than the main pool. That's why it's completel
 
 Private pools can be created. You can reach me via Telegram for create your own puzzle pool.
 
-# Hints
+### [**enable_logging**]
+
+`true` or `false`.
+
+Stores error and information messages in a text file. Logging is disabled by default.
+
+## Tips
 
 1. If you are working on someone else's computer, set "untrusted_computer" to "true". However, you need to change either "api_share" or "telegram_share" to "true".
 2. If possible, use "api_share" instead of "telegram_share". So you can save the private key in a file, send it via SMS or send it as mail.
 3. Set "app_arguments" according to GPU model. This will give you higher performance.
 4. I recommend using at least the "excludeIterated4" type in the scan type. It is very unlikely that such a private key will occur with hierarchically generated private keys.
 5. If you are scanning with more than one video card, you can split the ranges. Even with two graphics cards, you can easily double your chances.
-6. "DO NOT USE" closed-source bitcrack app. Use only the one in the original repo or a open sourced bitcrack application. Make sure you're really working for yourself or someone else.
+6. "DO NOT USE" closed-source bitcrack/vanitysearch app. Use only the one in the original repo or a open sourced bitcrack application. Make sure you're really working for yourself or someone else.
 
-# If found?
+## When found?
 
 `untrusted_computer=false` If the private key is found, it will appear on the console screen. Also, a new text file will be created in the folder where the application is run. (in the name of the target wallet address.)
 
 `untrusted_computer=true` If the private key is found, it will send your Telegram channel/group only.
+
+**[NOTE]** =>  `force_continue=true` and `untrusted_computer=true` and if Telegram and APi share feature is turned off, <ins>you will never get the key!</ins> Use the force_continue feature with caution and do not use it if you are not sure what it does.
+
+# Create your Docker image
+
+You can easily create your own image with the [Dockerfile](./Docker/Dockerfile) Docker image in the repo. With the Docker image, Bitcrackrandomiser, Bitcrack and VanitySearch will be pulled and built from the original github repos.
+
+1 - Build docker file.
+
+```bash
+$ docker build -t bitcrackrandomiser .
+```
+
+2 - Tag the image (for push to hub). With your `{username}/{image_name}:{tag}.`
+
+```bash
+$ docker tag bitcrackrandomiser ilkercndk/bitcrackrandomiser:autorun
+```
+
+3 - Push image to docker hub or use it local!
 
 # General Information
 

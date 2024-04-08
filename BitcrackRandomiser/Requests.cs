@@ -39,11 +39,17 @@ namespace BitcrackRandomiser
                 // Request
                 var request = await client.GetAsync($"hex/getv3?startswith={startsWith}&puzzlecode={targetPuzzle}&scantype={scanType}");
                 string result = await request.Content.ReadAsStringAsync();
-                if (result.Length >= 6 && result.Length <= 160 && request.IsSuccessStatusCode)
+                if (request.StatusCode == System.Net.HttpStatusCode.OK)
                     return result;
+
+                Logger.LogError(null, $"Database connection error. Request: {request}, Content:{result}, Headers:{client.DefaultRequestHeaders}");
                 return "";
             }
-            catch { return ""; }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Database connection error");
+                return "";
+            }
         }
 
         /// <summary>
@@ -70,9 +76,17 @@ namespace BitcrackRandomiser
                 client.DefaultRequestHeaders.Add("GPUCount", gpuCount.ToString());
                 string result = await client.PostAsync($"hex/flag?puzzlecode={targetPuzzle}", null).Result.Content.ReadAsStringAsync();
                 _ = bool.TryParse(result, out bool isSuccess);
+
+                if (!isSuccess)
+                    Logger.LogError(null, $"HEX [{hex}] flag error. Puzzle: {targetPuzzle}, Proof: {proofKey}, Wallet:{walletAddress}");
+
                 return isSuccess;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"HEX [{hex}] flag error.");
+                return false;
+            }
         }
 
         /// <summary>
@@ -88,7 +102,11 @@ namespace BitcrackRandomiser
                 string result = await client.GetAsync($"hex/rewards?puzzlecode={targetPuzzle}").Result.Content.ReadAsStringAsync();
                 return result;
             }
-            catch { return ""; }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex, $"Cannot pull data from reward. Puzzle:{targetPuzzle}");
+                return "";
+            }
         }
 
         /// <summary>
@@ -114,12 +132,22 @@ namespace BitcrackRandomiser
                     client.DefaultRequestHeaders.Add("ScanType", settings.ScanType.ToString());
                     string result = await client.PostAsync("", null).Result.Content.ReadAsStringAsync();
                     _ = bool.TryParse(result, out bool isSuccess);
+
+                    if (!isSuccess)
+                        Logger.LogError(null, $"API share failed. Url:{settings.ApiShare}, Puzzle:{settings.TargetPuzzle}, Wallet:{settings.WalletAddress}");
+                    else
+                        Logger.LogInformation($"API share successfully. Url:{settings.ApiShare}");
+
                     return isSuccess;
                 }
 
                 return false;
             }
-            catch { return false; }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex, $"API share failed. Url:{settings.ApiShare}");
+                return false;
+            }
         }
     }
 }
