@@ -94,7 +94,27 @@ You can use more settings for this docker image. See below (default settings);
 
 2 - No more step. The application started automatically.
 
-# Run on Vast.ai (Bitcoin accepted)
+# Run on CloudSearch
+
+![CloudSearch by btcpuzzle.info](https://btcpuzzle.info/cloud-search.png)
+
+Discover the easiest way to use the app and join the pool. Everything here is optimized for the application and the repository. Top up the balance and rent the instance at the hourly rates you want.
+
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and activate your CloudSearch account.
+
+2 - Create template. The templates in Cloud Search are an area where you can create settings for “bitcrackrandomiser” and you can create as many templates as you want. Templates are used when creating instances.
+
+![Templates on CloudSearch](https://btcpuzzle.info/faq/7.png)
+
+3 - Top up balance (USD) using Polygon, Base, ETH and many other networks.
+
+4 - Rent! To create a new instance, you first need a template that you can use. You can create new instances with default settings without using a template. Scroll down to the Cloud Search page and click on the “Search Instances” link. Select the template you want to use. Then, rent the instance by clicking the "Rent" button next to any instance you want to rent.
+
+![Rent instance on CloudSearch](https://btcpuzzle.info/faq/9.gif)
+
+You are now ready! You can read the questions you are wondering about on the [FAQ](https://btcpuzzle.info/faq). page.
+
+# Run on Vast.ai
 
 <ins>NOTE [1]: ONLY FOR NVIDIA DEVICES!</ins> The relevant docker image only builds for "cuda devices". For AMD and OpenCL devices, use the "BUILD_OPENCL=1" argument in the dockerfile. (or go to Long Way section)
 

@@ -75,7 +75,7 @@ When the range is scanned, a new range is requested and the process proceeds in 
 
 You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackrandomiser/blob/main/HOW-TO-USE.md)
 
-### Simple Using
+## Simple Using
 
 1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and obtain your user token.
 
@@ -87,7 +87,17 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 5 - Run the application.
 
-### Docker Image Using
+## Using CloudSearch
+
+If you're looking for the easiest way to join the pool, you're in the right place. Rent the graphics card you want at hourly rates and chase the reward. Go to [CloudSearch by btcpuzzle.info](https://btcpuzzle.info/cloud-search).
+
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and activate your CloudSearch account.
+
+2 - Top up balance (USD) using Polygon, Base, ETH and many other networks.
+
+3 - Create a template and rent the instance you want. That is all!
+
+## Using Docker Images
 
 You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Dockerfile/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
@@ -95,7 +105,7 @@ You can use docker image for a faster experience. You can also create your own d
 
 
 
-#### # ilkercndk/bitcrackrandomiser:latest
+### # ilkercndk/bitcrackrandomiser:latest
 
 Everything is ready! Edit the [settings.txt](./BitcrackRandomiser/settings.txt) file and run the app!
 
@@ -111,7 +121,7 @@ Don't forget to add the `--gpus all` flag when running on your local computer.
 $ docker run --gpus all -it ilkercndk/bitcrackrandomiser:latest
 ```
 
-#### # ilkercndk/bitcrackrandomiser:autorun
+### # ilkercndk/bitcrackrandomiser:autorun
 
 Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> starts automatically. You can see the Docker create/run settings in the example below. Does not need interactive console.
 
