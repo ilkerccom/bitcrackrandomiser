@@ -247,6 +247,13 @@ namespace BitcrackRandomiser
         {
             Settings settings = new Settings();
             string path = AppDomain.CurrentDomain.BaseDirectory + "settings.txt";
+            string pathExample = AppDomain.CurrentDomain.BaseDirectory + "settings.example.txt";
+
+            // If file not exists copy from example 
+            if (!File.Exists(path) && File.Exists(pathExample))
+            {
+                File.Copy(pathExample, path);
+            }
 
             // From file
             string[] lines = File.ReadLines(path).ToArray();
