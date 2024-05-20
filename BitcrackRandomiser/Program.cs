@@ -66,6 +66,13 @@ namespace BitcrackRandomiser
                     Randomiser.Scan(appSettings, i);
                 });
             }
+            else if(appSettings.AppType == AppType.vanitysearch && appSettings.GPUSeperatedRange)
+            {
+                Parallel.For(0, appSettings.GPUCount, i =>
+                {
+                    Randomiser.Scan(appSettings, i);
+                });
+            }
             else if (appSettings.AppType == AppType.vanitysearch || appSettings.AppType == AppType.cpu)
                 Randomiser.Scan(appSettings, 0);
 

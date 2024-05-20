@@ -30,9 +30,9 @@ namespace BitcrackRandomiser.Helpers
             }
 
             // Try flag
-            int gpuCount = settings.AppType == AppType.bitcrack ? 1 : settings.GPUCount;
+            int gpuCount = settings.AppType == AppType.bitcrack || (settings.AppType == AppType.vanitysearch && settings.GPUSeperatedRange) ? 1 : settings.GPUCount;
             string walletAddress = settings.WalletAddress;
-            if (settings.AppType == Enums.AppType.bitcrack && settings.GPUCount > 1)
+            if (settings.AppType == Enums.AppType.bitcrack && settings.GPUCount > 1 || (settings.AppType == AppType.vanitysearch && settings.GPUSeperatedRange))
                     walletAddress += "_" + gpuIndex;
             bool flagUsed = Requests.SetHex(hex, walletAddress, hashedProofKey, gpuName, settings.PrivatePool, settings.TargetPuzzle, gpuCount).Result;
 

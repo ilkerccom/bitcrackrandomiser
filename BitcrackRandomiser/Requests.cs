@@ -1,3 +1,4 @@
+using BitcrackRandomiser.Enums;
 using BitcrackRandomiser.Models;
 
 namespace BitcrackRandomiser
@@ -23,7 +24,7 @@ namespace BitcrackRandomiser
             {
                 // Wallet address
                 string walletAddress = settings.WalletAddress;
-                if (settings.AppType == Enums.AppType.bitcrack && settings.GPUCount > 1)
+                if (settings.AppType == Enums.AppType.bitcrack && settings.GPUCount > 1 || (settings.AppType == AppType.vanitysearch && settings.GPUSeperatedRange))
                     walletAddress += "_" + gpuIndex;
 
                 // CustomRange

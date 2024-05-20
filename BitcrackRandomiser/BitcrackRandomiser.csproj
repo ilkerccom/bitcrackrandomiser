@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>BitcrackRandomiser.Program</StartupObject>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
+    <AssemblyVersion>1.3.1.1</AssemblyVersion>
+    <FileVersion>1.3.1.1</FileVersion>
     <ApplicationIcon>appicon.ico</ApplicationIcon>
     <PackageProjectUrl>https://github.com/ilkerccom/bitcrackrandomiser</PackageProjectUrl>
     <Copyright>ILKERC.</Copyright>

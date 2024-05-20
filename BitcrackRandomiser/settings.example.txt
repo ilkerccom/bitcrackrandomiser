@@ -26,6 +26,9 @@ gpu_count=1
 // Use only one GPU at index. [0-15]
 gpu_index=0
 
+// Use each graphics card as a worker. [For VanitySearch only]
+gpu_seperated_range=false
+
 // Scan type [default,includeDefeatedRanges,excludeIterated{2/3/4},excludeContains{3/4},excludeStartsWith{XXX}]
 scan_type=default
 

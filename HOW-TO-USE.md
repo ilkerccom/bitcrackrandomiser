@@ -10,7 +10,7 @@ Download and install .NET 6.0.x runtimes for Windows from [Microsoft](https://do
 
 3 - Edit `settings.txt` file from "bitcrackrandomiser" app folder.
 
-a. Enter "user_token" value. Get your "user_token" from [btcpuzzle.info/dashboard](https://btcpuzzle.info/dashboard) website.
+a. Enter "user_token" value. Get your "user_token" from [btcpuzzle.info/user-center](https://btcpuzzle.info/user-center) website.
 
 b. Enter "wallet_address" value. You should use your BTC wallet address.
 
@@ -100,7 +100,7 @@ You can use more settings for this docker image. See below (default settings);
 
 Discover the easiest way to use the app and join the pool. Everything here is optimized for the application and the repository. Top up the balance and rent the instance at the hourly rates you want.
 
-1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and activate your CloudSearch account.
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/user-center) website and activate your CloudSearch account.
 
 2 - Create template. The templates in Cloud Search are an area where you can create settings for “bitcrackrandomiser” and you can create as many templates as you want. Templates are used when creating instances.
 

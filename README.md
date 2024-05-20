@@ -77,7 +77,7 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 ## Simple Using
 
-1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and obtain your user token.
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/user-center) website and obtain your user token.
 
 2 - Download latest released [Bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/releases) or build it yourself.
 
@@ -91,7 +91,7 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 If you're looking for the easiest way to join the pool, you're in the right place. Rent the graphics card you want at hourly rates and chase the reward. Go to [CloudSearch by btcpuzzle.info](https://btcpuzzle.info/cloud-search).
 
-1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/dashboard) website and activate your CloudSearch account.
+1 - Create an account on [BTCPuzzle.info](https://btcpuzzle.info/user-center) website and activate your CloudSearch account.
 
 2 - Top up balance (USD) using Polygon, Base, ETH and many other networks.
 
@@ -269,6 +269,16 @@ If you are using more than one GPU, GPU indexes will be automatically added to t
 Index number of the graphics card to be used. Use only if you are going to scan with a single graphics card.
 
 If you have a single video card, use the value "0". If you are scanning with more than one graphics card, this field is disabled.
+
+---
+
+### [**gpu_seperated_range**]
+
+Only valid for VanitySearch. By default, VanitySearch uses 1 range to scan all graphics cards. If you set this setting to "true", each GPU scans different ranges. 
+
+In some systems with multi GPU, it works slightly better than the default setting.
+
+You must have at least 2 GPUs to use this setting. You also need to update the "gpu_count" setting according to the number of graphics cards you have.
 
 ---
 

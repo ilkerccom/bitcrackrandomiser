@@ -167,18 +167,22 @@ namespace BitcrackRandomiser
                     targetAddress
                 };
                 if (settings.ScanRewards) addresses.AddRange(Program.rewardAddresses);
-                var fileSaved = Helper.SaveAddressVanity(addresses);
+                var fileSaved = Helper.SaveAddressVanity(addresses, gpuIndex);
 
                 if (fileSaved)
                 {
                     switch (settings.AppType)
                     {
                         case AppType.vanitysearch:
-                            string settedGpus = settings.GPUIndex > 0 ? $"-gpuId {settings.GPUIndex}" : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
-                            appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                            string settedGpus = settings.GPUIndex > 0
+                                ? $"-gpuId {settings.GPUIndex}" 
+                                : settings.GPUSeperatedRange
+                                ? $"-gpuId {gpuIndex}"
+                                : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
+                            appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
                             break;
                         case AppType.cpu:
-                            appArguments = $"{settings.AppArgs} -i vanitysearch.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
+                            appArguments = $"{settings.AppArgs} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {startHex}{totalZeros}:+1{totalZeros}";
                             break;
                     }
                 }

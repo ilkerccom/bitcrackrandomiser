@@ -30,6 +30,7 @@ dotnet BitcrackRandomiser.dll \
 	wallet_address=${BC_WALLET} \
 	gpu_count=${GPUCOUNTS} \
 	gpu_index=${BC_GPUINDEX} \
+	gpu_seperated_range=${BC_GPUSEPERATEDRANGE} \
 	target_puzzle=${BC_PUZZLE} \
 	scan_type=${BC_SCAN_TYPE} \
 	scan_rewards=${BC_SCAN_REWARDS} \

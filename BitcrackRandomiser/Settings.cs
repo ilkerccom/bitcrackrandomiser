@@ -94,6 +94,11 @@ namespace BitcrackRandomiser
         }
 
         /// <summary>
+        /// VanitySearch only. When running multiple graphics cards, it uses each graphics card as a separate worker.
+        /// </summary>
+        public bool GPUSeperatedRange { get; set; } = false;
+
+        /// <summary>
         /// Parsed wallet address
         /// </summary>
         public string ParsedWalletAddress
@@ -312,6 +317,10 @@ namespace BitcrackRandomiser
                             _ = int.TryParse(value, out int _gi);
                             settings.GPUIndex = _gi;
                             break;
+                        case "gpu_seperated_range":
+                            _ = bool.TryParse(value, out bool _gsr);
+                            settings.GPUSeperatedRange = _gsr;
+                            break;
                         case "scan_type":
                             settings.ScanType = value;
                             break;
@@ -394,6 +403,9 @@ namespace BitcrackRandomiser
             // GPU Index
             string _GPUIndex = DetermineSettings("Enter your GPU Index [Default:0]", null, 1);
 
+            // GPU seperated ranges
+            string _GPUSeperatedRanges = DetermineSettings("Use each GPU as a separate worker? VanitySearch only.", new string[2] { "true", "false" });
+
             // Scan type
             string _ScanType = DetermineSettings("Select a scan type", new string[2] { "default", "includeDefeatedRanges" });
 
@@ -451,6 +463,7 @@ namespace BitcrackRandomiser
             consoleSettings.WalletAddress = _WalletAddress;
             consoleSettings.GPUCount = int.Parse(_GPUCount);
             consoleSettings.GPUIndex = int.Parse(_GPUIndex);
+            consoleSettings.GPUSeperatedRange = bool.Parse(_GPUSeperatedRanges);
             consoleSettings.ScanType = _ScanType;
             consoleSettings.ScanRewards = bool.Parse(_ScanRewards);
             consoleSettings.CustomRange = _CustomRange;
@@ -484,6 +497,7 @@ namespace BitcrackRandomiser
                     "wallet_address=" + consoleSettings.WalletAddress + Environment.NewLine +
                     "gpu_count=" + consoleSettings.GPUCount + Environment.NewLine +
                     "gpu_index=" + consoleSettings.GPUIndex + Environment.NewLine +
+                    "gpu_seperated_range=" + consoleSettings.GPUSeperatedRange + Environment.NewLine +
                     "scan_type=" + consoleSettings.ScanType + Environment.NewLine +
                     "scan_rewards=" + consoleSettings.ScanRewards + Environment.NewLine +
                     "custom_range=" + consoleSettings.CustomRange + Environment.NewLine +
