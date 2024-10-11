@@ -9,7 +9,7 @@ namespace BitcrackRandomiser
         /// <summary>
         /// Target puzzle number. [66,67,68 or 38]
         /// </summary>
-        public string TargetPuzzle { get; set; } = "66";
+        public string TargetPuzzle { get; set; } = "67";
 
         /// <summary>
         /// Which app will be used.
@@ -383,7 +383,7 @@ namespace BitcrackRandomiser
             var consoleSettings = new Settings();
 
             // Select puzzle
-            string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "66", "67", "68" });
+            string _Puzzle = DetermineSettings("Select a puzzle number", new string[3] { "67", "68", "69" });
 
             // Select app path
             string _Folder = DetermineSettings("Enter app folder path [cuBitcrack, clBitcrack, vanitysearch or full path]", null, 6);

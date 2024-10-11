@@ -64,7 +64,7 @@ namespace BitcrackRandomiser
         /// <param name="targetPuzzle">Target Puzzle</param>
         /// <param name="gpuCount">GPU count</param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "66", int gpuCount = 1, bool forceContinue = false)
+        public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "67", int gpuCount = 1, bool forceContinue = false)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace BitcrackRandomiser
         /// </summary>
         /// <param name="targetPuzzle">Target puzzle code</param>
         /// <returns></returns>
-        public static async Task<string> GetRewards(string targetPuzzle = "66")
+        public static async Task<string> GetRewards(string targetPuzzle = "67")
         {
             try
             {
