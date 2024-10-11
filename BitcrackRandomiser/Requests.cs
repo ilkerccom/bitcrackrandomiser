@@ -64,7 +64,7 @@ namespace BitcrackRandomiser
         /// <param name="targetPuzzle">Target Puzzle</param>
         /// <param name="gpuCount">GPU count</param>
         /// <returns></returns>
-        public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "66", int gpuCount = 1)
+        public static async Task<bool> SetHex(string hex, string walletAddress, string proofKey, string gpuName, string privatePool = "none", string targetPuzzle = "66", int gpuCount = 1, bool forceContinue = false)
         {
             try
             {
@@ -75,6 +75,7 @@ namespace BitcrackRandomiser
                 client.DefaultRequestHeaders.Add("ProofKey", proofKey);
                 client.DefaultRequestHeaders.Add("GPU", gpuName ?? "-");
                 client.DefaultRequestHeaders.Add("GPUCount", gpuCount.ToString());
+                client.DefaultRequestHeaders.Add("ForceContinue", forceContinue ? "active" : "disabled");
                 string result = await client.PostAsync($"hex/flag?puzzlecode={targetPuzzle}", null).Result.Content.ReadAsStringAsync();
                 _ = bool.TryParse(result, out bool isSuccess);
 
