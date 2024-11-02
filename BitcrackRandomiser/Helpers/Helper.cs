@@ -107,16 +107,7 @@ namespace BitcrackRandomiser.Helpers
             return puzzle switch
             {
                 38 => new String('0', 8),
-                65 or 66 or 67 or 68 => new String('0', 10),
-                69 or 70 or 71 or 72 => new String('0', 11),
-                73 or 74 or 75 or 76 => new String('0', 12),
-                77 or 78 or 79 or 80 => new String('0', 13),
-                81 or 82 or 83 or 84 => new String('0', 14),
-                85 or 86 or 87 or 88 => new String('0', 15),
-                89 or 90 or 91 or 92 => new String('0', 16),
-                93 or 94 or 95 or 96 => new String('0', 17),
-                97 or 98 or 99 or 100 => new String('0', 18),
-                _ => new String('0', 8),
+                _ => new String('0', 10),
             };
         }
 
