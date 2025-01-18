@@ -210,10 +210,10 @@ Possible Value|Description
 `cuBitcrack`|For NVidia Cuda devices
 `clBitcrack`|For AMD devices
 `vanitysearch`|For VanitySearch and CPU support
-`C:\{BITCRACK_PATH}\cuBitCrack.exe`|Example custom path on Windows
-`{BITCRACK_PATH}/./cuBitCrack`|Example custom path on Linux
+`C:\{BITCRACK_PATH}\cuBitcrack.exe`|Example custom path on Windows
+`{BITCRACK_PATH}/./cuBitcrack`|Example custom path on Linux
 
-**NOTE: You can use OpenCL "clBitCrack.exe" for <ins>AMD devices on Bitcrack v0.30 only</ins>**
+**NOTE: You can use OpenCL "clBitcrack.exe" for <ins>AMD devices on Bitcrack v0.30 only</ins>**
 
 ---
 
