@@ -8,26 +8,26 @@
         /// <summary>
         /// App running
         /// </summary>
-        running,
+        running = 0,
         /// <summary>
         /// Scan completed
         /// </summary>
-        finished,
+        finished = 1,
         /// <summary>
         /// Found an address (Proof address or target address)
         /// </summary>
-        address,
+        address = 2,
         /// <summary>
         /// Private key found
         /// </summary>
-        privateKeyFound,
+        privateKeyFound = 3,
         /// <summary>
         /// GPU model found on output
         /// </summary>
-        gpuModel,
+        gpuModel = 4,
         /// <summary>
         /// Any other types
         /// </summary>
-        unknown
+        unknown = 10
     }
 }

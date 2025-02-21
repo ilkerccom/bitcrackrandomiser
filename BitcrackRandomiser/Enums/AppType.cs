@@ -8,14 +8,14 @@
         /// <summary>
         /// Bitcrack
         /// </summary>
-        bitcrack,
+        bitcrack = 0,
         /// <summary>
         /// Vanitysearch
         /// </summary>
-        vanitysearch,
+        vanitysearch = 1,
         /// <summary>
         /// CPU support with VanitySearch
         /// </summary>
-        cpu
+        cpu = 10
     }
 }

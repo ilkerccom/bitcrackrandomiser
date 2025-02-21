@@ -3,17 +3,23 @@
 namespace BitcrackRandomiser.Models
 {
     /// <summary>
-    /// Alternative for telegram. Share progress with your API
+    /// Alternative for telegram. Share progress with your custom API
     /// </summary>
     public class ApiShare
     {
-        // Current status
+        /// <summary>
+        /// Current status
+        /// </summary>
         public ResultType Status { get; set; }
 
-        // Scanned HEX
-        public string HEX { get; set; } = "";
+        /// <summary>
+        /// Scanned HEX
+        /// </summary>
+        public string? HEX { get; set; }
 
-        // Found private key
-        public string PrivateKey { get; set; } = "";
+        /// <summary>
+        /// Found private key
+        /// </summary>
+        public string? PrivateKey { get; set; }
     }
 }

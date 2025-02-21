@@ -2,12 +2,12 @@
 using BitcrackRandomiser.Models;
 using System.Diagnostics;
 
-namespace BitcrackRandomiser.Helpers
+namespace BitcrackRandomiser.Services.PoolService
 {
     /// <summary>
     /// BitcrackRandomiser job class.
     /// </summary>
-    internal class Job
+    internal static class JobStatus
     {
         /// <summary>
         /// Get current status of external app (Bitcrack or another)
@@ -31,8 +31,9 @@ namespace BitcrackRandomiser.Helpers
                 Console.CursorVisible = false;
                 Console.SetCursorPosition(0, 9 + gpuIndex);
 
-                if(appType == AppType.bitcrack)
+                if (appType == AppType.bitcrack)
                 {
+                    /// Bitcrack
                     if (e.Data.Contains("Reached") || e.Data.Contains("No targets remaining"))
                     {
                         string finishedMessage = string.Format("[{0}] [Info] {1}", currentDate, "Scan completed.");
@@ -72,8 +73,9 @@ namespace BitcrackRandomiser.Helpers
                         return new Result { OutputType = OutputType.running };
                     }
                 }
-                else if(appType == AppType.vanitysearch || appType == AppType.cpu)
+                else if (appType == AppType.vanitysearch || appType == AppType.cpu)
                 {
+                    /// VanitySearch
                     if (e.Data.Contains("[EXIT]"))
                     {
                         string finishedMessage = string.Format("[{0}] [Info] {1}", currentDate, "Scan completed.");
@@ -88,8 +90,8 @@ namespace BitcrackRandomiser.Helpers
                     else if (e.Data.Contains("Priv (HEX):"))
                     {
                         string key = e.Data.Split(':').Last().Trim().Replace("0x", "").Trim();
-                        if(key.Length != 64)
-                            key = new String('0', (64 - key.Length)) + key;
+                        if (key.Length != 64)
+                            key = new string('0', 64 - key.Length) + key;
                         return new Result { OutputType = OutputType.privateKeyFound, Content = key };
                     }
                     else if (e.Data.Contains("GPU:"))

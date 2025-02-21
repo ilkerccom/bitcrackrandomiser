@@ -1,17 +1,17 @@
 ﻿using Serilog;
 
-namespace BitcrackRandomiser
+namespace BitcrackRandomiser.Services
 {
     /// <summary>
     /// Logger class
     /// </summary>
-    internal class Logger
+    internal static class Logger
     {
         public static Serilog.Core.Logger? _logger = null;
 
         static Logger()
         {
-            if (_logger == null && Program.isLoggingEnabled)
+            if (_logger == null)
             {
                 var fileName = DateTime.Now.ToString("dd-MM-yyyy");
                 _logger = new LoggerConfiguration()

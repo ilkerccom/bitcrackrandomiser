@@ -2,12 +2,12 @@ using System.Text;
 using System.Security.Cryptography;
 using BitcrackRandomiser.Enums;
 
-namespace BitcrackRandomiser.Helpers
+namespace BitcrackRandomiser.Services
 {
     /// <summary>
     /// BitcrackRandomiser helper class.
     /// </summary>
-    internal class Helper
+    internal static class Helper
     {
         /// <summary>
         /// Write message to console screen
@@ -67,48 +67,6 @@ namespace BitcrackRandomiser.Helpers
             Console.ForegroundColor = color;
             Console.Write(string.Format("{0}", message));
             Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        /// <summary>
-        /// Get target address of puzzle
-        /// </summary>
-        /// <param name="puzzleCode"></param>
-        /// <returns></returns>
-        public static string GetTargetAddress(string puzzleCode = "38")
-        {
-            _ = int.TryParse(puzzleCode.Trim(), out int puzzle);
-            return puzzle switch
-            {
-                38 => "1HBtApAFA9B2YZw3G2YKSMCtb3dVnjuNe2",
-                66 => "13zb1hQbWVsc2S7ZTZnP2G4undNNpdh5so",
-                67 => "1BY8GQbnueYofwSuFAT3USAhGjPrkxDdW9",
-                68 => "1MVDYgVaSN6iKKEsbzRUAYFrYJadLYZvvZ",
-                69 => "19vkiEajfhuZ8bs8Zu2jgmC6oqZbWqhxhG",
-                71 => "1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU",
-                72 => "1JTK7s9YVYywfm5XUH7RNhHJH1LshCaRFR",
-                73 => "12VVRNPi4SJqUTsp6FmqDqY5sGosDtysn4",
-                74 => "1FWGcVDK3JGzCC3WtkYetULPszMaK2Jksv",
-                76 => "1DJh2eHFYQfACPmrvpyWc8MSTYKh7w9eRF",
-                77 => "1Bxk4CQdqL9p22JEtDfdXMsng1XacifUtE",
-                78 => "15qF6X51huDjqTmF9BJgxXdt1xcj46Jmhb",
-                79 => "1ARk8HWJMn8js8tQmGUJeQHjSE7KRkn2t8",
-                _ => "Unknown",
-            };
-        }
-
-        /// <summary>
-        /// Create zeros.
-        /// </summary>
-        /// <param name="puzzleCode"></param>
-        /// <returns></returns>
-        public static string GetZeros(string puzzleCode = "38")
-        {
-            _ = int.TryParse(puzzleCode.Trim(), out int puzzle);
-            return puzzle switch
-            {
-                38 => new String('0', 8),
-                _ => new String('0', 10),
-            };
         }
 
         /// <summary>

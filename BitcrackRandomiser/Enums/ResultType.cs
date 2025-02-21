@@ -8,26 +8,26 @@
         /// <summary>
         /// Worker started to scan
         /// </summary>
-        workerStarted,
+        workerStarted = 0,
         /// <summary>
         /// Worker gone offline
         /// </summary>
-        workerExited,
+        workerExited = 1,
         /// <summary>
         /// A range scanned
         /// </summary>
-        rangeScanned,
+        rangeScanned = 2,
         /// <summary>
         /// Reached of key space
         /// </summary>
-        reachedOfKeySpace,
+        reachedOfKeySpace = 3,
         /// <summary>
         /// Private key found of target address
         /// </summary>
-        keyFound,
+        keyFound = 4,
         /// <summary>
         /// An external reward was found
         /// </summary>
-        rewardFound
+        rewardFound = 5
     }
 }

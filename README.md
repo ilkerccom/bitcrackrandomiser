@@ -1,10 +1,10 @@
 # Bitcrack-Randomiser
 
-Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **66, 67 and 68**. (Technically supports up to Puzzle 100). It works with Bitcrack and VanitySearch.
+Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **66, 67, 68, 69 and 71**. (Technically supports up to Puzzle 160). It works with Bitcrack and VanitySearch.
 
-Supports <ins>Windows</ins>, <ins>Linux</ins> and <ins>MacOS</ins>.
+Official client for "btcpuzzle.info pool".
 
-Supports <ins>NVIDIA</ins> / <ins>AMD</ins> devices and <ins>CPU</ins>. (**AMD Bitcrack v0.30 only, CPU VanitySearch only**)
+Supports <ins>Windows</ins> and <ins>Linux</ins>. Supports <ins>NVIDIA</ins> / <ins>AMD</ins> devices and <ins>CPU</ins>. (**AMD Bitcrack v0.30 only, CPU VanitySearch only**)
 
 ![alt text](https://i.ibb.co/sC3KDxB/app.png)
 
@@ -33,7 +33,7 @@ Endless thanks to everyone involved in the development of Bitcrack and VanitySea
 
 ## How it works?
 
-It only works with BTC Puzzle 66, 67 and 68 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file.).
+It only works with BTC Puzzle 68, 69 and 71 (You can change the puzzle number from the **[<ins>target_puzzle</ins>]** variable in the <ins>[settings.txt](./BitcrackRandomiser/settings.example.txt)</ins> file.).
 
 ## Proof of Work
 
@@ -81,9 +81,9 @@ You can read detailed [How To Use Guide](https://github.com/ilkerccom/bitcrackra
 
 2 - Download latest released [Bitcrackrandomiser](https://github.com/ilkerccom/bitcrackrandomiser/releases) or build it yourself.
 
-3 - Download .NET 6.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+3 - Download .NET 8.0 runtimes from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (.NET Runtime 8.x.x)
 
-4 - Edit the <ins>[settings.txt](./BitcrackRandomiser/settings.txt)</ins> file according to you.
+4 - Edit the <ins>[settings.example.txt](./BitcrackRandomiser/settings.example.txt)</ins> file according to you.
 
 5 - Run the application.
 
@@ -99,7 +99,7 @@ If you're looking for the easiest way to join the pool, you're in the right plac
 
 ## Using Docker Images
 
-You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Dockerfile/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
+You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Docker/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
 <ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
 
@@ -107,7 +107,7 @@ You can use docker image for a faster experience. You can also create your own d
 
 ### # ilkercndk/bitcrackrandomiser:latest
 
-Everything is ready! Edit the [settings.txt](./BitcrackRandomiser/settings.txt) file and run the app!
+Everything is ready! Edit the [settings.txt](./BitcrackRandomiser/settings.example.txt) file and run the app!
 
 ```bash
 $ docker run -it ilkercndk/bitcrackrandomiser:latest
@@ -148,16 +148,14 @@ If you do not send the ```BC_APP_TYPE``` value, "vanitysearch" will run by defau
 ### Docker options with default settings
 
 ```bash
-BC_PUZZLE=66
-BC_USERTOKEN="0"
-BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
+BC_PUZZLE=68
+BC_USERTOKEN=""
+BC_WORKER="workerdefault"
 BC_APP_TYPE="vanitysearch"
 BC_APP="/app/VanitySearch/./vanitysearch"
 BC_APP_ARGS=""
 BC_GPUCOUNT="1"
 BC_GPUINDEX="0"
-BC_SCAN_TYPE="includeDefeatedRanges"
-BC_SCAN_REWARDS="true"
 BC_CUSTOM_RANGE="none"
 BC_API_SHARE="none"
 BC_TELEGRAM_SHARE="false"
@@ -166,26 +164,25 @@ BC_TELEGRAM_CHAT_ID="0"
 BC_TELEGRAM_SHARE_EACHKEY="false"
 BC_UNTRUSTED_COMPUTER="false"
 BC_FORCE_CONTINUE="false"
-BC_PRIVATEPOOL="none"
 ```
 
 # Settings
 
-You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.txt)" file or in app. You can create your settings file on btcpuzzle.info dashboard.
+You can update the application settings via the "[settings.txt](./BitcrackRandomiser/settings.example.txt)" file or in app. You can create your settings file on btcpuzzle.info dashboard.
 
 Also, You can pass arguments to the application as in the example below.
 
 ```
-dotnet BitcrackRandomiser.dll target_puzzle=66 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
+dotnet BitcrackRandomiser.dll target_puzzle=68 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
 ```
 
 ---
 
 ### [**target_puzzle**]
 
-Select the puzzle you want to scan. Default: 66
+Select the puzzle you want to scan.
 
-`66` or `67` or `68`
+`68` or `69` or `71` or `current any puzzle`
 
 You can use `38` for test pool. There are 32 possible ranges in the test pool. You can find the test pool data on the website. Test pool data is reset every 30 minutes.
 
@@ -227,7 +224,7 @@ Note: Do not use `-o --keyspace` parameters.
 
 ---
 
-### [**user_token**]
+### [**user_token**] *Required
 
 <ins>You can create user token value by logging into your account</ins> at btcpuzzle.info. If you do not have an account, you can create a new account using your wallet address.
 
@@ -240,17 +237,14 @@ Example user token value;
 
 ---
 
-### [**wallet_address**]
+### [**worker_name**]
 
 Enter the BTC wallet address here. 
 
-`1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw` or `1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw.worker1`
+`worker4124`
 
-You can specify a **worker name** like `{wallet}.{worker}` Only alphanumeric is accepted. Max 16 characters. Do not use special characters. If you do not enter a worker name, it will be created automatically.
+Only alphanumeric is accepted. Max 16 characters. Do not use special characters. If you do not enter a worker name, it will be created automatically.
 
-If you enter an invalid BTC address, it will show as "Unknown" in the system and you cannot follow your workers on your dashboard.
-
-**Note: You can only enter your wallet address registered to your membership account. If you enter any other address, you will get an error.**
 
 ---
 
@@ -280,32 +274,6 @@ In some systems with multi GPU, it works slightly better than the default settin
 
 You must have at least 2 GPUs to use this setting. You also need to update the "gpu_count" setting according to the number of graphics cards you have.
 
----
-
-### [**scan_type**]
-
-Select a scan type. 
-
-Possible Value|Description
--|-
-`default`|Scan anything that isn't scanned.
-`includeDefeatedRanges`|Include defeated ranges. This does not scan ranges that have already been scanned!
-`excludeIterated2`|Exclude iterated ranges (2 iterated and more). Not good choice. Example: 1A<ins>FF</ins>1B3 
-`excludeIterated3`|Exclude iterated ranges (3 iterated and more). May be good choice. Example: 1A<ins>FFF</ins>B3
-`excludeIterated4`|Exclude iterated ranges (4 iterated and more). Good choice. Example: 1A<ins>FFFF</ins>3
-`excludeContains3`|Exclude contains ranges (3 and more). Not good choice. Example: 1<ins>F</ins>A1<ins>FF</ins>3
-`excludeContains4`|Exclude contains ranges (4 and more). May be good choice. Example: 1<ins>F</ins>A<ins>F</ins>C<ins>FF</ins>
-`excludeAlphanumericLoop`|Exclude if HEX contains only numbers or only letters. Example: <ins>2572441</ins> or <ins>BCAFFEB</ins>
-`excludeEven` / `excludeOdd`|Exclude the even or odd numbered HEX range.<br/><br/>You can only choose one. When you select any of them, the number of keys to be scanned decreases by 1/2.
-`excludeStartsWith{XX}`|Exclude ranges that starts with. [Min 1, max 2 chars]. <br/><br/>Example [1]: `excludeStartsWith2` The range starting with 2 will not return.<br/>Example [2]: `excludeStartsWith2A` The range starting with 2A will not return.<br/><br/>If you enter a value that you entered in the "**custom_range**" field, you will get a "reached of keyspace" error and the application will be stopped.
-
-You can make multiple settings using commas.
-
-```
-...
-scan_type=excludeIterated3,excludeStartsWith2A,excludeStartsWith2B,excludeStartsWith3F
-...
-```
 
 ---
 
@@ -328,11 +296,9 @@ Scan custom range
 
 `none` Scan all of ranges.
 
-`2D` or `3BA` or `3FF1`  Enter the first [2-5] characters of the range you want to scan. Only one value.
+`2D` or `3BA` or `3FF1`  Enter the first [1-7] characters of the range you want to scan. Only one value.
 
 You can use specify ranges like `3400000:38FFFFF`. Incoming keys will be selected from this range. You must write the range in full length. Make sure you enter the correct range.
-
-You can use percentiles like `%5:%20`. In the example, only HEX values between 5% and 20% will be scanned.
 
 Note: You can specify only one setting for the custom range field.
 
@@ -350,10 +316,9 @@ IMPORTANT: If the key is found and an unsuccessful result is received from the A
 status // [workerStarted, workerExited, rangeScanned, reachedOfKeySpace, keyFound]
 hex // Scanned HEX value
 privatekey // Private key if that found
-targetpuzzle // Which puzzle is being scanned [66,67,68 or 38]
+targetpuzzle // Which puzzle is being scanned
 workeraddress // Worker wallet address [1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw]
 workername // Worker name [worker1039]
-scantype // Current scan type [default, includeDefeatedRanges]
 ```
 
 I wrote a sample PHP script to get the data. It sends info to Telegram.
@@ -366,7 +331,6 @@ $hex = $headers['Hex'];
 $workeraddress = $headers['Workeraddress'];
 $workername = $headers['Workername'];
 $privatekey = $headers['Privatekey'];
-$scantype = $headers['Scantype'];
 $targetpuzzle = $headers['Targetpuzzle'];
 
 if($status == "workerStarted"){
@@ -482,15 +446,6 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 
 ---
 
-### [**private_pool**] 
-
-`none` or `{private_pool_id}`
-
-You can create your own pool for Puzzle 66, 67 and 68. Only the user who created this pool can use it and no other user can join.
-
-Private pools use a database other than the main pool. That's why it's completely empty. Ranges scanned in the private pool just stay there. It is not transferred to another pool.
-
-Private pools can be created. You can reach me via Telegram for create your own puzzle pool.
 
 ### [**enable_logging**]
 

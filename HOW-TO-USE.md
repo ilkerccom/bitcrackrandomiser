@@ -1,6 +1,6 @@
 # Run on Windows
 
-Download and install .NET 6.0.x runtimes for Windows from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+Download and install .NET 8.0.x runtimes for Windows from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 1 - Go to [ilkerccom/bitcrackrandomiser/releases](https://github.com/ilkerccom/bitcrackrandomiser/releases) and download latest released "bitcrackrandomiser.zip" file.
 

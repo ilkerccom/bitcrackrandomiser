@@ -1,5 +1,8 @@
-// Select puzzle number [67,68,69] or [38] for test pool
-target_puzzle=67
+// Enter puzzle number [68,69,71] or [38] for test pool
+target_puzzle=68
+
+// User token value. You can create it by logging into your account at btcpuzzle.info
+user_token=
 
 // which app will be used [bitcrack,vanitysearch,cpu]
 app_type=vanitysearch
@@ -14,11 +17,8 @@ app_path=vanitysearch
 // Example for bitcrack: -b 896 -t 256 -p 256
 app_arguments=
 
-// User token value. You can create it by logging into your account at btcpuzzle.info
-user_token=
-
-// Wallet address for worker. {wallet}.{worker}. If no worker name it will create random.
-wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
+// Worker name. If no worker name it will create random. [1-16 chars.]
+worker_name=
 
 // Enter your GPU Count [1-16]
 gpu_count=1
@@ -29,16 +29,13 @@ gpu_index=0
 // Use each graphics card as a worker. [For VanitySearch only]
 gpu_seperated_range=false
 
-// Scan type [default,includeDefeatedRanges,excludeIterated{2/3/4},excludeContains{3/4},excludeStartsWith{XXX}]
-scan_type=default
-
 // Scan for rewards of the pool [true,false]
 scan_rewards=true
 
 // Custom range to scan Example; [2D,3BA,3F12,2881A or none]
 custom_range=none
 
-// Share progress with your API [https://yourwebsite/example.php]
+// Share progress with your API URL [https://yourwebsite/example.php]
 api_share=none
 
 // Send notifications to Telegram
@@ -50,7 +47,7 @@ telegram_accesstoken=0
 // Telegram chat id
 telegram_chatid=0
 
-// Send notification when eack key scanned
+// Send notification when each key scanned
 telegram_share_eachkey=false
 
 // If true and the private key found; private key will be send to Telegram 
@@ -61,9 +58,3 @@ test_mode=false
 
 // Force continue if key found
 force_continue=false
-
-// Private pool id
-private_pool=none
-
-// Enable or disable error/information logging
-enable_logging=false

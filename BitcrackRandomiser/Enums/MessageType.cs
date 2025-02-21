@@ -8,26 +8,26 @@
         /// <summary>
         /// Regular message
         /// </summary>
-        normal,
+        normal = 0,
         /// <summary>
         /// Success message
         /// </summary>
-        success,
+        success = 1,
         /// <summary>
         /// Information
         /// </summary>
-        info,
+        info = 2,
         /// <summary>
         /// Error message
         /// </summary>
-        error,
+        error = 3,
         /// <summary>
         /// External app's message
         /// </summary>
-        externalApp,
+        externalApp = 4,
         /// <summary>
         /// Seperator for line
         /// </summary>
-        seperator
+        seperator = 10
     }
 }

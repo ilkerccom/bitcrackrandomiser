@@ -15,6 +15,6 @@ namespace BitcrackRandomiser.Models
         /// <summary>
         /// Content. May be private key or another
         /// </summary>
-        public string Content { get; set; } = "";
+        public string? Content { get; set; }
     }
 }
