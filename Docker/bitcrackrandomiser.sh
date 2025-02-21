@@ -1,4 +1,4 @@
-#!/bin/sh
+﻿#!/bin/sh
 
 # Get GPU count
 GPUCOUNTS=$(nvidia-smi -L |wc -l)
@@ -27,13 +27,11 @@ dotnet BitcrackRandomiser.dll \
 	app_path=${APPPATH} \
 	app_arguments="${APPARGS}" \
 	user_token=${BC_USERTOKEN} \
-	wallet_address=${BC_WALLET} \
+	worker_name=${BC_WORKERNAME} \
 	gpu_count=${GPUCOUNTS} \
 	gpu_index=${BC_GPUINDEX} \
 	gpu_seperated_range=${BC_GPUSEPERATEDRANGE} \
 	target_puzzle=${BC_PUZZLE} \
-	scan_type=${BC_SCAN_TYPE} \
-	scan_rewards=${BC_SCAN_REWARDS} \
 	custom_range=${BC_CUSTOM_RANGE} \
 	api_share=${BC_API_SHARE} \
 	telegram_share=${BC_TELEGRAM_SHARE} \
@@ -41,5 +39,4 @@ dotnet BitcrackRandomiser.dll \
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
 	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
 	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
-	force_continue=${BC_FORCE_CONTINUE} \
-	private_pool=${BC_PRIVATEPOOL}
+	force_continue=${BC_FORCE_CONTINUE}
