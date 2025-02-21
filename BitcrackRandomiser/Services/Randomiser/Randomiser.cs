@@ -81,36 +81,6 @@ namespace BitcrackRandomiser.Services.Randomiser
             string randomHex = hexResult.data.Hex;
             var proofValues = hexResult.data.ProofOfWorkAddresses;
 
-            // Add +1 to random HEX value
-            int startNumber = int.Parse(randomHex, System.Globalization.NumberStyles.HexNumber);
-            int endNumber = startNumber + 1;
-
-            // Convert numbers to HEX
-            string startHex = randomHex;
-            string endHex = endNumber.ToString("X");
-
-            // Testing - [test_mode=true]
-            if (settings.TestMode)
-            {
-                // ~1min on 3090
-                targetAddress = "1Cnrx6rxiGvVNw1UroYM5hRjVvqPnWC7fR";
-                startHex = "2012E83";
-                endHex = "2012E84";
-
-                // Test with custom settings
-                string customTestFile = AppDomain.CurrentDomain.BaseDirectory + "customtest.txt";
-                if (File.Exists(customTestFile))
-                {
-                    string[] lines = File.ReadAllLines(customTestFile);
-                    if (lines.Length == 3)
-                    {
-                        targetAddress = lines[0];
-                        startHex = lines[1];
-                        endHex = lines[2];
-                    }
-                }
-            }
-
             // Write info
             if (!appStarted)
             {
@@ -136,7 +106,7 @@ namespace BitcrackRandomiser.Services.Randomiser
                 var proofAddressList = string.Join(' ', proofValues);
                 var currentGpuIndex = settings.GPUCount > 1 ? gpuIndex : settings.GPUIndex;
 
-                appArguments = $"{settings.AppArgs} --keyspace {startHex}{hexResult.data.WorkloadStart}:{endHex}{hexResult.data.WorkloadEnd} {targetAddress} {proofAddressList} -d {currentGpuIndex}";
+                appArguments = $"{settings.AppArgs} --keyspace {randomHex}{hexResult.data.WorkloadStart}:+{hexResult.data.WorkloadEnd} {targetAddress} {proofAddressList} -d {currentGpuIndex}";
             }
             else if (settings.AppType == AppType.vanitysearch ^ settings.AppType == AppType.cpu)
             {
@@ -156,10 +126,10 @@ namespace BitcrackRandomiser.Services.Randomiser
                                 : settings.GPUSeperatedRange
                                 ? $"-gpuId {gpuIndex}"
                                 : $"-gpuId {string.Join(",", Enumerable.Range(0, settings.GPUCount).ToArray())}";
-                            appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {startHex}{hexResult.data.WorkloadStart}:+{hexResult.data.WorkloadEnd}";
+                            appArguments = $"{settings.AppArgs} -t 0 -gpu {settedGpus} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {randomHex}{hexResult.data.WorkloadStart}:+{hexResult.data.WorkloadEnd}";
                             break;
                         case AppType.cpu:
-                            appArguments = $"{settings.AppArgs} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {startHex}{hexResult.data.WorkloadStart}:+{hexResult.data.WorkloadEnd}";
+                            appArguments = $"{settings.AppArgs} -i vanitysearch_gpu{gpuIndex}.txt --keyspace {randomHex}{hexResult.data.WorkloadStart}:+{hexResult.data.WorkloadEnd}";
                             break;
                     }
                 }
@@ -183,8 +153,8 @@ namespace BitcrackRandomiser.Services.Randomiser
             };
 
             // Output from BitCrack
-            process.ErrorDataReceived += (o, s) => OutputReceivedHandler(o, s, targetAddress, proofValues, startHex, settings, process, gpuIndex);
-            process.OutputDataReceived += (o, s) => OutputReceivedHandler(o, s, targetAddress, proofValues, startHex, settings, process, gpuIndex);
+            process.ErrorDataReceived += (o, s) => OutputReceivedHandler(o, s, targetAddress, proofValues, randomHex, settings, process, gpuIndex);
+            process.OutputDataReceived += (o, s) => OutputReceivedHandler(o, s, targetAddress, proofValues, randomHex, settings, process, gpuIndex);
 
             // App exited
             process.Exited += (sender, args) =>

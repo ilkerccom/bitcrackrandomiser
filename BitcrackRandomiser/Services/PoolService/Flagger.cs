@@ -36,14 +36,14 @@ namespace BitcrackRandomiser.Services.PoolService
             string walletAddress = settings.WorkerName;
             if ((settings.AppType == AppType.bitcrack && settings.GPUCount > 1) || settings.AppType == AppType.vanitysearch && settings.GPUSeperatedRange)
                 walletAddress += "_" + gpuIndex;
-            bool flagUsed = MainService.FlagHex(settings!.UserToken!, hex, walletAddress, hashedProofKey, proofKey, gpuName, settings.GPUCount, settings.ForceContinue, settings!.TargetPuzzle!).Result;
+            bool flagUsed = MainService.FlagHex(settings!.UserToken!, hex, walletAddress, hashedProofKey, proofKey, gpuName, gpuCount, settings.ForceContinue, settings!.TargetPuzzle!).Result;
 
             // Try flagging
             const int maxTries = 6;
             int flagTries = 1;
             while (!flagUsed && flagTries <= maxTries)
             {
-                flagUsed = MainService.FlagHex(settings!.UserToken!, hex, settings.WorkerName, hashedProofKey, proofKey, gpuName, settings.GPUCount, settings.ForceContinue, settings!.TargetPuzzle!).Result;
+                flagUsed = MainService.FlagHex(settings!.UserToken!, hex, settings.WorkerName, hashedProofKey, proofKey, gpuName, gpuCount, settings.ForceContinue, settings!.TargetPuzzle!).Result;
                 Helper.WriteLine($"Flag error... Retrying... {flagTries}/{maxTries} [GPU{gpuIndex}]", MessageType.externalApp, gpuIndex: gpuIndex);
                 Thread.Sleep(10000);
                 flagTries++;
