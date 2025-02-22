@@ -2,7 +2,7 @@
 target_puzzle=68
 
 // User token value. You can create it by logging into your account at btcpuzzle.info
-user_token=
+user_token=5DKGfuQAJw7SkSl3tSTbNJcwSxZdZ6bMdkQcIWe3uQq6AI5ZgwybEiwMtkk6juosHJlil56W88fGEMXE8pjNDtftbSsdYMreaYSJQJDfJJIFWEKjZPy6EkMojJWINnjE
 
 // which app will be used [bitcrack,vanitysearch,cpu]
 app_type=vanitysearch
