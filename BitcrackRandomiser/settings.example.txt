@@ -58,3 +58,6 @@ test_mode=false
 
 // Force continue if key found
 force_continue=false
+
+// App is working on any cloud service [true,false]
+cloud_search_mode=false

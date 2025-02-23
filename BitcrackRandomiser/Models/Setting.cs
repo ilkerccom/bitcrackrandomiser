@@ -132,6 +132,11 @@ namespace BitcrackRandomiser.Models
         public bool ForceContinue { get; set; }
 
         /// <summary>
+        /// App is working in any cloud service.
+        /// </summary>
+        public bool CloudSearchMode { get; set; }
+
+        /// <summary>
         /// Hashed settings for untrusted computers.
         /// When the any setting changes, the hash value also changes.
         /// </summary>

@@ -28,8 +28,11 @@ namespace BitcrackRandomiser.Services.PoolService
                 if (Environment.UserInteractive && !Console.IsInputRedirected)
                     consoleWidth = Console.WindowWidth;
 
-                Console.CursorVisible = false;
-                Console.SetCursorPosition(0, 9 + gpuIndex);
+                if (!Program.isCloudSearchMode)
+                {
+                    Console.CursorVisible = false;
+                    Console.SetCursorPosition(0, 9 + gpuIndex);
+                }
 
                 if (appType == AppType.bitcrack)
                 {
@@ -37,7 +40,10 @@ namespace BitcrackRandomiser.Services.PoolService
                     if (e.Data.Contains("Reached") || e.Data.Contains("No targets remaining"))
                     {
                         string finishedMessage = string.Format("[{0}] [Info] {1}", currentDate, "Scan completed.");
-                        Console.Write(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
+                        if (Program.isCloudSearchMode)
+                            Console.WriteLine(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
+                        else
+                            Console.Write(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
                         return new Result { OutputType = OutputType.finished };
                     }
                     else if (e.Data.Contains("Address:"))
@@ -63,12 +69,18 @@ namespace BitcrackRandomiser.Services.PoolService
                             string message = string.Format("{0} [GPU={1}] [HEX={2}]", data.Length > 1 ? data : "...", gpuIndex, hex);
                             int totalLength = consoleWidth - message.Length;
                             string spaces = totalLength > 0 ? new string(' ', totalLength) : "";
-                            Console.Write($"{message}{spaces}");
+                            if (Program.isCloudSearchMode)
+                                Console.WriteLine($"{message}{spaces}");
+                            else
+                                Console.Write($"{message}{spaces}");
                         }
                         else
                         {
                             string loadingMessage = string.Format("[{0}] [Info] Running ... [GPU={2}] [HEX:{1}]", currentDate, hex, gpuIndex);
-                            Console.Write(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
+                            if(Program.isCloudSearchMode)
+                                Console.WriteLine(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
+                            else
+                                Console.Write(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
                         }
                         return new Result { OutputType = OutputType.running };
                     }
@@ -79,7 +91,10 @@ namespace BitcrackRandomiser.Services.PoolService
                     if (e.Data.Contains("[EXIT]"))
                     {
                         string finishedMessage = string.Format("[{0}] [Info] {1}", currentDate, "Scan completed.");
-                        Console.Write(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
+                        if (Program.isCloudSearchMode)
+                            Console.WriteLine(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
+                        else
+                            Console.Write(finishedMessage + new string(' ', consoleWidth - finishedMessage.Length));
                         return new Result { OutputType = OutputType.finished };
                     }
                     else if (e.Data.Contains("Public Addr:"))
@@ -116,12 +131,19 @@ namespace BitcrackRandomiser.Services.PoolService
                             string message = string.Format("{0} [HEX={2}]", data.Length > 1 ? data : "...", gpuIndex, hex);
                             int totalLength = consoleWidth - message.Length;
                             string spaces = totalLength > 0 ? new string(' ', totalLength) : "";
-                            Console.Write($"{message}{spaces}");
+
+                            if(Program.isCloudSearchMode)
+                                Console.WriteLine($"{message}{spaces}");
+                            else
+                                Console.Write($"{message}{spaces}");
                         }
                         else
                         {
                             string loadingMessage = string.Format("[{0}] [Info] Running ... [HEX:{1}]", currentDate, hex, gpuIndex);
-                            Console.Write(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
+                            if(Program.isCloudSearchMode)
+                                Console.WriteLine(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
+                            else
+                                Console.Write(loadingMessage + new string(' ', consoleWidth - loadingMessage.Length));
                         }
                         return new Result { OutputType = OutputType.running };
                     }

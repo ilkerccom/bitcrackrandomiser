@@ -9,6 +9,11 @@ namespace BitcrackRandomiser
     static class Program
     {
         /// <summary>
+        /// App is working in any cloud service
+        /// </summary>
+        public static bool isCloudSearchMode = false;
+
+        /// <summary>
         /// Main function
         /// </summary>
         /// <param name="args"></param>
@@ -24,6 +29,8 @@ namespace BitcrackRandomiser
                 bool editSettings = Task.Factory.StartNew(() => Console.ReadLine()).Wait(TimeSpan.FromSeconds(3));
                 if (editSettings)
                     appSettings = SettingsService.SetSettings();
+
+                isCloudSearchMode = appSettings.CloudSearchMode;
             }
 
             // App exit events

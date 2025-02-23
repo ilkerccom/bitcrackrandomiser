@@ -12,9 +12,7 @@ Download and install .NET 8.0.x runtimes for Windows from [Microsoft](https://do
 
 a. Enter "user_token" value. Get your "user_token" from [btcpuzzle.info/user-center](https://btcpuzzle.info/user-center) website.
 
-b. Enter "wallet_address" value. You should use your BTC wallet address.
-
-c. Save the file.
+b. Save the file.
 
 4 - Run the "**BitcrackRandomiser.exe**"
 
@@ -58,41 +56,6 @@ Or you can edit "settings.txt" file from Docker app in currently active containe
 $ dotnet BitcrackRandomiser.dll
 ```
 
-## Auto Launch
-
-`ilkercndk/bitcrackrandomiser:autorun` will be used for auto launch.
-
-1 - Open a new Command Prompt console and write below code.
-
-```
-docker run --gpus all -e BC_USER_TOKEN={your_user_token} -e BC_WALLET={your_wallet_address} ilkercndk/bitcrackrandomiser:autorun
-```
-
-You can use more settings for this docker image. See below (default settings);
-
-```
--e BC_PUZZLE=66
--e BC_USERTOKEN="0"
--e BC_WALLET="1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw"
--e BC_APP_TYPE="vanitysearch"
--e BC_APP="/app/VanitySearch/./vanitysearch"
--e BC_APP_ARGS=""
--e BC_GPUCOUNT="1"
--e BC_GPUINDEX="0"
--e BC_SCAN_TYPE="includeDefeatedRanges"
--e BC_SCAN_REWARDS="true"
--e BC_CUSTOM_RANGE="none"
--e BC_API_SHARE="none"
--e BC_TELEGRAM_SHARE="false"
--e BC_TELEGRAM_ACCESS_TOKEN="0"
--e BC_TELEGRAM_CHAT_ID="0"
--e BC_TELEGRAM_SHARE_EACHKEY="false"
--e BC_UNTRUSTED_COMPUTER="false"
--e BC_FORCE_CONTINUE="false"
--e BC_PRIVATEPOOL="none"
-```
-
-2 - No more step. The application started automatically.
 
 # Run on CloudSearch
 
@@ -134,13 +97,11 @@ Additionally, the "security hash" value (in your dashboard) that I underlined in
 
 Register [Vast.ai](https://cloud.vast.ai/?ref_id=69296) to rent GPU(s). 
 
-## Easiest way
+## Easiest Way (Autorun)
 
 Use custom docker image `ilkercndk/bitcrackrandomiser:autorun` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
 
-![vast ai console](https://i.ibb.co/1Lzj0zb/vast.png)
-
-You can enter any settings you want in the "Docker options" field. "wallet_addres" and "user_token" values are entered in this field.
+You can enter any settings you want in the "Docker options" field. "user_token" values are entered in this field.
 
 You can create a template similar to the one above and rent the instance you want with this template. When you rent instance, bitcrackrandomiser will be run automatically according to the settings you enter. Make sure any of the Telegram or Api Share settings are active. It is also a useful setting to set the "untrusted_computer" value to "true" when using vast.ai. Thus, when the key is found, it is not saved anywhere in the running instance.
 
@@ -148,19 +109,27 @@ You can create a template similar to the one above and rent the instance you wan
 
 ### Example
 
-Using `ilkercndk/bitcrackrandomiser:autorun` image.
+Using `ilkercndk/bitcrackrandomiser:latest` image.
 
-#### Docker options
+#### 1- Docker options (Env. variables)
 
 ```bash
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_USERTOKEN {YOUR_USERTOKEN_VALUE} -e BC_SCAN_TYPE=excludeIterated4
+-e BC_USERTOKEN {YOUR_USERTOKEN_VALUE} -e BC_WORKERNAME=worker394
 ```
 
-#### Launch mode
+#### 2- Launch mode
 
-[x] Docker Run: use docker ENTRYPOINT.
+[x] Interactive shell server, SSH
 
-## Short Way
+#### 3- On-start script
+
+```
+bash /app/bitcrackrandomiser/bitcrackrandomiser.sh
+```
+
+Save the template.
+
+## Short Way (Manual)
 
 Use custom docker image `ilkercndk/bitcrackrandomiser:latest` from [dockerhub](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser) in "Template Slot" and run any instance.
 
@@ -180,33 +149,16 @@ $ dotnet BitcrackRandomiser.dll
 
 ```
 $ cd /app/bitcrackrandomiser
-$ dotnet BitcrackRandomiser.dll app_path=/app/BitCrack/bin/./cuBitCrack app_arguments="-b 896 -t 256 -p 256" user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw;
-```
-
-You can use env variables for docker entrypoint with `ilkercndk/bitcrackrandomiser:autorun` image:
-
-```
--e BC_PUZZLE=66
--e BC_USER_TOKEN=0
--e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
--e BC_APP=/app/BitCrack/bin/./cuBitCrack
--e BC_APP_ARGS="-b 896 -t 256 -p 256"
--e BC_SCAN_TYPE=includeDefeatedRanges
--e BC_CUSTOM_RANGE=none
--e BC_TELEGRAM_SHARE=false
--e BC_TELEGRAM_ACCESS_TOKEN=0
--e BC_TELEGRAM_CHAT_ID=0
--e BC_TELEGRAM_SHARE_EACHKEY=false
--e BC_UNTRUSTED_COMPUTER=false
+$ dotnet BitcrackRandomiser.dll user_token=xxxx ...
 ```
 
 Example docker create/run options
 
 ```
--e BC_USER_TOKEN=xxxx -e BC_WALLET=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw -e BC_SCAN_TYPE=default -e BC_UNTRUSTED_COMPUTER=true
+-e BC_USER_TOKEN=xxxx -e BC_UNTRUSTED_COMPUTER=true ...
 ```
 
-## Long Way
+## Long Way (Not recommended)
 
 (1) Select custom docker image `nvidia/cuda:12.0.0-devel-ubuntu20.04` in "Template Slot" and run any instance. (3090 or 4090 is fine)
 
@@ -230,12 +182,11 @@ $ cd bitcrackrandomiser/BitcrackRandomiser
 Edit settings.txt file. You can edit settings.txt file with `nano settings.txt` or connect with WinSCP and download-edit *settings.txt* file. Example below:
 
 ```
-target_puzzle=66
+target_puzzle=68
 app_type=bitcrack
 app_path=/root/BitCrack/bin/./cuBitCrack
 app_arguments=-b 896 -t 256 -p 256
 user_token=xxxxxxxxxxxxxxxxxx
-wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw
 ... other settings
 ```
 

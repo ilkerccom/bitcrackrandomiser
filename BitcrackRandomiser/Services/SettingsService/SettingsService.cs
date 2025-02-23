@@ -117,6 +117,10 @@ namespace BitcrackRandomiser.Services.SettingsService
                             _ = bool.TryParse(value, out bool _f);
                             settings.ForceContinue = _f;
                             break;
+                        case "cloud_search_mode":
+                            _ = bool.TryParse(value, out bool _cs);
+                            settings.CloudSearchMode = _cs;
+                            break;
                     }
                 }
             }
@@ -145,7 +149,7 @@ namespace BitcrackRandomiser.Services.SettingsService
             string _UserToken = DetermineSettings("Your user token value", null, 20);
 
             // Wallet address
-            string _WalletAddress = DetermineSettings("Your BTC wallet address", null, 20);
+            string _WalletAddress = DetermineSettings("Enter worker name", null, 20);
 
             // GPU Count
             string _gpuCount = DetermineSettings("Enter your GPU count [Min:1, Max:16]", null, 1);

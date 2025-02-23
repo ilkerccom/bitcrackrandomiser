@@ -1,6 +1,6 @@
 # Bitcrack-Randomiser
 
-Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **66, 67, 68, 69 and 71**. (Technically supports up to Puzzle 160). It works with Bitcrack and VanitySearch.
+Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **68, 69 and 71**. (Technically supports up to Puzzle 160). It works with Bitcrack and VanitySearch.
 
 Official client for "btcpuzzle.info pool".
 
@@ -120,30 +120,11 @@ Don't forget to add the `--gpus all` flag when running on your local computer.
 ```bash
 $ docker run --gpus all -it ilkercndk/bitcrackrandomiser:latest
 ```
-
-### # ilkercndk/bitcrackrandomiser:autorun
-
-Everything is ready! When you run the image, <ins>bitcrackrandomiser</ins> starts automatically. You can see the Docker create/run settings in the example below. Does not need interactive console.
+Using env. variables
 
 ```bash
-$ docker run -e BC_WALLET=xxxx -e BC_USERTOKEN=xxxx ilkercndk/bitcrackrandomiser:autorun
+$ docker run --gpus all -it ilkercndk/bitcrackrandomiser:latest -e BC_USERTOKEN=xxx -e BC_WORKER=workername ...
 ```
-
-Example run Bitcrack  on Vast.ai;
-
-```bash
-$ docker run -e BC_APP_TYPE=bitcrack ilkercndk/bitcrackrandomiser:autorun
-```
-
-Example run VanitySearch on Vast.ai;
-
-```bash
-$ docker run -e BC_APP_TYPE=vanitysearch ilkercndk/bitcrackrandomiser:autorun
-```
-
-If you do not send the ```BC_APP_TYPE``` value, "vanitysearch" will run by default. You do not need to send the ```BC_GPUCOUNT``` value. The number of GPUs will automatically calculate the total number of graphics cards on the instance and the application will be run.
-
-
 
 ### Docker options with default settings
 
@@ -173,7 +154,7 @@ You can update the application settings via the "[settings.txt](./BitcrackRandom
 Also, You can pass arguments to the application as in the example below.
 
 ```
-dotnet BitcrackRandomiser.dll target_puzzle=68 user_token=xxxx wallet_address=1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw ...any other settings
+dotnet BitcrackRandomiser.dll target_puzzle=68 user_token=xxxx ...any other settings
 ```
 
 ---
@@ -239,9 +220,9 @@ Example user token value;
 
 ### [**worker_name**]
 
-Enter the BTC wallet address here. 
+Enter the worker name.
 
-`worker4124`
+`worker4124` or `anyworkername`
 
 Only alphanumeric is accepted. Max 16 characters. Do not use special characters. If you do not enter a worker name, it will be created automatically.
 
@@ -317,7 +298,6 @@ status // [workerStarted, workerExited, rangeScanned, reachedOfKeySpace, keyFoun
 hex // Scanned HEX value
 privatekey // Private key if that found
 targetpuzzle // Which puzzle is being scanned
-workeraddress // Worker wallet address [1eosEvvesKV6C2ka4RDNZhmepm1TLFBtw]
 workername // Worker name [worker1039]
 ```
 
@@ -328,25 +308,24 @@ I wrote a sample PHP script to get the data. It sends info to Telegram.
 $headers = getallheaders();
 $status = $headers['Status'];
 $hex = $headers['Hex'];
-$workeraddress = $headers['Workeraddress'];
 $workername = $headers['Workername'];
 $privatekey = $headers['Privatekey'];
 $targetpuzzle = $headers['Targetpuzzle'];
 
 if($status == "workerStarted"){
-	shareTelegram($workeraddress.$workername." started job!");
+	shareTelegram($workername." started job!");
 }
 else if($status == "workerExited"){
-	shareTelegram($workeraddress.$workername." goes offline!");
+	shareTelegram($workername." goes offline!");
 }
 else if($status == "rangeScanned"){
-	shareTelegram($hex." scanned by ".$workeraddress.$workername);
+	shareTelegram($hex." scanned by ".$workername);
 }
 else if($status == "reachedOfKeySpace"){
-	shareTelegram($workeraddress.$workername." reached of keyspace!");
+	shareTelegram($workername." reached of keyspace!");
 }
 else if($status == "keyFound"){
-	shareTelegram("Congratulations! ".$workeraddress.$workername." found the key! Key is: ".$privatekey);
+	shareTelegram("Congratulations! ".$workername." found the key! Key is: ".$privatekey);
 }
 function shareTelegram($message){
 	$apiToken = "{telegram_api_token}";
@@ -446,12 +425,6 @@ Start app in test mode if `true`. You can test with custom parameters by creatin
 
 ---
 
-
-### [**enable_logging**]
-
-`true` or `false`.
-
-Stores error and information messages in a text file. Logging is disabled by default.
 
 ## Tips
 

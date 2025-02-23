@@ -43,9 +43,14 @@ namespace BitcrackRandomiser.Services
                 // Add spaces to message
                 message += new string(' ', consoleWidth - message.Length);
 
-                Console.CursorVisible = false;
-                Console.SetCursorPosition(0, 9 + gpuIndex);
-                Console.Write(string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), message));
+                if (Program.isCloudSearchMode)
+                    Console.WriteLine(string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), message));
+                else
+                {
+                    Console.CursorVisible = false;
+                    Console.SetCursorPosition(0, 9 + gpuIndex);
+                    Console.Write(string.Format("[{0}] [Info] {1}", DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"), message));
+                }
             }
             else if (type == MessageType.seperator)
             {
@@ -65,7 +70,10 @@ namespace BitcrackRandomiser.Services
         {
             // Write message
             Console.ForegroundColor = color;
-            Console.Write(string.Format("{0}", message));
+            if(Program.isCloudSearchMode)
+                Console.WriteLine(string.Format("{0}", message));
+            else
+                Console.Write(string.Format("{0}", message));
             Console.ForegroundColor = ConsoleColor.White;
         }
 
