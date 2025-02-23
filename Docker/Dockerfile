@@ -18,6 +18,7 @@ ENV BC_TELEGRAM_CHAT_ID="0"
 ENV BC_TELEGRAM_SHARE_EACHKEY="false"
 ENV BC_UNTRUSTED_COMPUTER="false"
 ENV BC_FORCE_CONTINUE="false"
+ENV BC_CLOUDSEARCHMODE="true"
 
 # Build Variables
 ENV BITCRACKCCAP=86
@@ -73,3 +74,4 @@ RUN chmod +x /app/bitcrackrandomiser/bitcrackrandomiser.sh
 
 # Its ready to run
 WORKDIR /app/bitcrackrandomiser
+#CMD ["/app/bitcrackrandomiser/bitcrackrandomiser.sh"]

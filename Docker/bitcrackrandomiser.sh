@@ -39,4 +39,5 @@ dotnet BitcrackRandomiser.dll \
 	telegram_chatid=${BC_TELEGRAM_CHAT_ID} \
 	telegram_share_eachkey=${BC_TELEGRAM_SHARE_EACHKEY} \
 	untrusted_computer=${BC_UNTRUSTED_COMPUTER} \
-	force_continue=${BC_FORCE_CONTINUE}
+	force_continue=${BC_FORCE_CONTINUE} \
+	cloud_search_mode=${BC_CLOUDSEARCHMODE}
