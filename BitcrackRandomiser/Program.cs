@@ -21,6 +21,7 @@ namespace BitcrackRandomiser
         {
             // Get settings
             var appSettings = SettingsService.GetSettings(args);
+            isCloudSearchMode = appSettings.CloudSearchMode;
 
             // Edit settings
             Helper.WriteLine($"Press <enter> to edit settings or wait for 3 seconds to load app with <settings.txt>");
@@ -29,8 +30,6 @@ namespace BitcrackRandomiser
                 bool editSettings = Task.Factory.StartNew(() => Console.ReadLine()).Wait(TimeSpan.FromSeconds(3));
                 if (editSettings)
                     appSettings = SettingsService.SetSettings();
-
-                isCloudSearchMode = appSettings.CloudSearchMode;
             }
 
             // App exit events
