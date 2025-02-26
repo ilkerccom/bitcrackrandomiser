@@ -8,7 +8,7 @@ Returns a new HEX value to be scanned from the pool.
 
 Name |  Type | Required | Default Value | Info
 --- | --- | --- |  --- | ---
-PuzzleCode |  string ***(path)*** | yes | 68 | The puzzle number you want to scan. Possible values: 66,67,68 and 38 for test pool
+PuzzleCode |  string ***(path)*** | yes | 68 | The puzzle number you want to scan. Possible values: 68, 69, 71 and 38 for test pool
 UserToken|  string ***(*header)*** | yes | null | User token value of worker/user.
 WorkerName|  string ***(*header)*** | no | null | Worker name. Min:1, max:15.
 CustomRange|  string ***(*header)*** | no | null | The setting variables that you will use as the scan type are sent.
@@ -37,7 +37,7 @@ https://api.btcpuzzle.info/puzzle/68/range
 }
 ```
 
-**HEX:** Specifies the HEX range to scan. Determine the starting point for Puzzle 66 by adding 10 zeros to the end of this HEX. Example; 3AB84430000000000
+**HEX:** Specifies the HEX range to scan. Determine the starting point for Puzzle 66 by adding 10 zeros from ***"workloadStart"*** to the end of this HEX. Example; 3AB84430000000000
 
 **workloadStart** | **workladEnd**: Total number of keys for the puzzle. In this example range must be; 3AB84430000000000:+3FFFFFFFFFF
 
@@ -49,9 +49,12 @@ You must scan the "x6 ProofValue" addresses simultaneously with the target addre
 ExampleProofKey1 = 000000000000000000000000000000000000000000000003AB8443AB91BBAFE8; //for proofAddress1
 ExampleProofKey2 = 000000000000000000000000000000000000000000000003AB84435AF1E51FD1; //for proofAddress2
 ExampleProofKey3 = 000000000000000000000000000000000000000000000003AB8443DAFCC114AF; //for proofAddress3
+ExampleProofKey4 = ....
+ExampleProofKey5 = ....
+ExampleProofKey6 = ....
 ```
 
-The final proof key result is obtained as `SHA256(proofKey1+proofKey2+proofKey3)`
+The final proof key result is obtained as `SHA256(proofKey1+proofKey2+proofKey3+proofKey4+proofKey5+proofKey6)`
 
 ```
 892a38381912bcce412030d7a403de8a92c0e56f452ba5a865f0bf728ff3fa87
