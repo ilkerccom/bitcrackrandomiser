@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.0.0-devel-ubuntu20.04
+#ilkercndk/bitcrackrandomiser:cuda-122
+FROM nvidia/cuda:12.2.2-devel-ubuntu20.04
 
 # Variables
 ENV BC_PUZZLE=68
@@ -9,7 +10,7 @@ ENV BC_APP="/app/VanitySearch/./vanitysearch"
 ENV BC_APP_ARGS=""
 ENV BC_GPUCOUNT="1"
 ENV BC_GPUINDEX="0"
-ENV BC_GPUSEPERATEDRANGE="false"
+ENV BC_GPUSEPERATEDRANGE="true"
 ENV BC_CUSTOM_RANGE="none"
 ENV BC_API_SHARE="none"
 ENV BC_TELEGRAM_SHARE="false"
@@ -21,28 +22,18 @@ ENV BC_FORCE_CONTINUE="false"
 ENV BC_CLOUDSEARCHMODE="true"
 
 # Build Variables
-ENV BITCRACKCCAP=86
-ENV VANITYCCAP=2.0
+ENV VANITYCCAP=6.0
 
-# Clone and build bitcrack. For older graphics cards, you can lower the <COMPUTE_CAP> value.
+# Install updates
 WORKDIR /app
 RUN apt-get update \
  && apt-get install git nano curl -y
-RUN git clone https://github.com/brichard19/BitCrack
-WORKDIR /app/BitCrack
-
-# Build for AMD and OpenCL devices
-#RUN make BUILD_OPENCL=1 COMPUTE_CAP=${BITCRACKCCAP}
-# Build for NVIDIA CUDA devices
-RUN make BUILD_CUDA=1 COMPUTE_CAP=${BITCRACKCCAP}
 
 # Clone and build vanitysearch.
 WORKDIR /app
-RUN git clone https://github.com/ilkerccom/VanitySearch
+RUN git clone https://github.com/ilkerccom/VanitySearch-V2 /app/VanitySearch
 WORKDIR /app/VanitySearch
 
-# Build for CPU
-#RUN make all
 # Build for NVIDIA CUDA devices
 RUN make gpu=1 CCAP=${VANITYCCAP} all
 
@@ -62,13 +53,11 @@ ENV DOTNET_RUNNING_IN_CONTAINER=true \
 # Clone and build bitcrackrandomiser
 WORKDIR /app/cloned
 RUN git clone https://github.com/ilkerccom/bitcrackrandomiser.git
-#COPY bitcrackrandomiser /app/cloned/bitcrackrandomiser/BitcrackRandomiser
 WORKDIR /app/cloned/bitcrackrandomiser/BitcrackRandomiser
 RUN dotnet publish --configuration Release --output /app/bitcrackrandomiser
 
 # Copy entrypoint
 COPY bitcrackrandomiser.sh /app/bitcrackrandomiser
-RUN chmod +x /app/bitcrackrandomiser/Apps/bitcrack/./cuBitcrack
 RUN chmod +x /app/bitcrackrandomiser/Apps/vanitysearch/./vanitysearch
 RUN chmod +x /app/bitcrackrandomiser/bitcrackrandomiser.sh
 

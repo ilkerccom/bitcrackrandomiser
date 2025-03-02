@@ -26,6 +26,7 @@ You can build the client and all the applications used yourself. %100 open-sourc
 
 - Bitcrack ([Go repo](https://github.com/brichard19/BitCrack))
 - VanitySearch ([Go repo](https://github.com/ilkerccom/VanitySearch))
+- VanitySearch (Optimised) ([Go repo](https://github.com/ilkerccom/VanitySearch-V2))
 - Bitcrackrandomiser (This repo)
 
 Endless thanks to everyone involved in the development of Bitcrack and VanitySearch applications.
@@ -99,13 +100,24 @@ If you're looking for the easiest way to join the pool, you're in the right plac
 
 3 - Create a template and rent the instance you want. That is all!
 
-## Using Docker Images
+## Docker Images
 
 You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Docker/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
 <ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
 
-
+- <ins>***ilkercndk/bitcrackrandomiser:latest***</ins> -> Default vanitysearch (Supports up to RTX 4000 series)
+  - The default vanitysearch is used. You can scan with multiple GPUs on a range.
+  - It scans slower than the optimized VanitySearch.
+  - Supports maximum RTX 4000 series GPUs.
+- <ins>***ilkercndk/bitcrackrandomiser:cuda-122***</ins> -> Optimized vanitysearch (Supports up to RTX 4000 series)
+  - The default vanitysearch is used. A maximum of 1 GPU can be used for each range.
+  - It scans faster than the default VanitySearch.
+  - Supports maximum RTX 4000 series GPUs.
+- <ins>***ilkercndk/bitcrackrandomiser:cuda-128***</ins> -> Optimized vanitysearch (Supports RTX 5000 series)
+  - The default vanitysearch is used. A maximum of 1 GPU can be used for each range.
+  - It scans faster than the default VanitySearch.
+  - Supports maximum RTX 5000 series GPUs.
 
 ### # ilkercndk/bitcrackrandomiser:latest
 
@@ -127,18 +139,24 @@ Using env. variables
 ```bash
 $ docker run --gpus all -it ilkercndk/bitcrackrandomiser:latest -e BC_USERTOKEN=xxx -e BC_WORKER=workername ...
 ```
+You can add auto start script
+
+```bash
+bash /app/bitcrackrandomiser/bitcrackrandomiser.sh
+```
 
 ### Docker options with default settings
 
 ```bash
 BC_PUZZLE=68
-BC_USERTOKEN=""
-BC_WORKER="workerdefault"
+BC_USERTOKEN="0"
+BC_WORKERNAME=""
 BC_APP_TYPE="vanitysearch"
 BC_APP="/app/VanitySearch/./vanitysearch"
 BC_APP_ARGS=""
 BC_GPUCOUNT="1"
 BC_GPUINDEX="0"
+BC_GPUSEPERATEDRANGE="true"
 BC_CUSTOM_RANGE="none"
 BC_API_SHARE="none"
 BC_TELEGRAM_SHARE="false"
@@ -147,6 +165,7 @@ BC_TELEGRAM_CHAT_ID="0"
 BC_TELEGRAM_SHARE_EACHKEY="false"
 BC_UNTRUSTED_COMPUTER="false"
 BC_FORCE_CONTINUE="false"
+BC_CLOUDSEARCHMODE="true"
 ```
 
 # Settings
