@@ -12,7 +12,7 @@ dotnet BitcrackRandomiser.dll \
 	worker_name=${BC_WORKERNAME} \
 	gpu_count=${GPUCOUNTS} \
 	gpu_index=${BC_GPUINDEX} \
-	gpu_seperated_range=${BC_GPUSEPERATEDRANGE} \
+	gpu_seperated_range="true" \
 	target_puzzle=${BC_PUZZLE} \
 	custom_range=${BC_CUSTOM_RANGE} \
 	api_share=${BC_API_SHARE} \

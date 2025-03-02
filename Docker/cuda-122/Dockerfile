@@ -21,9 +21,6 @@ ENV BC_UNTRUSTED_COMPUTER="false"
 ENV BC_FORCE_CONTINUE="false"
 ENV BC_CLOUDSEARCHMODE="true"
 
-# Build Variables
-ENV VANITYCCAP=6.0
-
 # Install updates
 WORKDIR /app
 RUN apt-get update \
@@ -35,7 +32,7 @@ RUN git clone https://github.com/ilkerccom/VanitySearch-V2 /app/VanitySearch
 WORKDIR /app/VanitySearch
 
 # Build for NVIDIA CUDA devices
-RUN make gpu=1 CCAP=${VANITYCCAP} all
+RUN make gpu=1 all
 
 # Install .NET Core
 ENV DOTNET_SDK_VERSION 8.0.406
