@@ -100,22 +100,23 @@ If you're looking for the easiest way to join the pool, you're in the right plac
 
 3 - Create a template and rent the instance you want. That is all!
 
-## Docker Images
+## 
+Images
 
-You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfile](./Docker/Dockerfile)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
+You can use docker image for a faster experience. You can also create your own docker image. "[Dockerfiles](./Docker)" is available in the repo. Visit the [Bitcrackrandomiser Docker Images](https://hub.docker.com/r/ilkercndk/bitcrackrandomiser/tags)
 
 <ins>What needs to be done above is ready in the Docker image. All you have to do is run the application.</ins>
 
-- <ins>***ilkercndk/bitcrackrandomiser:latest***</ins> -> Default vanitysearch (Supports up to RTX 4000 series)
+- ***ilkercndk/bitcrackrandomiser:<ins>latest</ins>***
   - The default vanitysearch is used. You can scan with multiple GPUs on a range.
   - It scans slower than the optimized VanitySearch.
   - Supports maximum RTX 4000 series GPUs.
-- <ins>***ilkercndk/bitcrackrandomiser:cuda-122***</ins> -> Optimized vanitysearch (Supports up to RTX 4000 series)
-  - The default vanitysearch is used. A maximum of 1 GPU can be used for each range.
+- ***ilkercndk/bitcrackrandomiser:<ins>cuda-122</ins>***
+  - The optimised vanitysearch is used. A maximum of 1 GPU can be used for each range.
   - It scans faster than the default VanitySearch.
   - Supports maximum RTX 4000 series GPUs.
-- <ins>***ilkercndk/bitcrackrandomiser:cuda-128***</ins> -> Optimized vanitysearch (Supports RTX 5000 series)
-  - The default vanitysearch is used. A maximum of 1 GPU can be used for each range.
+- ***ilkercndk/bitcrackrandomiser:<ins>cuda-128</ins>***
+  - The optimised vanitysearch is used. A maximum of 1 GPU can be used for each range.
   - It scans faster than the default VanitySearch.
   - Supports maximum RTX 5000 series GPUs.
 
