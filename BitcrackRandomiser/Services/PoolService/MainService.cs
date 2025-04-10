@@ -74,7 +74,8 @@ namespace BitcrackRandomiser.Services.PoolService
                 client.DefaultRequestHeaders.Add("IsForceContinue", isForceContinue.ToString());
                 client.DefaultRequestHeaders.Add("HashedProofKey", hashedProofKey);
                 client.DefaultRequestHeaders.Add("UserToken", userToken);
-                var result = await client.PutAsync($"puzzle/{targetPuzzle}/range", null);
+
+                var result = await client.PutAsync($"puzzle/{targetPuzzle}/range", new StringContent(hex));
                 bool isSuccess = result.IsSuccessStatusCode;
 
                 if (!isSuccess)

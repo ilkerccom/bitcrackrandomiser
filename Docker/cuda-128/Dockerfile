@@ -2,7 +2,7 @@
 FROM nvidia/cuda:12.8.0-devel-ubuntu20.04
 
 # Variables
-ENV BC_PUZZLE=68
+ENV BC_PUZZLE=69
 ENV BC_USERTOKEN="0"
 ENV BC_WORKERNAME=""
 ENV BC_APP_TYPE="vanitysearch"
