@@ -1,3 +1,13 @@
+# !!! WARNING !!!
+
+<img width="740" height="493" alt="image" src="https://github.com/user-attachments/assets/91223e98-a1f5-4894-adcf-fb0eadd73888" />
+
+This client will no longer be maintained. Please visit the new GitHub page for the updated client. For a more reliable experience, always use the latest version.
+
+[Go To New Client - github.com/ilkerccom/btcpuzzle](https://github.com/ilkerccom/btcpuzzle)
+
+# !!! WARNING !!!
+
 # Bitcrack-Randomiser
 
 Bitcrackrandomiser is a solo pool project for Bitcoin puzzle **69, 70 and 72**. (Technically supports up to Puzzle 160). It works with Bitcrack and VanitySearch.
